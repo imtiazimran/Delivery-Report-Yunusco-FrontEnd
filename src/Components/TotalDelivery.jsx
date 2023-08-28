@@ -20,7 +20,7 @@ const TotalDelivery = () => {
                 <table className="table">
                     {/* head */}
                     <thead>
-                        <tr className="text-center flex flex-col">
+                        <tr className="text-center">
                             <th>#</th>
                             <th>Customar</th>
                             <th>Job</th>
@@ -38,7 +38,7 @@ const TotalDelivery = () => {
                             </tr>
                         ) : (
                             prevJobs.map((job, i) => (
-                                <tr key={job._id} className="hover text-center flex flex-col">
+                                <tr key={job._id} className="hover text-center ">
                                     <th>{i + 1}</th>
                                     <td className='capitalize'>{job.customar}</td>
                                     <td>JBH00{job.po}</td>
@@ -50,7 +50,7 @@ const TotalDelivery = () => {
                         )}
                     </tbody>
                     <tfoot>
-                        <tr className='text-center flex flex-col'>
+                        <tr className='text-center'>
                             <th>#</th>
                             <th></th>
                             <th className='text-md text-yellow-600'>Total Quantity</th>
