@@ -16,48 +16,50 @@ const TotalDelivery = () => {
     return (
         <div>
             <div className="text-2xl py-3 bg-sky-700 text-white text-center">Total Delivery  </div>
-            <table className="table">
-                {/* head */}
-                <thead>
-                    <tr className="text-center">
-                        <th>#</th>
-                        <th>Customar</th>
-                        <th>Job</th>
-                        <th>Quantity</th>
-                        <th>Label Name</th>
-                        <th>Delivery Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {isLoading ? (
-                        <tr>
-                            <td colSpan="5" className="text-center">
-                                <span className="loading loading-bars loading-lg"></span>
-                            </td>
+            <div className="overflow-x-auto">
+                <table className="table">
+                    {/* head */}
+                    <thead>
+                        <tr className="text-center flex flex-col">
+                            <th>#</th>
+                            <th>Customar</th>
+                            <th>Job</th>
+                            <th>Quantity</th>
+                            <th>Label Name</th>
+                            <th>Delivery Date</th>
                         </tr>
-                    ) : (
-                        prevJobs.map((job, i) => (
-                            <tr key={job._id} className="hover text-center">
-                                <th>{i + 1}</th>
-                                <td className='capitalize'>{job.customar}</td>
-                                <td>JBH00{job.po}</td>
-                                <td>{job.qty}</td>
-                                <td className='uppercase'>{job.label}</td>
-                                <td>{job.goodsDeliveryDate}</td>
+                    </thead>
+                    <tbody>
+                        {isLoading ? (
+                            <tr>
+                                <td colSpan="5" className="text-center">
+                                    <span className="loading loading-bars loading-lg"></span>
+                                </td>
                             </tr>
-                        ))
-                    )}
-                </tbody>
-                <tfoot>
-                    <tr className='text-center'>
-                        <th>#</th>
-                        <th></th>
-                        <th className='text-md text-yellow-600'>Total Quantity</th>
-                        <th className='text-md text-yellow-600'>{totalPrevDelivery.toLocaleString('en-IN')} Piece</th>
-                        <th></th>
-                    </tr>
-                </tfoot>
-            </table>
+                        ) : (
+                            prevJobs.map((job, i) => (
+                                <tr key={job._id} className="hover text-center flex flex-col">
+                                    <th>{i + 1}</th>
+                                    <td className='capitalize'>{job.customar}</td>
+                                    <td>JBH00{job.po}</td>
+                                    <td>{job.qty}</td>
+                                    <td className='uppercase'>{job.label}</td>
+                                    <td>{job.goodsDeliveryDate}</td>
+                                </tr>
+                            ))
+                        )}
+                    </tbody>
+                    <tfoot>
+                        <tr className='text-center flex flex-col'>
+                            <th>#</th>
+                            <th></th>
+                            <th className='text-md text-yellow-600'>Total Quantity</th>
+                            <th className='text-md text-yellow-600'>{totalPrevDelivery.toLocaleString('en-IN')} Piece</th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
     );
 };

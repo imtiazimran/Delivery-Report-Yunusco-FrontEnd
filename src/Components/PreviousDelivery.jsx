@@ -32,46 +32,48 @@ const PreviousDelivery = () => {
     return (
         <div>
             <div className="text-2xl py-3 bg-sky-700 text-white text-center">Previous Delivery {yesterdayDate.toLocaleDateString()} </div>
-            <table className="table">
-                {/* head */}
-                <thead>
-                    <tr className="text-center">
-                        <th>#</th>
-                        <th>Customar</th>
-                        <th>Job</th>
-                        <th>Quantity</th>
-                        <th>Label Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {isLoading ? (
-                        <tr>
-                            <td colSpan="5" className="text-center">
-                                <span className="loading loading-bars loading-lg"></span>
-                            </td>
+            <div className="overflow-x-auto">
+                <table className="table">
+                    {/* head */}
+                    <thead>
+                        <tr className="text-center">
+                            <th>#</th>
+                            <th>Customar</th>
+                            <th>Job</th>
+                            <th>Quantity</th>
+                            <th>Label Name</th>
                         </tr>
-                    ) : (
-                        yesterdayDeliveries.map((job, i) => (
-                            <tr key={job._id} className="hover text-center">
-                                <th>{i + 1}</th>
-                                <td className='capitalize'>{job.customar}</td>
-                                <td>JBH00{job.po}</td>
-                                <td>{job.qty}</td>
-                                <td className='uppercase'>{job.label}</td>
+                    </thead>
+                    <tbody>
+                        {isLoading ? (
+                            <tr>
+                                <td colSpan="5" className="text-center">
+                                    <span className="loading loading-bars loading-lg"></span>
+                                </td>
                             </tr>
-                        ))
-                    )}
-                </tbody>
-                <tfoot>
-                    <tr className='text-center'>
-                        <th>#</th>
-                        <th></th>
-                        <th className='text-md text-yellow-600'>Total Quantity</th>
-                        <th className='text-md text-yellow-600'>{totalPrevDelivery.toLocaleString('en-IN')} Piece</th>
-                        <th></th>
-                    </tr>
-                </tfoot>
-            </table>
+                        ) : (
+                            yesterdayDeliveries.map((job, i) => (
+                                <tr key={job._id} className="hover text-center">
+                                    <th>{i + 1}</th>
+                                    <td className='capitalize'>{job.customar}</td>
+                                    <td>JBH00{job.po}</td>
+                                    <td>{job.qty}</td>
+                                    <td className='uppercase'>{job.label}</td>
+                                </tr>
+                            ))
+                        )}
+                    </tbody>
+                    <tfoot>
+                        <tr className='text-center'>
+                            <th>#</th>
+                            <th></th>
+                            <th className='text-md text-yellow-600'>Total Quantity</th>
+                            <th className='text-md text-yellow-600'>{totalPrevDelivery.toLocaleString('en-IN')} Piece</th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
     );
 };
