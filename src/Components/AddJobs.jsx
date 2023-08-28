@@ -17,7 +17,7 @@ const AddJobs = () => {
             customar, po, qty, label
         }
 
-        axios.post('http://localhost:8570/addJobs', addJobs)
+        axios.post('https://delivery-report-yunusco-back-end.vercel.app/addJobs', addJobs)
             .then(res => {
                 setIsloading(false)
                 if (res.data.insertedId) {

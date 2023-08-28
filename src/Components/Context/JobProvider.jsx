@@ -10,7 +10,7 @@ const JobProvider = ({children}) => {
     const [isLoading, setIsLoading] = useState(true)
     
     useEffect(() => {
-        axios.get('http://localhost:8570/delivery')
+        axios.get('https://delivery-report-yunusco-back-end.vercel.app/delivery')
             .then(res => {
                 setIsLoading(true)
                 setJobs(res.data)
@@ -20,7 +20,7 @@ const JobProvider = ({children}) => {
     }, [])
 
     useEffect(() => {
-        axios.get('http://localhost:8570/delivered')
+        axios.get('https://delivery-report-yunusco-back-end.vercel.app/delivered')
             .then(res => {
                 setIsLoading(true)
                 setPrevJobs(res.data)

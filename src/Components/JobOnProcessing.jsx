@@ -16,7 +16,7 @@ const JobOnProcessing = () => {
     const handleDeliveredJob = async (job) => {
         console.log(job._id)
         try {
-            await axios.put(`http://localhost:8570/markDelivered/${job._id}`);
+            await axios.put(`https://delivery-report-yunusco-back-end.vercel.app/markDelivered/${job._id}`);
             setJobs(prevJobs => prevJobs.filter(j => j._id !== job._id));
 
             // Display SweetAlert success alert
@@ -54,7 +54,7 @@ const JobOnProcessing = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    await axios.delete(`http://localhost:8570/deleteJob/${job._id}`);
+                    await axios.delete(`https://delivery-report-yunusco-back-end.vercel.app/deleteJob/${job._id}`);
                     setJobs(prevJobs => prevJobs.filter(j => j._id !== job._id));
     
                     // Display SweetAlert success alert
