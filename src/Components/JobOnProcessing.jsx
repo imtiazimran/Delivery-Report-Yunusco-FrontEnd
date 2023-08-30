@@ -11,7 +11,6 @@ const JobOnProcessing = () => {
 
     const currentDeliveryQty = jobs.reduce((accumolator, currentJob) => accumolator + parseInt(currentJob.qty), 0)
 
-    console.log(currentDeliveryQty)
 
     const handleDeliveredJob = async (job) => {
         console.log(job._id)
