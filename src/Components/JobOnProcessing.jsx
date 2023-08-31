@@ -17,7 +17,6 @@ const JobOnProcessing = () => {
         setSelectedJobForPartialDelivery(job);
         setPartialDeliveryQty(0); // Reset input field
         setIsOpen(true)
-        console.log(job.po)
     };
 
 

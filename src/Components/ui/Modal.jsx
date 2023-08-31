@@ -1,13 +1,14 @@
 import { Dialog, Transition } from '@headlessui/react'
 import axios from 'axios';
 import { Fragment } from 'react'
+import Swal from 'sweetalert2';
 
 export default function PD_Modal({ isOpen, setIsOpen, selectedJobForPartialDelivery, setSelectedJobForPartialDelivery, partialDeliveryQty, setPartialDeliveryQty }) {
   function closeModal() {
     setIsOpen(false)
   }
 
-  const handlePartialDelivery = async () =>  {
+  const handlePartialDelivery = async () => {
 
     if (selectedJobForPartialDelivery && partialDeliveryQty > 0) {
       try {
@@ -15,16 +16,24 @@ export default function PD_Modal({ isOpen, setIsOpen, selectedJobForPartialDeliv
           `http://localhost:8570/updatePartialDelivery/${selectedJobForPartialDelivery._id}`,
           { partialDeliveryQty }
         );
-          console.log(response)
+
         // Update the job in your state or context with the response data
-        // Close the modal
         setSelectedJobForPartialDelivery(null);
+
+        // Show SweetAlert success notification
+        Swal.fire({
+          icon: 'success',
+          title: 'Partial Delivery Submitted',
+          text: 'The partial delivery has been successfully submitted.',
+          confirmButtonText: 'OK',
+          onClose: () => {
+            closeModal();
+          },
+        });
       } catch (error) {
         console.error("Error updating partial delivery:", error);
       }
     }
-
-    console.log(partialDeliveryQty, selectedJobForPartialDelivery._id)
     closeModal()
   }
 
