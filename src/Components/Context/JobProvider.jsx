@@ -14,7 +14,6 @@ const JobProvider = ({children}) => {
             .then(res => {
                 setIsLoading(true)
                 setJobs(res.data)
-                console.log(res.data)
                 setIsLoading(false)
             })
     }, [])

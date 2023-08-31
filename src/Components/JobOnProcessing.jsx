@@ -11,9 +11,7 @@ const JobOnProcessing = () => {
 
     const currentDeliveryQty = jobs.reduce((accumolator, currentJob) => accumolator + parseInt(currentJob.qty), 0)
 
-
     const handleDeliveredJob = async (job) => {
-        console.log(job._id)
         try {
             await axios.put(`https://delivery-report-yunusco-back-end.vercel.app/markDelivered/${job._id}`);
             setJobs(prevJobs => prevJobs.filter(j => j._id !== job._id));
@@ -55,7 +53,7 @@ const JobOnProcessing = () => {
                 try {
                     await axios.delete(`https://delivery-report-yunusco-back-end.vercel.app/deleteJob/${job._id}`);
                     setJobs(prevJobs => prevJobs.filter(j => j._id !== job._id));
-    
+
                     // Display SweetAlert success alert
                     Swal.fire({
                         icon: 'success',
@@ -79,13 +77,13 @@ const JobOnProcessing = () => {
             }
         });
     };
-    
+
 
 
 
     return (
         <div>
-            <div className="text-2xl py-3 bg-sky-700 text-white text-center"><span className="loading loading-ring loading-xs"></span> Jobs On Processing <span className="loading loading-ring loading-xs"></span></div>
+            <div className="rounded-xl text-2xl py-3 bg-sky-700 text-white text-center"><span className="loading loading-ring loading-xs"></span> Jobs On Processing <span className="loading loading-ring loading-xs"></span></div>
             <div className="overflow-x-auto">
                 <table className="table">
                     {/* head */}
@@ -106,6 +104,12 @@ const JobOnProcessing = () => {
                                     <span className="loading loading-bars loading-lg"></span>
                                 </td>
                             </tr>
+                        ) : jobs.length === 0 ? (
+                            <tr>
+                                <td colSpan="5" className="text-center">
+                                    Please add some jobs first.
+                                </td>
+                            </tr>
                         ) : (
                             jobs.map((job, i) => (
                                 <tr key={job._id} className="hover text-center">
@@ -120,6 +124,11 @@ const JobOnProcessing = () => {
                             ))
                         )}
                     </tbody>
+
+
+
+
+
                     <tfoot>
                         <tr className='text-center'>
                             <th>#</th>

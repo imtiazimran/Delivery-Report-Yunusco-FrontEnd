@@ -57,13 +57,13 @@ const AddJobs = () => {
             <div className="form-control my-5">
                 <label className="input-group input-group-vertical">
                     <span>Job No</span>
-                    <input name='po' type="text" placeholder="Exp: JBH00342050" className="input input-bordered " />
+                    <input name='po' type="number" placeholder="Exp: JBH00342050" className="input input-bordered " />
                 </label>
             </div>
             <div className="form-control my-5">
                 <label className="input-group input-group-vertical">
                     <span>Quantity</span>
-                    <input name='qty' type="text" placeholder="Qty" className="input input-bordered " />
+                    <input name='qty' type="number" placeholder="Qty" className="input input-bordered " />
                 </label>
             </div>
             <div className="form-control my-5">

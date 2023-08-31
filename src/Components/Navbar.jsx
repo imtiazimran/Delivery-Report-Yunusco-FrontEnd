@@ -9,7 +9,7 @@ const Navbar = () => {
         <div>
             <div className="navbar ">
                 <div className="flex-1 justify-between">
-                    <Link to={"/"} className=" text-orange-500 normal-case text-xl">Yunusco T&A (BD) LTD. </Link>
+                    <Link to={"/"} className=" text-orange-500 normal-case text-xl"> <img className='w-1/4' src="https://i.ibb.co/gwV6FjL/1553451971650-removebg-preview.png" alt="" /> </Link>
                     <div>
 
 

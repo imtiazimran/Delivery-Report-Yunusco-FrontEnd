@@ -1,37 +1,33 @@
 import React, { useContext } from 'react';
 import { JobContext } from './Context/JobProvider';
 
-const PreviousDelivery = () => {
+const DeliveredToday = () => {
     const { prevJobs, isLoading } = useContext(JobContext);
 
     const currentDate = new Date();
 
-    // Calculate yesterday's date
-    const yesterdayDate = new Date(currentDate);
-    yesterdayDate.setDate(currentDate.getDate() - 1);
+    // Calculate start of today's date (midnight)
+    const startOfToday = new Date(currentDate);
+    startOfToday.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to 0
 
-
-    // Filter deliveries for yesterday's date
-    const yesterdayDeliveries = prevJobs.filter(currentJob => {
-        if (currentJob.goodsDeliveryDate) { // Check if goodsDeliveryDate is not empty
+    // Filter deliveries for today's date
+    const todaysDeliveries = prevJobs.filter(currentJob => {
+        if (currentJob.goodsDeliveryDate) {
             const deliveryDate = parseCustomDate(currentJob.goodsDeliveryDate);
-            return isSameDate(deliveryDate, yesterdayDate);
+            return isSameDate(deliveryDate, startOfToday);
         }
-        return false; // Skip jobs without a valid delivery date
+        return false;
     });
-
-    // Calculate total previous delivery quantity
-    const totalPrevDelivery = yesterdayDeliveries.reduce((accumulator, currentJob) => {
+    const totalPrevDelivery = todaysDeliveries.reduce((accumulator, currentJob) => {
         const qtyAsNumber = parseInt(currentJob.qty, 10); // Convert the string to an integer
         if (!isNaN(qtyAsNumber)) {
             return accumulator + qtyAsNumber;
         }
         return accumulator; // If conversion fails, return the accumulator unchanged
     }, 0);
-
     return (
         <div>
-            <div className="text-2xl rounded-xl py-3 bg-violet-700 text-white text-center">Previous Delivery {yesterdayDate.toLocaleDateString()} </div>
+            <div className="text-2xl rounded-xl py-3 bg-green-700 text-white text-center">Delivered Today  </div>
             <div className="overflow-x-auto">
                 <table className="table">
                     {/* head */}
@@ -52,8 +48,8 @@ const PreviousDelivery = () => {
                                 </td>
                             </tr>
                         ) : (
-                            yesterdayDeliveries.map((job, i) => (
-                                <tr key={job._id} className="hover text-center">
+                            todaysDeliveries.map((job, i) => (
+                                <tr key={job._id} className="hover text-center ">
                                     <th>{i + 1}</th>
                                     <td className='capitalize'>{job.customar}</td>
                                     <td>JBH00{job.po}</td>
@@ -78,7 +74,7 @@ const PreviousDelivery = () => {
     );
 };
 
-// Helper function to parse a date in the format "DD-MM-YYYY HH:MM:SS"
+
 function parseCustomDate(dateString) {
     const [datePart, timePart] = dateString.split(' ');
     const [day, month, year] = datePart.split('-');
@@ -95,4 +91,4 @@ function isSameDate(date1, date2) {
     );
 }
 
-export default PreviousDelivery;
+export default DeliveredToday;

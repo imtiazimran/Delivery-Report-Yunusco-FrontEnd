@@ -1,14 +1,15 @@
 import React, { useContext } from 'react';
 import { JobContext } from './Context/JobProvider';
+import { Link } from 'react-router-dom';
 
 const Stat = () => {
     const { jobs, prevJobs } = useContext(JobContext)
 
-// --------------------Current Delivery Calculation--------------------------
+    // --------------------Current Delivery Calculation--------------------------
 
-const currentDeliveryQty = jobs.reduce((accumolator, currentJob) => accumolator + parseInt(currentJob.qty), 0)
+    const currentDeliveryQty = jobs.reduce((accumolator, currentJob) => accumolator + parseInt(currentJob.qty), 0)
 
-// ------------------Previous Delivery--------------------------------
+    // ------------------Previous Delivery--------------------------------
     const currentDate = new Date();
 
     // Calculate yesterday's date
@@ -48,22 +49,28 @@ const currentDeliveryQty = jobs.reduce((accumolator, currentJob) => accumolator 
         <div className='p-5 flex justify-center '>
             <div className="stats stats-vertical lg:stats-horizontal shadow ">
 
-                <div className="stat text-center">
-                    <div className="stat-title">Previous Delivery</div>
-                    <div className="stat-value">{totalPrevDelivery.toLocaleString('en-IN')}</div>
-                    <div className="stat-desc">{yesterdayDate.toLocaleDateString()}</div>
-                </div>
+                <Link to={"/previousDelivery"}>
+                    <div className="stat text-center">
+                        <div className="stat-title">Previous Delivery</div>
+                        <div className="stat-value">{totalPrevDelivery.toLocaleString('en-IN')}</div>
+                        <div className="stat-desc">{yesterdayDate.toLocaleDateString()}</div>
+                    </div>
+                </Link>
+                    <div className="stat text-center">
+                        <div className="stat-title">On Going</div>
+                        <div className="stat-value">{currentDeliveryQty.toLocaleString("en-IN")}</div>
+                        <div className="stat-desc">↗︎ </div>
+                    </div>
+                <Link to={"/totalDelivery"}>
+                    <div className="stat text-center">
+                        <div className="stat-title">Total Delivery</div>
+                        <div className="stat-value">{totalDelivery.toLocaleString("en-IN")}</div>
+                    </div>
+                </Link>
 
-                <div className="stat text-center">
-                    <div className="stat-title">On Going</div>
-                    <div className="stat-value">{currentDeliveryQty.toLocaleString("en-IN")}</div>
-                    <div className="stat-desc">↗︎ </div>
-                </div>
 
-                <div className="stat text-center">
-                    <div className="stat-title">Total Delivery</div>
-                    <div className="stat-value">{totalDelivery.toLocaleString("en-IN")}</div>
-                </div>
+
+
 
             </div>
         </div>
