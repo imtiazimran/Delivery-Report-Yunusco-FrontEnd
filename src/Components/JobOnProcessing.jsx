@@ -100,13 +100,14 @@ const JobOnProcessing = () => {
                     <tbody>
                         {isLoading ? (
                             <tr>
-                                <td colSpan="5" className="text-center">
+                                <td colSpan="7" className="text-center">
                                     <span className="loading loading-bars loading-lg"></span>
                                 </td>
                             </tr>
                         ) : jobs.length === 0 ? (
                             <tr>
-                                <td colSpan="5" className="text-center">
+                                <td colSpan="7" className="text-center">
+                                No jobs Is in Process <br />
                                     Please add some jobs first.
                                 </td>
                             </tr>
@@ -130,13 +131,22 @@ const JobOnProcessing = () => {
 
 
                     <tfoot>
-                        <tr className='text-center'>
-                            <th>#</th>
-                            <th></th>
-                            <th className='text-md text-yellow-600'>Total Quantity</th>
-                            <th className='text-md text-yellow-600'>{currentDeliveryQty.toLocaleString('en-IN')} Piece</th>
-                            <th></th>
-                        </tr>
+                        {
+                            jobs.length === 0 ? (
+                                <tr>
+                                    <td colSpan="5" className="text-center">
+                                        
+                                    </td>
+                                </tr>
+                            ) : <tr className='text-center'>
+                                <th>#</th>
+                                <th></th>
+                                <th className='text-md text-yellow-600'>Total Quantity</th>
+                                <th className='text-md text-yellow-600'>{currentDeliveryQty.toLocaleString('en-IN')} Piece</th>
+                                <th></th>
+                            </tr>
+                        }
+
                     </tfoot>
                 </table>
             </div>

@@ -27,7 +27,7 @@ const DeliveredToday = () => {
     }, 0);
     return (
         <div>
-            <div className="text-2xl rounded-xl py-3 bg-green-700 text-white text-center">Delivered Today  </div>
+            <div className="text-2xl rounded-xl py-3 bg-green-700 text-white text-center"> {todaysDeliveries.length} Jobs Delivered Today  </div>
             <div className="overflow-x-auto">
                 <table className="table">
                     {/* head */}
