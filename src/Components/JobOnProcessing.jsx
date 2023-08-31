@@ -1,13 +1,25 @@
 
 
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { JobContext } from "./Context/JobProvider";
 import axios from "axios";
 import Swal from "sweetalert2";
+import PD_Modal from "./ui/Modal";
 
 const JobOnProcessing = () => {
 
     const { jobs, isLoading, setJobs } = useContext(JobContext)
+    const [isOpen, setIsOpen] = useState(false)
+    const [selectedJobForPartialDelivery, setSelectedJobForPartialDelivery] = useState(null);
+    const [partialDeliveryQty, setPartialDeliveryQty] = useState(0);
+
+    const handlePartialDeliveryModal = (job) => {
+        setSelectedJobForPartialDelivery(job);
+        setPartialDeliveryQty(0); // Reset input field
+        setIsOpen(true)
+        console.log(job.po)
+    };
+
 
     const currentDeliveryQty = jobs.reduce((accumolator, currentJob) => accumolator + parseInt(currentJob.qty), 0)
 
@@ -83,6 +95,16 @@ const JobOnProcessing = () => {
 
     return (
         <div>
+
+            <PD_Modal
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
+                selectedJobForPartialDelivery={selectedJobForPartialDelivery}
+                setSelectedJobForPartialDelivery={setSelectedJobForPartialDelivery}
+                partialDeliveryQty={partialDeliveryQty}
+                setPartialDeliveryQty={setPartialDeliveryQty} 
+                />
+
             <div className="rounded-xl text-2xl py-3 bg-sky-700 text-white text-center"><span className="loading loading-ring loading-xs"></span> Jobs On Processing <span className="loading loading-ring loading-xs"></span></div>
             <div className="overflow-x-auto">
                 <table className="table">
@@ -107,7 +129,7 @@ const JobOnProcessing = () => {
                         ) : jobs.length === 0 ? (
                             <tr>
                                 <td colSpan="7" className="text-center">
-                                No jobs Is in Process <br />
+                                    No jobs Is in Process <br />
                                     Please add some jobs first.
                                 </td>
                             </tr>
@@ -119,7 +141,9 @@ const JobOnProcessing = () => {
                                     <td>JBH00{job.po}</td>
                                     <td>{job.qty}</td>
                                     <td className='uppercase'>{job.label}</td>
-                                    <td><button onClick={() => handleDeliveredJob(job)} className="btn-md btn-success btn-outline">Finish</button>
+                                    <td>
+                                        <button onClick={() => handleDeliveredJob(job)} className="btn-md btn-success btn-outline">Finish</button>
+                                        <button onClick={() => handlePartialDeliveryModal(job)} className="btn-md btn-primary btn-outline">PD</button>
                                         <button onClick={() => handleDelete(job)} className="btn-md btn-error btn-outline">Delete</button></td>
                                 </tr>
                             ))
@@ -135,7 +159,7 @@ const JobOnProcessing = () => {
                             jobs.length === 0 ? (
                                 <tr>
                                     <td colSpan="5" className="text-center">
-                                        
+
                                     </td>
                                 </tr>
                             ) : <tr className='text-center'>

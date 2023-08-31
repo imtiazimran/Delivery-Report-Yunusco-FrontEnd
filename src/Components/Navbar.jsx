@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, Transition } from '@headlessui/react'
-import { Fragment, useEffect, useRef, useState } from 'react'
+import { Fragment } from 'react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 
 const Navbar = () => {
@@ -9,15 +9,13 @@ const Navbar = () => {
         <div>
             <div className="navbar ">
                 <div className="flex-1 justify-between">
-                    <Link to={"/"} className=" text-orange-500 normal-case text-xl"> <img className='w-1/4' src="https://i.ibb.co/gwV6FjL/1553451971650-removebg-preview.png" alt="" /> </Link>
+                    <a href='/' className=" text-orange-500 normal-case text-xl"> <img className='w-1/4' src="https://i.ibb.co/gwV6FjL/1553451971650-removebg-preview.png" alt="" /> </a>
                     <div>
-
-
                         <div className="flex">
                             <Menu as="div" className="relative inline-block text-left z-50 lg:hidden">
                                 <div>
                                     <Menu.Button className="inline-flex w-full justify-center rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-5 h-5 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-5 h-5 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                                         <ChevronDownIcon
                                             className="ml-2 -mr-1 h-5 w-5 text-violet-200 hover:text-violet-100"
                                             aria-hidden="true"
@@ -41,18 +39,18 @@ const Navbar = () => {
                                                         className={`${active ? 'bg-violet-500 text-white' : 'text-gray-900'
                                                             } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                                     >
-                                                    {active ? (
-                                                        <EditActiveIcon
-                                                          className="mr-2 h-5 w-5"
-                                                          aria-hidden="true"
-                                                        />
-                                                      ) : (
-                                                        <EditInactiveIcon
-                                                          className="mr-2 h-5 w-5"
-                                                          aria-hidden="true"
-                                                        />
-                                                      )}
-                                                  <Link className='mx-3 p-1 rounded' to={"/addJobs"}>Add Job</Link>
+                                                        {active ? (
+                                                            <EditActiveIcon
+                                                                className="mr-2 h-5 w-5"
+                                                                aria-hidden="true"
+                                                            />
+                                                        ) : (
+                                                            <EditInactiveIcon
+                                                                className="mr-2 h-5 w-5"
+                                                                aria-hidden="true"
+                                                            />
+                                                        )}
+                                                        <Link className='mx-3 p-1 rounded' to={"/addJobs"}>Add Job</Link>
                                                     </button>
                                                 )}
                                             </Menu.Item>

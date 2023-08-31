@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { JobContext } from './Context/JobProvider';
+import { Link } from 'react-router-dom';
 
 const DeliveredToday = () => {
     const { prevJobs, isLoading } = useContext(JobContext);
@@ -47,7 +48,16 @@ const DeliveredToday = () => {
                                     <span className="loading loading-bars loading-lg"></span>
                                 </td>
                             </tr>
-                        ) : (
+                        ) : todaysDeliveries.length === 0 ? (
+                            <tr>
+                                <td colSpan="7" className='text-center'>
+                                    <p>
+                                        No Job Delivered Today <br /> <br /> <Link className='btn-link' to={"/previousDelivery"}>View Previous Delivery</Link>
+                                    </p>
+                                </td>
+                            </tr>
+                        ) 
+                        : (
                             todaysDeliveries.map((job, i) => (
                                 <tr key={job._id} className="hover text-center ">
                                     <th>{i + 1}</th>

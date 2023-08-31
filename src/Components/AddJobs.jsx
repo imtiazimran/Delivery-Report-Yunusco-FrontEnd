@@ -14,7 +14,7 @@ const AddJobs = () => {
         const label = form.label.value
 
         const addJobs = {
-            customar, po, qty, label
+            customar, po, qty: parseInt(qty), label
         }
 
         axios.post('https://delivery-report-yunusco-back-end.vercel.app/addJobs', addJobs)
@@ -57,13 +57,13 @@ const AddJobs = () => {
             <div className="form-control my-5">
                 <label className="input-group input-group-vertical">
                     <span>Job No</span>
-                    <input name='po' type="number" placeholder="Exp: JBH00342050" className="input input-bordered " />
+                    <input name='po' type="number" placeholder="Exp: 342050" className="input input-bordered " />
                 </label>
             </div>
             <div className="form-control my-5">
                 <label className="input-group input-group-vertical">
                     <span>Quantity</span>
-                    <input name='qty' type="number" placeholder="Qty" className="input input-bordered " />
+                    <input name='qty' type="number" placeholder="Quantity" className="input input-bordered " />
                 </label>
             </div>
             <div className="form-control my-5">
