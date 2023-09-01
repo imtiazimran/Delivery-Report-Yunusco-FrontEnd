@@ -16,7 +16,7 @@ const JobProvider = ({children}) => {
                 setJobs(res.data)
                 setIsLoading(false)
             })
-    }, [])
+    }, [prevJobs])
 
     useEffect(() => {
         axios.get('https://delivery-report-yunusco-back-end.vercel.app/delivered')
