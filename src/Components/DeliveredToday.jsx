@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const DeliveredToday = () => {
     const { prevJobs, isLoading } = useContext(JobContext);
-
+    // console.log(prevJobs)
     const currentDate = new Date();
 
     // Calculate start of today's date (midnight)

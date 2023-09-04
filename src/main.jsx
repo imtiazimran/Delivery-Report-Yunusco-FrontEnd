@@ -11,6 +11,7 @@ import AddJobs from './Components/AddJobs.jsx';
 import JobProvider from './Components/Context/JobProvider.jsx';
 import PreviousDelivery from './Components/PreviousDelivery.jsx';
 import TotalDelivery from './Components/TotalDelivery.jsx';
+import PartialJobs from './Components/PartialJobs.jsx';
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
       {
         path: "/totalDelivery",
         element: <TotalDelivery/>
+      },
+      {
+        path : "/partialDelivery",
+        element: <PartialJobs/>
       }
     ]
   },

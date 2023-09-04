@@ -17,7 +17,7 @@ export default function PD_Modal({ isOpen, setIsOpen, selectedJobForPartialDeliv
           `https://delivery-report-yunusco-back-end.vercel.app/updatePartialDelivery/${selectedJobForPartialDelivery._id}`,
           { partialDeliveryQty }
         );
-
+          
         // Update the job in your state or context with the response data
         setSelectedJobForPartialDelivery(null);
 

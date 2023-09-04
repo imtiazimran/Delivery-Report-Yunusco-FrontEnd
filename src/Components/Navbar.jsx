@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import { JobContext } from './Context/JobProvider';
 
 const Navbar = () => {
+    const { jobs } = useContext(JobContext)
+
+    const partialDeliveries = jobs.filter((item) => item.hasOwnProperty("deliveryType"))
     return (
         <div>
             <div className="navbar ">
@@ -12,6 +16,12 @@ const Navbar = () => {
                     <a href='/' className=" text-orange-500 normal-case text-xl"> <img className='w-1/4' src="https://i.ibb.co/gwV6FjL/1553451971650-removebg-preview.png" alt="" /> </a>
                     <div>
                         <div className="flex">
+                            <Link to="/partialDelivery" className='lg:hidden'>
+                                <button className="btn btn-sm mx-2">
+                                    <span className='text-xs'>PD Jobs</span>
+                                    <div className="badge badge-primary badge-sm">{partialDeliveries.length}</div>
+                                </button>
+                            </Link>
                             <Menu as="div" className="relative inline-block text-left z-50 lg:hidden">
                                 <div>
                                     <Menu.Button className="inline-flex w-full justify-center rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
@@ -31,7 +41,9 @@ const Navbar = () => {
                                     leaveFrom="transform opacity-100 scale-100"
                                     leaveTo="transform opacity-0 scale-95"
                                 >
+
                                     <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+
                                         <div className="px-1 py-1 ">
                                             <Menu.Item>
                                                 {({ active }) => (
@@ -103,6 +115,12 @@ const Navbar = () => {
                                 </Transition>
                             </Menu>
                             <div className='hidden lg:block'>
+                                <Link  to="/partialDelivery">
+                                    <button className="btn btn-sm">
+                                        Partial Jobs
+                                        <div className="badge badge-secondary badge-sm">{partialDeliveries.length}</div>
+                                    </button>
+                                </Link>
                                 <Link className='mx-3 bg-blue-500 text-white p-1 rounded' to={"/addJobs"}>Add Job</Link>
                                 <Link className='mx-3 bg-blue-500 text-white p-1 rounded' to={"/previousDelivery"}>Previous Job</Link>
                                 <Link className='mx-3 bg-blue-500 text-white p-1 rounded' to={"/totalDelivery"}>Total Delivery</Link>

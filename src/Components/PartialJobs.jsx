@@ -1,13 +1,8 @@
+import React, { useContext } from 'react';
+import { JobContext } from './Context/JobProvider';
+import PD_Modal from './ui/Modal';
 
-
-import { useContext, useState } from "react";
-import { JobContext } from "./Context/JobProvider";
-import axios from "axios";
-import Swal from "sweetalert2";
-import PD_Modal from "./ui/Modal";
-
-const JobOnProcessing = () => {
-
+const PartialJobs = () => {
     const { jobs,
         isLoading,
         handleDelete,
@@ -26,20 +21,14 @@ const JobOnProcessing = () => {
         setIsOpen(true)
     };
 
-    const onProccess = jobs.filter((item) => !item.hasOwnProperty("deliveryType"))
+    
 
-    // console.log(currentJobs)
+    const partialDeliveries = jobs.filter((item) => item.hasOwnProperty("deliveryType"))
+    // console.log(handleDeliveredJob)
 
-    const currentDeliveryQty = onProccess.reduce((accumolator, currentJob) => accumolator + parseInt(currentJob.qty), 0)
-
-
-
-
-
-
+    const partialQty = partialDeliveries.reduce((accumolator, currentJob) => accumolator + parseInt(currentJob.qty), 0)
     return (
         <div>
-
             <PD_Modal
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
@@ -48,8 +37,6 @@ const JobOnProcessing = () => {
                 partialDeliveryQty={partialDeliveryQty}
                 setPartialDeliveryQty={setPartialDeliveryQty}
             />
-
-            <div className="rounded-xl text-2xl py-3 bg-sky-700 text-white text-center"><span className="loading loading-ring loading-xs"></span> Jobs On Processing <span className="loading loading-ring loading-xs"></span></div>
             <div className="overflow-x-auto">
                 <table className="table">
                     {/* head */}
@@ -70,15 +57,14 @@ const JobOnProcessing = () => {
                                     <span className="loading loading-bars loading-lg"></span>
                                 </td>
                             </tr>
-                        ) : onProccess.length === 0 ? (
+                        ) : partialDeliveries.length === 0 ? (
                             <tr>
                                 <td colSpan="7" className="text-center">
-                                    No jobs Is in Process <br />
-                                    Please add some jobs first.
+                                    No Partial Jobs
                                 </td>
                             </tr>
                         ) : (
-                            onProccess.map((job, i) => (
+                            partialDeliveries.map((job, i) => (
                                 <tr key={job._id} className="hover text-center">
                                     <th>{i + 1}</th>
                                     <td className='capitalize'>{job.customar}</td>
@@ -95,7 +81,7 @@ const JobOnProcessing = () => {
                     </tbody>
                     <tfoot>
                         {
-                            onProccess.length === 0 ? (
+                            partialDeliveries.length === 0 ? (
                                 <tr>
                                     <td colSpan="5" className="text-center">
 
@@ -105,7 +91,7 @@ const JobOnProcessing = () => {
                                 <th>#</th>
                                 <th></th>
                                 <th className='text-md text-yellow-600'>Total Quantity</th>
-                                <th className='text-md text-yellow-600'>{currentDeliveryQty.toLocaleString('en-IN')} Piece</th>
+                                <th className='text-md text-yellow-600'>{partialQty.toLocaleString('en-IN')} Piece</th>
                                 <th></th>
                             </tr>
                         }
@@ -117,4 +103,4 @@ const JobOnProcessing = () => {
     );
 };
 
-export default JobOnProcessing;
+export default PartialJobs;
