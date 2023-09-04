@@ -138,7 +138,7 @@ const JobOnProcessing = () => {
                                     <th>{i + 1}</th>
                                     <td className='capitalize'>{job.customar}</td>
                                     <td>JBH00{job.po}</td>
-                                    <td>{job.qty}</td>
+                                    <td>{job.qty.toLocaleString('en-IN')}</td>
                                     <td className='uppercase'>{job.label}</td>
                                     <td>
                                         <button onClick={() => handleDeliveredJob(job)} className="btn-md btn-success btn-outline">Finish</button>

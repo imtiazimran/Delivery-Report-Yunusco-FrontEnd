@@ -42,7 +42,7 @@ const TotalDelivery = () => {
                                     <th>{i + 1}</th>
                                     <td className='capitalize'>{job.customar}</td>
                                     <td>JBH00{job.po}</td>
-                                    <td>{job.qty}</td>
+                                    <td>{job.qty.toLocaleString('en-IN')}</td>
                                     <td className='uppercase'>{job.label}</td>
                                     <td>{job.goodsDeliveryDate}</td>
                                 </tr>
