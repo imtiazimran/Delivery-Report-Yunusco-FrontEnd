@@ -1,8 +1,14 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { JobContext } from './Context/JobProvider';
 
 const TotalDelivery = () => {
     const { prevJobs, isLoading } = useContext(JobContext);
+
+    const [searchQuery, setSearchQuery] = useState("")
+
+    const filteredJobs = prevJobs.filter((job) =>
+        job.po.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     // Calculate total previous delivery quantity
     const totalPrevDelivery = prevJobs.reduce((accumulator, currentJob) => {
@@ -16,6 +22,10 @@ const TotalDelivery = () => {
     return (
         <div>
             <div className="text-2xl py-3 bg-sky-700 text-white text-center">Total Delivery  </div>
+            <input onChange={(e) => setSearchQuery(e.target.value)}
+                type="number"
+                placeholder="Search By JOB"
+                className="input input-bordered input-primary w-4/5 mx-auto block my-5 max-w-xs text-center" />
             <div className="overflow-x-auto">
                 <table className="table">
                     {/* head */}
@@ -37,7 +47,7 @@ const TotalDelivery = () => {
                                 </td>
                             </tr>
                         ) : (
-                            prevJobs.map((job, i) => (
+                            filteredJobs.map((job, i) => (
                                 <tr key={job._id} className="hover text-center ">
                                     <th>{i + 1}</th>
                                     <td className='capitalize'>{job.customar}</td>
