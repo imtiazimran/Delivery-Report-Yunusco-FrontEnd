@@ -47,7 +47,7 @@ const AddJobs = () => {
     }
 
     return (
-        <form onSubmit={handleSubmit} className='lg:w-2/4 mx-auto py-10'>
+        <form onSubmit={handleSubmit} className='lg:w-2/4 mx-auto py-10 w-3/4'>
             <div className="form-control my-5">
                 <label className="input-group input-group-vertical">
                     <span>Customar</span>
@@ -72,7 +72,7 @@ const AddJobs = () => {
                     <input name='label' type="text" placeholder="Exp: HM14149" className="input input-bordered uppercase" />
                 </label>
             </div>
-            <button disabled={isLoading} type="submit" className='bg-orange-700 w-full text-white p-1 rounded'> {
+            <button disabled={isLoading} type="submit" className='btn btn-outline btn-info btn-sm'> {
                 isLoading ? <span className="loading loading-infinity loading-md"></span> : <span>Submit</span>
             }</button>
         </form>
