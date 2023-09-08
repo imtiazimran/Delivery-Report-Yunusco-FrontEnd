@@ -7,7 +7,9 @@ const Stat = () => {
 
     // --------------------Current Delivery Calculation--------------------------
 
-    const currentDeliveryQty = jobs.reduce((accumolator, currentJob) => accumolator + parseInt(currentJob.qty), 0)
+    const currentJobs = jobs.filter((item) => !item.hasOwnProperty("deliveryType"))
+
+    const currentDeliveryQty = currentJobs.reduce((accumolator, currentJob) => accumolator + parseInt(currentJob.qty), 0)
 
     // ------------------Previous Delivery--------------------------------
     const currentDate = new Date();

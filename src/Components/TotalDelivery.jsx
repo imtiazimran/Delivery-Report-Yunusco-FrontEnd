@@ -36,7 +36,7 @@ const TotalDelivery = () => {
     };
     // const handleModalBlur = () => {
     //     // Use a timeout to check if the focus has moved outside the modal
-    //     document.getElementById('editDate').onBlur(editDateDialogRef.current.close())
+    //     document.getElementById('editDate').onBlur(handleCloseModal())
     // };
 
 
@@ -45,7 +45,7 @@ const TotalDelivery = () => {
         if (selectedJobForUpdateData && updatedQuantity > 0) {
             try {
                 const response = await axios.put(
-                    `http://delivery-report-yunusco-back-end.vercel.app/editedJob/${selectedJobForUpdateData._id}`,
+                    `https://delivery-report-yunusco-back-end-imtiazimran.vercel.app/editedJob/${selectedJobForUpdateData._id}`,
                     { updatedQuantity, updatedDeliveryDate }
                 );
 
@@ -65,7 +65,7 @@ const TotalDelivery = () => {
                     confirmButtonText: 'OK',
                 });
             } catch (error) {
-                console.error("Error updating partial delivery:", error);
+                console.log("Error updating  existing data:", error);
             }
         }
     }
@@ -153,6 +153,7 @@ const TotalDelivery = () => {
                 >
                     <div className="modal-box">
                         <h3 className="font-bold text-lg text-center">JBH000{selectedJobForUpdateData?.po}</h3>
+                        <button onClick={handleCloseModal} className="btn btn-sm btn-outline absolute right-2 top-2">Close</button>
                         <form method="dialog" onSubmit={handleEditJob} className="mx-auto w-4/5">
                             <label className=" block my-5">
                                 <span className="block">Quantity</span>
@@ -164,7 +165,6 @@ const TotalDelivery = () => {
                             </label>
                             <button type='submit' className="btn btn-outline btn-info btn-sm my-5">Submit</button>
                         </form>
-                        <button onClick={handleCloseModal} className="btn  btn-error btn-sm my-5">X</button>
                     </div>
                 </dialog>
 
