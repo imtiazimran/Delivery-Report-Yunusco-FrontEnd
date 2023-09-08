@@ -18,8 +18,8 @@ const Navbar = () => {
                         <div className="flex">
                             <Link to="/partialDelivery" className='lg:hidden'>
                                 <button className="btn btn-sm mx-2">
+                                <div className="indicator-item badge badge-primary">{partialDeliveries.length}</div>
                                     <span className='text-xs'>PD Jobs</span>
-                                    <div className="badge badge-primary badge-sm">{partialDeliveries.length}</div>
                                 </button>
                             </Link>
                             <Menu as="div" className="relative inline-block text-left z-50 lg:hidden">
