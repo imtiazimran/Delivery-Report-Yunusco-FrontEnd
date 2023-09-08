@@ -47,8 +47,9 @@ const Navbar = () => {
                                         <div className="px-1 py-1 ">
                                             <Menu.Item>
                                                 {({ active }) => (
-                                                    <button
-                                                        className={`${active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                                                    <Link
+                                                        to={"/addJobs"}
+                                                        className={`btn ${active ? 'bg-violet-500 text-white' : 'text-gray-900'
                                                             } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                                     >
                                                         {active ? (
@@ -62,14 +63,15 @@ const Navbar = () => {
                                                                 aria-hidden="true"
                                                             />
                                                         )}
-                                                        <Link className='mx-3 p-1 rounded' to={"/addJobs"}>Add Job</Link>
-                                                    </button>
+                                                        Add Job
+                                                    </Link>
                                                 )}
                                             </Menu.Item>
                                             <Menu.Item>
                                                 {({ active }) => (
-                                                    <button
-                                                        className={`${active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                                                    <Link
+                                                    to={"/previousDelivery"}
+                                                        className={`btn mt-2 ${active ? 'bg-violet-500 text-white' : 'text-gray-900'
                                                             } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                                     >
                                                         {active ? (
@@ -83,16 +85,17 @@ const Navbar = () => {
                                                                 aria-hidden="true"
                                                             />
                                                         )}
-                                                        <Link className='mx-3 p-1 rounded' to={"/previousDelivery"}>Previous Job</Link>
-                                                    </button>
+                                                        Previous Job
+                                                    </Link>
                                                 )}
                                             </Menu.Item>
                                         </div>
                                         <div className="px-1 py-1">
                                             <Menu.Item>
                                                 {({ active }) => (
-                                                    <button
-                                                        className={`${active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                                                    <Link
+                                                    to={"/totalDelivery"}
+                                                        className={` btn ${active ? 'bg-violet-500 text-white' : 'text-gray-900'
                                                             } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                                     >
                                                         {active ? (
@@ -106,8 +109,8 @@ const Navbar = () => {
                                                                 aria-hidden="true"
                                                             />
                                                         )}
-                                                        <Link className='mx-3 p-1 rounded' to={"/totalDelivery"}>Total Delivery</Link>
-                                                    </button>
+                                                        Total Delivery
+                                                    </Link>
                                                 )}
                                             </Menu.Item>
                                         </div>
