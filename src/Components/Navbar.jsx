@@ -15,11 +15,11 @@ const Navbar = () => {
                 <div className="flex-1 justify-between">
                     <a href='/' className=" text-orange-500 normal-case text-xl"> <img className='w-1/4' src="https://i.ibb.co/gwV6FjL/1553451971650-removebg-preview.png" alt="" /> </a>
                     <div>
-                        <div className="flex">
+                        <div className="flex items-center gap-5">
                             <Link to="/partialDelivery" className='lg:hidden'>
                                 <div className="indicator">
-                                    <span className="indicator-item badge badge-secondary">{partialDeliveries.length}</span>
-                                    <button className="btn">PD Jobs</button>
+                                    <span className="indicator-item badge badge-secondary ">{partialDeliveries.length}</span>
+                                    <button className="btn btn-sm">PD Jobs</button>
                                 </div>
                             </Link>
                             <Menu as="div" className="relative inline-block text-left z-50 lg:hidden">
