@@ -17,10 +17,10 @@ const Navbar = () => {
                     <div>
                         <div className="flex">
                             <Link to="/partialDelivery" className='lg:hidden'>
-                                <button className="btn btn-sm mx-2">
-                                <div className="indicator-item badge badge-primary">{partialDeliveries.length}</div>
-                                    <span className='text-xs'>PD Jobs</span>
-                                </button>
+                                <div className="indicator">
+                                    <span className="indicator-item badge badge-secondary">{partialDeliveries.length}</span>
+                                    <button className="btn">PD Jobs</button>
+                                </div>
                             </Link>
                             <Menu as="div" className="relative inline-block text-left z-50 lg:hidden">
                                 <div>
