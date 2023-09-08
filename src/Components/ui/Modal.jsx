@@ -3,12 +3,18 @@ import axios from 'axios';
 import { Fragment } from 'react'
 import Swal from 'sweetalert2';
 
-export default function PD_Modal({ isOpen, setIsOpen, selectedJobForPartialDelivery, setSelectedJobForPartialDelivery, partialDeliveryQty, setPartialDeliveryQty }) {
+export default function PD_Modal({
+  isOpen,
+  setIsOpen,
+  selectedJobForPartialDelivery,
+  setSelectedJobForPartialDelivery,
+  partialDeliveryQty,
+  setPartialDeliveryQty }) {
   function closeModal() {
     setIsOpen(false)
   }
 
-  
+
   const handlePartialDelivery = async () => {
 
     if (selectedJobForPartialDelivery && partialDeliveryQty > 0) {
@@ -17,7 +23,7 @@ export default function PD_Modal({ isOpen, setIsOpen, selectedJobForPartialDeliv
           `https://delivery-report-yunusco-back-end.vercel.app/updatePartialDelivery/${selectedJobForPartialDelivery._id}`,
           { partialDeliveryQty }
         );
-          
+
         // Update the job in your state or context with the response data
         setSelectedJobForPartialDelivery(null);
 
@@ -101,7 +107,7 @@ export default function PD_Modal({ isOpen, setIsOpen, selectedJobForPartialDeliv
                     >
                       Cancel
                     </button>
-                    
+
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

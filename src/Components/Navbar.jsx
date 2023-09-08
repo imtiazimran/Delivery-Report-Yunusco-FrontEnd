@@ -115,11 +115,11 @@ const Navbar = () => {
                                 </Transition>
                             </Menu>
                             <div className='hidden lg:block'>
-                                <Link  to="/partialDelivery">
-                                    <button className="btn btn-sm">
-                                        Partial Jobs
-                                        <div className="badge badge-secondary badge-sm">{partialDeliveries.length}</div>
-                                    </button>
+                                <Link to="/partialDelivery">
+                                    <div className="indicator">
+                                        <span className="indicator-item badge badge-secondary">{partialDeliveries.length}</span>
+                                        <button className="btn">Partial Jobs</button>
+                                    </div>
                                 </Link>
                                 <Link className='mx-3 bg-blue-500 text-white p-1 rounded' to={"/addJobs"}>Add Job</Link>
                                 <Link className='mx-3 bg-blue-500 text-white p-1 rounded' to={"/previousDelivery"}>Previous Job</Link>
