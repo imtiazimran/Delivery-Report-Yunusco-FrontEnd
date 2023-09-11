@@ -119,7 +119,7 @@ const JobProvider = ({ children }) => {
                     Swal.fire({
                         icon: 'success',
                         title: 'Job Deleted',
-                        text: 'The job has been successfully Deleted from On Proccessing delivery.',
+                        text: 'The job has been successfully Deleted from Total delivery.',
                     });
                 } catch (error) {
                     if (error) {
