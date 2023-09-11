@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { JobContext } from './Context/JobProvider';
 
 const PreviousDelivery = () => {
-    const { prevJobs, isLoading } = useContext(JobContext);
+    const { prevJobs, isLoading, handleDeleteDeliveredJob } = useContext(JobContext);
 
     const currentDate = new Date();
 
@@ -53,7 +53,7 @@ const PreviousDelivery = () => {
                             </tr>
                         ) : (
                             yesterdayDeliveries.map((job, i) => (
-                                <tr key={job._id} className="hover text-center">
+                                <tr onDoubleClick={()=>handleDeleteDeliveredJob(job)} key={job._id} className="hover text-center">
                                     <th>{i + 1}</th>
                                     <td className='capitalize'>{job.customar}</td>
                                     <td>JBH00{job.po}</td>
@@ -64,11 +64,11 @@ const PreviousDelivery = () => {
                         )}
                     </tbody>
                     <tfoot>
-                        <tr className='text-center'>
+                        <tr className='text-center bg-yellow-500'>
                             <th>#</th>
                             <th></th>
-                            <th className='text-md text-yellow-600'>Total Quantity</th>
-                            <th className='text-md text-yellow-600'>{totalPrevDelivery.toLocaleString('en-IN')} Piece</th>
+                            <th className='text-xl text-white'>Total Quantity</th>
+                            <th className='text-xl text-white '>{totalPrevDelivery.toLocaleString('en-IN')} Pcs</th>
                             <th></th>
                         </tr>
                     </tfoot>

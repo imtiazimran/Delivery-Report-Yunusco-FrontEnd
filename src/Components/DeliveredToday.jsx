@@ -3,7 +3,7 @@ import { JobContext } from './Context/JobProvider';
 import { Link } from 'react-router-dom';
 
 const DeliveredToday = () => {
-    const { prevJobs, isLoading } = useContext(JobContext);
+    const { prevJobs, isLoading, handleDeleteDeliveredJob } = useContext(JobContext);
     // console.log(prevJobs)
     const currentDate = new Date();
 
@@ -59,22 +59,22 @@ const DeliveredToday = () => {
                         ) 
                         : (
                             todaysDeliveries.map((job, i) => (
-                                <tr key={job._id} className="hover text-center ">
+                                <tr onDoubleClick={()=>handleDeleteDeliveredJob(job)} key={job._id} className="hover text-center ">
                                     <th>{i + 1}</th>
                                     <td className='capitalize'>{job.customar}</td>
                                     <td>JBH00{job.po}</td>
-                                    <td>{job.qty}</td>
+                                    <td>{job.qty.toLocaleString('en-IN')}</td>
                                     <td className='uppercase'>{job.label}</td>
                                 </tr>
                             ))
                         )}
                     </tbody>
                     <tfoot>
-                        <tr className='text-center'>
+                        <tr className='text-center bg-yellow-600 rounded'>
                             <th>#</th>
                             <th></th>
-                            <th className='text-md text-yellow-600'>Total Quantity</th>
-                            <th className='text-md text-yellow-600'>{totalPrevDelivery.toLocaleString('en-IN')} Piece</th>
+                            <th className='text-xl text-white'>Total Quantity</th>
+                            <th className='text-xl text-white'>{totalPrevDelivery.toLocaleString('en-IN')} Pcs</th>
                             <th></th>
                         </tr>
                     </tfoot>

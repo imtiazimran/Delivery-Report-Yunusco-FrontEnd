@@ -65,7 +65,7 @@ const PartialJobs = () => {
                             </tr>
                         ) : (
                             partialDeliveries.map((job, i) => (
-                                <tr key={job._id} className="hover text-center">
+                                <tr onDoubleClick={()=>handleDelete(job)} key={job._id} className="hover text-center">
                                     <th>{i + 1}</th>
                                     <td className='capitalize'>{job.customar}</td>
                                     <td>JBH00{job.po}</td>

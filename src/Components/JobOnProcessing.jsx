@@ -49,20 +49,24 @@ const JobOnProcessing = () => {
                 setPartialDeliveryQty={setPartialDeliveryQty}
             />
 
-            <div className="rounded-xl text-2xl py-3 bg-sky-700 text-white text-center"><span className="loading loading-ring loading-xs"></span> Jobs On Processing <span className="loading loading-ring loading-xs"></span></div>
+            {
+                onProccess.length === 0 || <div className="rounded-xl text-2xl py-3 bg-sky-700 text-white text-center"><span className="loading loading-ring loading-xs"></span> Jobs On Processing <span className="loading loading-ring loading-xs"></span></div>
+            }
             <div className="overflow-x-auto">
                 <table className="table">
                     {/* head */}
-                    <thead>
-                        <tr className="text-center">
-                            <th>#</th>
-                            <th>Customar</th>
-                            <th>Job</th>
-                            <th>Quantity</th>
-                            <th>Label Name</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
+                    {
+                        onProccess.length === 0 || <thead>
+                            <tr className="text-center">
+                                <th>#</th>
+                                <th>Customar</th>
+                                <th>Job</th>
+                                <th>Quantity</th>
+                                <th>Label Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                    }
                     <tbody>
                         {isLoading ? (
                             <tr>

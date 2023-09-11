@@ -4,7 +4,11 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 
 const TotalDelivery = () => {
-    const { prevJobs, isLoading } = useContext(JobContext);
+    const {
+        prevJobs,
+        isLoading,
+        handleDeleteDeliveredJob
+    } = useContext(JobContext);
     const editDateDialogRef = useRef(null);
     const [searchQuery, setSearchQuery] = useState("")
 
@@ -90,7 +94,7 @@ const TotalDelivery = () => {
             <div className="text-2xl py-3 bg-sky-700 text-white text-center">Total Delivery  </div>
             <div className="form-control">
                 <div className="input-group input-group-sm justify-center my-5">
-                    <input  onChange={(e) => setSearchQuery(e.target.value)} type="text" placeholder="Search…" className="input input-sm input-bordered" />
+                    <input onChange={(e) => setSearchQuery(e.target.value)} type="text" placeholder="Search…" className="input input-sm input-bordered" />
                     <button className="btn btn-sm btn-square">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                     </button>
@@ -118,7 +122,8 @@ const TotalDelivery = () => {
                             </tr>
                         ) : (
                             filteredJobs.map((job, i) => (
-                                <tr key={job._id} className="hover text-center ">
+                                <tr onDoubleClick={()=>
+                                    handleDeleteDeliveredJob(job)} key={job._id} className="hover text-center ">
                                     <th>{i + 1}</th>
                                     <td className='capitalize'>{job.customar}</td>
                                     <td>JBH00{job.po}</td>
@@ -139,11 +144,12 @@ const TotalDelivery = () => {
                         )}
                     </tbody>
                     <tfoot>
-                        <tr className='text-center'>
+                        <tr className='text-center bg-yellow-600'>
                             <th>#</th>
                             <th></th>
-                            <th className='text-md text-yellow-600'>Total Quantity</th>
-                            <th className='text-md text-yellow-600'>{totalPrevDelivery.toLocaleString('en-IN')} Piece</th>
+                            <th className='text-xl text-white'>Total Quantity</th>
+                            <th className='text-xl text-white'>{totalPrevDelivery.toLocaleString('en-IN')} Pcs</th>
+                            <th></th>
                             <th></th>
                         </tr>
                     </tfoot>
