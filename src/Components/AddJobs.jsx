@@ -1,9 +1,14 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 
-const AddJobs = () => {
+const AddJobs = ({ isOpen, setIsOpen }) => {
     const [isLoading, setIsloading] = useState(false)
+
+
+
+
+
     const handleSubmit = e => {
         setIsloading(true)
         e.preventDefault()
@@ -20,6 +25,7 @@ const AddJobs = () => {
         axios.post('https://delivery-report-yunusco-back-end.vercel.app/addJobs', addJobs)
             .then(res => {
                 setIsloading(false)
+                setIsOpen(false)
                 if (res.data.insertedId) {
                     Swal.fire({
                         position: 'top-center',
@@ -46,36 +52,92 @@ const AddJobs = () => {
             });
     }
 
+
+
+
+    const handleCloseModal = () => {
+        setIsOpen(false)
+    };
+
+    if (isOpen) {
+        document.getElementById('addJob').showModal();
+    } else {
+        document.getElementById('addJob')?.close();
+    }
+
     return (
-        <form onSubmit={handleSubmit} className='lg:w-2/4 mx-auto py-10 w-3/4'>
-            <div className="form-control my-5">
-                <label className="input-group input-group-vertical">
-                    <span>Customar</span>
-                    <input name='customar' type="text" placeholder="Exp: Apex Textile" className="input input-bordered capitalize" />
-                </label>
-            </div>
-            <div className="form-control my-5">
-                <label className="input-group input-group-vertical">
-                    <span>Job No</span>
-                    <input name='po' type="number" placeholder="Exp: 342050" className="input input-bordered " />
-                </label>
-            </div>
-            <div className="form-control my-5">
-                <label className="input-group input-group-vertical">
-                    <span>Quantity</span>
-                    <input name='qty' type="number" placeholder="Quantity" className="input input-bordered " />
-                </label>
-            </div>
-            <div className="form-control my-5">
-                <label className="input-group input-group-vertical">
-                    <span>Label Name</span>
-                    <input name='label' type="text" placeholder="Exp: HM14149" className="input input-bordered uppercase" />
-                </label>
-            </div>
-            <button disabled={isLoading} type="submit" className='btn btn-outline btn-info btn-sm'> {
-                isLoading ? <span className="loading loading-infinity loading-md"></span> : <span>Submit</span>
-            }</button>
-        </form>
+
+        <div>
+            <dialog
+                id="addJob"
+                className="modal"
+            >
+                <div className="modal-box">
+
+                    <button onClick={handleCloseModal} className="btn btn-sm btn-outline absolute right-2 top-2">Close</button>
+                    <form onSubmit={handleSubmit} className='lg:w-3/4 mx-auto py-10 w-3/4'>
+
+                        <div className="flex flex-col mb-5">
+                            <label htmlFor="title" className="mb-2">
+                                Customar
+                            </label>
+                            <input
+                                required
+                                className="w-full rounded-md"
+                                type="text"
+                                id="title"
+                                name='customar'
+                                placeholder="Exp: Apex Textile"
+                            />
+                        </div>
+                        <div className="flex flex-col mb-5">
+                            <label htmlFor="title" className="mb-2">
+                                Job No
+                            </label>
+                            <input
+                                required
+                                className="w-full rounded-md"
+                                type="number"
+                                id="title"
+                                name='po'
+                                placeholder="Exp: 342050"
+                            />
+                        </div>
+
+                        <div className="flex flex-col mb-5">
+                            <label htmlFor="title" className="mb-2">
+                                Quantity
+                            </label>
+                            <input
+                                required
+                                className="w-full rounded-md"
+                                type="number"
+                                id="title"
+                                name='qty'
+                                placeholder="Quantity"
+                            />
+                        </div>
+                        <div className="flex flex-col mb-5">
+                            <label htmlFor="title" className="mb-2">
+                                Label Name
+                            </label>
+                            <input
+                                required
+                                className="w-full rounded-md uppercase"
+                                type="text"
+                                id="title"
+                                name='label'
+                                placeholder="Exp: HM14149"
+                            />
+                        </div>
+
+                        <button disabled={isLoading} type="submit" className='btn btn-outline btn-info btn-sm'> {
+                            isLoading ? <span className="loading loading-infinity loading-md"></span> : <span>Submit</span>
+                        }</button>
+                    </form>
+                </div>
+            </dialog>
+        </div>
     );
 };
 

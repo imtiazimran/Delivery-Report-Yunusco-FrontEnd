@@ -1,19 +1,28 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { JobContext } from './Context/JobProvider';
+import AddJobs from './AddJobs';
 
 const Navbar = () => {
     const { jobs } = useContext(JobContext)
 
+    const [isOpen, setIsOpen] = useState(false)
+
+    const handleAddJobModal = () => {
+        setIsOpen(!isOpen)
+        console.log(isOpen)
+    }
+
     const partialDeliveries = jobs.filter((item) => item.hasOwnProperty("deliveryType"))
     return (
         <div>
+        <AddJobs isOpen={isOpen} setIsOpen={setIsOpen}/>
             <div className="navbar ">
                 <div className="flex-1 justify-between">
-                    <a href='/' className=" text-orange-500 normal-case text-xl"> <img className='w-1/4' src="https://i.ibb.co/gwV6FjL/1553451971650-removebg-preview.png" alt="" /> </a>
+                    <Link href='/' className=" text-orange-500 normal-case text-xl"> <img className='w-1/4' src="https://i.ibb.co/gwV6FjL/1553451971650-removebg-preview.png" alt="" /> </Link>
                     <div>
                         <div className="flex items-center gap-5">
                             <Link to="/partialDelivery" className='lg:hidden'>
@@ -47,8 +56,8 @@ const Navbar = () => {
                                         <div className="px-1 py-1 ">
                                             <Menu.Item>
                                                 {({ active }) => (
-                                                    <Link
-                                                        to={"/addJobs"}
+                                                    <button
+                                                        onClick={()=> handleAddJobModal}
                                                         className={`btn ${active ? 'bg-violet-500 text-white' : 'text-gray-900'
                                                             } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                                     >
@@ -64,7 +73,7 @@ const Navbar = () => {
                                                             />
                                                         )}
                                                         Add Job
-                                                    </Link>
+                                                    </button>
                                                 )}
                                             </Menu.Item>
                                             <Menu.Item>
@@ -124,7 +133,7 @@ const Navbar = () => {
                                         <button className="btn">Partial Jobs</button>
                                     </div>
                                 </Link>
-                                <Link className='mx-3 bg-blue-500 text-white p-1 rounded' to={"/addJobs"}>Add Job</Link>
+                                <button onClick={handleAddJobModal} className='mx-3 bg-blue-500 text-white p-1 rounded'>Add Job</button>
                                 <Link className='mx-3 bg-blue-500 text-white p-1 rounded' to={"/previousDelivery"}>Previous Job</Link>
                                 <Link className='mx-3 bg-blue-500 text-white p-1 rounded' to={"/totalDelivery"}>Total Delivery</Link>
                             </div>

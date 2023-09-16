@@ -28,19 +28,24 @@ const DeliveredToday = () => {
     }, 0);
     return (
         <div>
-            <div className="text-2xl rounded-xl py-3 bg-green-700 text-white text-center"> {todaysDeliveries.length} Jobs Delivered Today  </div>
+            {
+                todaysDeliveries.length === 0 || <div className="text-2xl rounded-xl py-3 bg-green-700 text-white text-center"> {todaysDeliveries.length} Jobs Delivered Today  </div>
+            }
+
             <div className="overflow-x-auto">
                 <table className="table">
                     {/* head */}
-                    <thead>
-                        <tr className="text-center">
-                            <th>#</th>
-                            <th>Customar</th>
-                            <th>Job</th>
-                            <th>Quantity</th>
-                            <th>Label Name</th>
-                        </tr>
-                    </thead>
+                    {
+                        todaysDeliveries.length === 0 || <thead>
+                            <tr className="text-center">
+                                <th>#</th>
+                                <th>Customar</th>
+                                <th>Job</th>
+                                <th>Quantity</th>
+                                <th>Label Name</th>
+                            </tr>
+                        </thead>
+                    }
                     <tbody>
                         {isLoading ? (
                             <tr>
@@ -56,28 +61,31 @@ const DeliveredToday = () => {
                                     </p>
                                 </td>
                             </tr>
-                        ) 
-                        : (
-                            todaysDeliveries.map((job, i) => (
-                                <tr onDoubleClick={()=>handleDeleteDeliveredJob(job)} key={job._id} className="hover text-center ">
-                                    <th>{i + 1}</th>
-                                    <td className='capitalize'>{job.customar}</td>
-                                    <td>JBH00{job.po}</td>
-                                    <td>{job.qty.toLocaleString('en-IN')}</td>
-                                    <td className='uppercase'>{job.label}</td>
-                                </tr>
-                            ))
-                        )}
+                        )
+                            : (
+                                todaysDeliveries.map((job, i) => (
+                                    <tr onDoubleClick={() => handleDeleteDeliveredJob(job)} key={job._id} className="hover text-center ">
+                                        <th>{i + 1}</th>
+                                        <td className='capitalize'>{job.customar}</td>
+                                        <td>JBH00{job.po}</td>
+                                        <td>{job.qty.toLocaleString('en-IN')}</td>
+                                        <td className='uppercase'>{job.label}</td>
+                                    </tr>
+                                ))
+                            )}
                     </tbody>
-                    <tfoot>
-                        <tr className='text-center bg-yellow-600 rounded'>
-                            <th>#</th>
-                            <th></th>
-                            <th className='text-xl text-white'>Total Quantity</th>
-                            <th className='text-xl text-white'>{totalPrevDelivery.toLocaleString('en-IN')} Pcs</th>
-                            <th></th>
-                        </tr>
-                    </tfoot>
+                    {
+                        todaysDeliveries.length === 0 || <tfoot>
+                            <tr className='text-center bg-yellow-600 rounded'>
+                                <th>#</th>
+                                <th></th>
+                                <th className='text-xl text-white'>Total Quantity</th>
+                                <th className='text-xl text-white'>{totalPrevDelivery.toLocaleString('en-IN')} Pcs</th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    }
+
                 </table>
             </div>
         </div>

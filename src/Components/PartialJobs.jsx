@@ -96,11 +96,12 @@ const PartialJobs = () => {
 
                                     </td>
                                 </tr>
-                            ) : <tr className='text-center'>
+                            ) : <tr className='text-center bg-yellow-600'>
                                 <th>#</th>
                                 <th></th>
-                                <th className='text-md text-yellow-600'>Total Quantity</th>
-                                <th className='text-md text-yellow-600'>{partialQty.toLocaleString('en-IN')} Piece</th>
+                                <th className='text-xl text-white'>Total Quantity</th>
+                                <th className='text-xl text-white'>{partialQty.toLocaleString('en-IN')} Piece</th>
+                                <th></th>
                                 <th></th>
                             </tr>
                         }

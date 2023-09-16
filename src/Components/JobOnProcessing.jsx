@@ -85,10 +85,10 @@ const JobOnProcessing = () => {
                             onProccess.map((job, i) => (
                                 <tr key={job._id} className="hover text-center">
                                     <th>{i + 1}</th>
-                                    <td className='capitalize'>{job.customar}</td>
-                                    <td>JBH00{job.po}</td>
-                                    <td>{job.qty.toLocaleString('en-IN')}</td>
-                                    <td className='uppercase'>{job.label}</td>
+                                    <td className='capitalize'>{job?.customar}</td>
+                                    <td>JBH00{job?.po}</td>
+                                    <td>{job?.qty.toLocaleString('en-IN')}</td>
+                                    <td className='uppercase'>{job?.label}</td>
                                     <td>
                                         <button onClick={() => handleDeliveredJob(job)} className="btn-md btn-success btn-outline rounded">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -119,11 +119,12 @@ const JobOnProcessing = () => {
 
                                     </td>
                                 </tr>
-                            ) : <tr className='text-center'>
+                            ) : <tr className='text-center bg-yellow-600'>
                                 <th>#</th>
                                 <th></th>
-                                <th className='text-md text-yellow-600'>Total Quantity</th>
-                                <th className='text-md text-yellow-600'>{currentDeliveryQty.toLocaleString('en-IN')} Piece</th>
+                                <th className='text-xl text-white'>Total Quantity</th>
+                                <th className='text-xl text-white'>{currentDeliveryQty.toLocaleString('en-IN')} Piece</th>
+                                <th></th>
                                 <th></th>
                             </tr>
                         }

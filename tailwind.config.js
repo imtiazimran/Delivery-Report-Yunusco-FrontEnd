@@ -8,5 +8,8 @@ export default {
     themes: ["light", "dark", "cupcake"],
   },
   // eslint-disable-next-line no-undef
-  plugins: [require("daisyui")],
+  plugins: [
+    require("daisyui"),
+    require('@tailwindcss/forms')
+  ],
 }

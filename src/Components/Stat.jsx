@@ -8,8 +8,10 @@ const Stat = () => {
     // --------------------Current Delivery Calculation--------------------------
 
     const currentJobs = jobs.filter((item) => !item.hasOwnProperty("deliveryType"))
+    const balanceJobs = jobs.filter((item) => item.hasOwnProperty("deliveryType"))
 
     const currentDeliveryQty = currentJobs.reduce((accumolator, currentJob) => accumolator + parseInt(currentJob.qty), 0)
+    const balanceQty = balanceJobs.reduce((accumolator, currentJob) => accumolator + parseInt(currentJob.qty), 0)
 
     // ------------------Previous Delivery--------------------------------
     const currentDate = new Date();
@@ -58,15 +60,21 @@ const Stat = () => {
                         <div className="stat-desc">{yesterdayDate.toLocaleDateString()}</div>
                     </div>
                 </Link>
-                    <div className="stat text-center">
-                        <div className="stat-title">On Going</div>
-                        <div className="stat-value">{currentDeliveryQty.toLocaleString("en-IN")}</div>
-                        <div className="stat-desc">↗︎ </div>
-                    </div>
+                <div className="stat text-center">
+                    <div className="stat-title">On Going</div>
+                    <div className="stat-value">{currentDeliveryQty.toLocaleString("en-IN")}</div>
+                    <div className="stat-desc">↗︎ </div>
+                </div>
                 <Link to={"/totalDelivery"}>
                     <div className="stat text-center">
                         <div className="stat-title">Total Delivery</div>
                         <div className="stat-value">{totalDelivery.toLocaleString("en-IN")}</div>
+                    </div>
+                </Link>
+                <Link to={"/partialDelivery"}>
+                    <div className="stat text-center">
+                        <div className="stat-title">Balance Quantity</div>
+                        <div className='stat-value'>{balanceQty.toLocaleString("en-IN")}</div>
                     </div>
                 </Link>
 

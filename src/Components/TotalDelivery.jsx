@@ -77,11 +77,11 @@ const TotalDelivery = () => {
     // console.log(selectedJobForUpdateData)
 
     const filteredJobs = prevJobs.filter((job) =>
-        job.po.toLowerCase().includes(searchQuery.toLowerCase())
+        job.po.toLowerCase().includes(searchQuery.toLowerCase()) || job.customar.toLowerCase().includes(searchQuery.toLocaleLowerCase())
     );
 
     // Calculate total previous delivery quantity
-    const totalPrevDelivery = prevJobs.reduce((accumulator, currentJob) => {
+    const totalPrevDelivery = filteredJobs.reduce((accumulator, currentJob) => {
         const qtyAsNumber = parseInt(currentJob.qty); // Convert the string to an integer
         if (!isNaN(qtyAsNumber)) {
             return accumulator + qtyAsNumber;
