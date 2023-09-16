@@ -12,8 +12,7 @@ const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false)
 
     const handleAddJobModal = () => {
-        setIsOpen(!isOpen)
-        console.log(isOpen)
+        setIsOpen(true)
     }
 
     const partialDeliveries = jobs.filter((item) => item.hasOwnProperty("deliveryType"))
@@ -57,7 +56,7 @@ const Navbar = () => {
                                             <Menu.Item>
                                                 {({ active }) => (
                                                     <button
-                                                        onClick={()=> handleAddJobModal}
+                                                        onClick={handleAddJobModal}
                                                         className={`btn ${active ? 'bg-violet-500 text-white' : 'text-gray-900'
                                                             } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                                     >
