@@ -39,6 +39,7 @@ const AddJobs = ({ isOpen, setIsOpen }) => {
             })
             .catch(error => {
                 setIsloading(false)
+                setIsOpen(false)
                 if (error.response && error.response.status === 400) {
                     Swal.fire({
                         position: 'top-center',
