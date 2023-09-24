@@ -1,14 +1,30 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { JobContext } from './Context/JobProvider';
 
 const PreviousDelivery = () => {
     const { prevJobs, isLoading, handleDeleteDeliveredJob } = useContext(JobContext);
-
+    const [reduceADay, setReduceADay] = useState(1)
     const currentDate = new Date();
+
+
 
     // Calculate yesterday's date
     const yesterdayDate = new Date(currentDate);
-    yesterdayDate.setDate(currentDate.getDate() - 1);
+    yesterdayDate.setDate(currentDate.getDate() - reduceADay);
+
+    const preDalivery = () => {
+        console.log("function hitting:", reduceADay);
+        setReduceADay(reduceADay + 1)
+    }
+
+    const forwardDelivery = () => {
+        // Disable the forward button when date is equal to yesterdayDate
+        if (isSameDate(currentDate, yesterdayDate)) {
+            return;
+        }
+        setReduceADay(reduceADay - 1);
+    }
+
 
 
     // Filter deliveries for yesterday's date
@@ -31,7 +47,19 @@ const PreviousDelivery = () => {
 
     return (
         <div>
-            <div className="text-2xl rounded-xl py-3 bg-violet-700 text-white text-center">Previous Delivery {yesterdayDate.toLocaleDateString()} </div>
+            <div className="text-2xl rounded-xl py-3 bg-violet-700 text-white text-center flex justify-center items-center gap-3">
+                <span onClick={preDalivery} className='cursor-pointer'>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                    </svg>
+                </span>
+                <span> Delivery Date {yesterdayDate.toLocaleDateString()}</span>
+                <span onClick={forwardDelivery} className={`cursor-pointer ${isSameDate(currentDate, yesterdayDate) ? 'disabled' : ''}`}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                    </svg>
+                </span>
+            </div>
             <div className="overflow-x-auto">
                 <table className="table">
                     {/* head */}
@@ -53,7 +81,7 @@ const PreviousDelivery = () => {
                             </tr>
                         ) : (
                             yesterdayDeliveries.map((job, i) => (
-                                <tr onDoubleClick={()=>handleDeleteDeliveredJob(job)} key={job._id} className="hover text-center">
+                                <tr onDoubleClick={() => handleDeleteDeliveredJob(job)} key={job._id} className="hover text-center">
                                     <th>{i + 1}</th>
                                     <td className='capitalize'>{job.customar}</td>
                                     <td>JBH00{job.po}</td>
