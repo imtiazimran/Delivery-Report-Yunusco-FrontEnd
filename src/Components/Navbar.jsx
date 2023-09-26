@@ -25,11 +25,12 @@ const Navbar = () => {
         logOut()
             .then(() => {
                 Swal.fire({
-                icon: 'success',
-                title: "Log Out Success",
-                showConfirmButton: "OK",
-                timer: 3000,
-            });
+                    icon: 'success',
+                    title: "Log Out Success",
+                    showConfirmButton: "OK",
+                    timer: 3000,
+                });
+                window.location.reload();
             }).catch((error) => {
                 console.log(error);
             });
@@ -181,10 +182,15 @@ const Navbar = () => {
                                         <li>
                                             <a className="justify-between">
                                                 Profile
-                                                <span className="badge">New</span>
+                                                <span className="badge">Comming soon</span>
                                             </a>
                                         </li>
-                                        <li><a>Settings</a></li>
+                                        <li>
+                                            <a className="justify-between">
+                                                Setting
+                                                <span className="badge">Comming soon</span>
+                                            </a>
+                                        </li>
                                         <li><button onClick={handleLogOut}>Logout</button></li>
                                     </ul>
                                 </div>

@@ -2,6 +2,10 @@ import React, { useContext } from 'react';
 import { JobContext } from './Context/JobProvider';
 import { Link } from 'react-router-dom';
 
+import EmptyAmimation from "../assets/blank.json"
+import Loader from "../assets/loader2.json"
+import Lottie from "lottie-react";
+
 const DeliveredToday = () => {
     const { prevJobs, isLoading, handleDeleteDeliveredJob } = useContext(JobContext);
     // console.log(prevJobs)
@@ -50,15 +54,14 @@ const DeliveredToday = () => {
                         {isLoading ? (
                             <tr>
                                 <td colSpan="5" className="text-center">
-                                    <span className="loading loading-bars loading-lg"></span>
+                                    <Lottie className="lg:w-1/4 mx-auto" animationData={Loader} />
                                 </td>
                             </tr>
                         ) : todaysDeliveries.length === 0 ? (
                             <tr>
                                 <td colSpan="7" className='text-center'>
-                                    <p>
-                                        No Job Delivered Today <br /> <br /> <Link className='btn-link' to={"/previousDelivery"}>View Previous Delivery</Link>
-                                    </p>
+                                    <span className="lg:text-2xl text-center block font-semibold capitalize lg:bg-black bg-opacity-5 lg:w-1/4 mx-auto lg:absolute top-2/4 z-50">No Job delivered today</span>
+                                    <Lottie className="lg:w-1/4 mx-auto" animationData={EmptyAmimation} />
                                 </td>
                             </tr>
                         )

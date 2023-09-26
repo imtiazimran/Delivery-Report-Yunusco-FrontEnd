@@ -2,9 +2,10 @@ import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { AuthContext } from '../Context/AuthProvider';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { JobContext } from '../Context/JobProvider';
+import GoogleLoginButton from './GoogleLogin';
 
 const Register = () => {
     const { signUp } = useContext(AuthContext)
@@ -111,11 +112,13 @@ const Register = () => {
                                     )}
                                 </div>
 
-                                <div className="form-control mt-6">
+                                <div className="form-control">
                                     <button className="btn btn-primary">Sign Up</button>
                                 </div>
                             </div>
                         </form>
+                        <GoogleLoginButton/>
+                        <Link className="p-2" to="/login">Already Have Account? <span className='text-blue-500'>Login!</span></Link>
                     </div>
                 </div>
             </div>

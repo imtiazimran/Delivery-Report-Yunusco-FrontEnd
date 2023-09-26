@@ -1,6 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { JobContext } from './Context/JobProvider';
-
+import EmptyBox from "../assets/EmptyBox.json"
+import Loader from "../assets/loader2.json"
+import Lottie from "lottie-react";
 const PreviousDelivery = () => {
     const { prevJobs, isLoading, handleDeleteDeliveredJob } = useContext(JobContext);
     const [reduceADay, setReduceADay] = useState(1)
@@ -63,20 +65,30 @@ const PreviousDelivery = () => {
             <div className="overflow-x-auto">
                 <table className="table">
                     {/* head */}
-                    <thead>
-                        <tr className="text-center">
-                            <th>#</th>
-                            <th>Customar</th>
-                            <th>Job</th>
-                            <th>Quantity</th>
-                            <th>Label Name</th>
-                        </tr>
-                    </thead>
+                    {
+                        yesterdayDeliveries.length === 0 || <thead>
+                            <tr className="text-center">
+                                <th>#</th>
+                                <th>Customar</th>
+                                <th>Job</th>
+                                <th>Quantity</th>
+                                <th>Label Name</th>
+                            </tr>
+                        </thead>
+                    }
+
                     <tbody>
                         {isLoading ? (
                             <tr>
                                 <td colSpan="5" className="text-center">
-                                    <span className="loading loading-bars loading-lg"></span>
+                                    <Lottie className="w-1/4 mx-auto" animationData={Loader} />
+                                </td>
+                            </tr>
+                        ) : yesterdayDeliveries.length === 0 ? (
+                            <tr>
+                                <td colSpan="7" className='text-center'>
+                                    <span className="lg:text-2xl text-center block font-semibold capitalize  lg:w-1/4 mx-auto z-50">No Job delivered on {yesterdayDate.toLocaleDateString()}</span>
+                                    <Lottie className="w-3/4 lg:w-2/5 mx-auto" animationData={EmptyBox} />
                                 </td>
                             </tr>
                         ) : (
@@ -91,15 +103,18 @@ const PreviousDelivery = () => {
                             ))
                         )}
                     </tbody>
-                    <tfoot>
-                        <tr className='text-center bg-yellow-500'>
-                            <th>#</th>
-                            <th></th>
-                            <th className='text-xl text-white'>Total Quantity</th>
-                            <th className='text-xl text-white '>{totalPrevDelivery.toLocaleString('en-IN')} Pcs</th>
-                            <th></th>
-                        </tr>
-                    </tfoot>
+                   {
+                    yesterdayDeliveries.length === 0 || <tfoot>
+                    <tr className='text-center bg-yellow-500'>
+                        <th>#</th>
+                        <th></th>
+                        <th className='text-xl text-white'>Total Quantity</th>
+                        <th className='text-xl text-white '>{totalPrevDelivery.toLocaleString('en-IN')} Pcs</th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+                   }
+                    
                 </table>
             </div>
         </div>

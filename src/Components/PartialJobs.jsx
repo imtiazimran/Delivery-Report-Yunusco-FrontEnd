@@ -2,6 +2,9 @@ import React, { useContext } from 'react';
 import { JobContext } from './Context/JobProvider';
 import PD_Modal from './ui/Modal';
 
+import NothingFound from "../assets/nothingFound.json"
+import Loader from "../assets/loader2.json"
+import Lottie from "lottie-react";
 const PartialJobs = () => {
     const { jobs,
         isLoading,
@@ -40,32 +43,35 @@ const PartialJobs = () => {
             <div className="overflow-x-auto">
                 <table className="table">
                     {/* head */}
-                    <thead>
-                        <tr className="text-center">
-                            <th>#</th>
-                            <th>Customar</th>
-                            <th>Job</th>
-                            <th>Quantity</th>
-                            <th>Label Name</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
+                    {
+                        partialDeliveries.length === 0 || <thead>
+                            <tr className="text-center">
+                                <th>#</th>
+                                <th>Customar</th>
+                                <th>Job</th>
+                                <th>Quantity</th>
+                                <th>Label Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                    }
                     <tbody>
                         {isLoading ? (
                             <tr>
                                 <td colSpan="7" className="text-center">
-                                    <span className="loading loading-bars loading-lg"></span>
+                                    <Lottie className="lg:w-1/4 mx-auto" animationData={Loader} />
                                 </td>
                             </tr>
                         ) : partialDeliveries.length === 0 ? (
                             <tr>
                                 <td colSpan="7" className="text-center">
-                                    No Partial Jobs
+                                    <span className="lg:text-2xl text-center block font-semibold capitalize bg-opacity-5 lg:w-1/4 mx-auto lg:absolute top-2/4 z-50">No Partial Jobs</span>
+                                    <Lottie className="lg:w-1/4 mx-auto" animationData={NothingFound} />
                                 </td>
                             </tr>
                         ) : (
                             partialDeliveries.map((job, i) => (
-                                <tr onDoubleClick={()=>handleDelete(job)} key={job._id} className="hover text-center">
+                                <tr onDoubleClick={() => handleDelete(job)} key={job._id} className="hover text-center">
                                     <th>{i + 1}</th>
                                     <td className='capitalize'>{job.customar}</td>
                                     <td>JBH00{job.po}</td>

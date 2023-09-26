@@ -1,11 +1,11 @@
 
 
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { JobContext } from "./Context/JobProvider";
-import axios from "axios";
-import Swal from "sweetalert2";
 import PD_Modal from "./ui/Modal";
-
+import EmptyAmimation from "../assets/Empty-Animation.json"
+import Loader from "../assets/loader2.json"
+import Lottie from "lottie-react";
 const JobOnProcessing = () => {
 
     const { jobs,
@@ -71,15 +71,15 @@ const JobOnProcessing = () => {
                         {isLoading ? (
                             <tr>
                                 <td colSpan="7" className="text-center">
-                                    <span className="loading loading-bars loading-lg"></span>
+                                <Lottie className="lg:w-1/4 mx-auto" animationData={Loader}/>
                                 </td>
                             </tr>
                         ) : onProccess.length === 0 ? (
-                            <tr>
-                                <td colSpan="7" className="text-center">
-                                    No jobs Is in Process <br />
-                                    Please add some jobs first.
-                                </td>
+                            <tr className="mt-5">
+                                <span className="lg:text-2xl text-center block font-semibold z-50">No Job is in Proccessing <br />
+                                    Please Add some Jobs First
+                                </span>
+                                <Lottie className="lg:w-2/4 mx-auto" animationData={EmptyAmimation} />
                             </tr>
                         ) : (
                             onProccess.map((job, i) => (

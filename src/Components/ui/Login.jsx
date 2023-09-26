@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { AuthContext } from '../Context/AuthProvider';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import loginImg from "/login.svg"
+import GoogleLoginButton from './GoogleLogin';
 
 const Login = () => {
     const { signIn, user } = useContext(AuthContext)
@@ -74,6 +75,8 @@ console.log(user);
                                 </div>
                             </div>
                         </form>
+                        <GoogleLoginButton/>
+                        <Link className='p-2' to="/registration">Don't Have Account? <span className='text-blue-500'>Register!</span></Link>
                     </div>
                 </div>
             </div>
