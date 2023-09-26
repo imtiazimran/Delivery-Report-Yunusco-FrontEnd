@@ -11,8 +11,6 @@ import Swal from 'sweetalert2';
 const Navbar = () => {
     const { user, logOut } = useContext(AuthContext)
 
-    console.log("from navbar", user);
-
     const { jobs } = useContext(JobContext)
 
     const [isOpen, setIsOpen] = useState(false)
