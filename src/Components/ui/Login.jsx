@@ -8,7 +8,6 @@ import GoogleLoginButton from './GoogleLogin';
 
 const Login = () => {
     const { signIn, user } = useContext(AuthContext)
-console.log(user);
     const navigate = useNavigate()
     const { register, handleSubmit, formState: { errors } } = useForm();
 

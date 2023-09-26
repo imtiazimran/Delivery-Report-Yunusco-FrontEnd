@@ -60,7 +60,7 @@ const DeliveredToday = () => {
                         ) : todaysDeliveries.length === 0 ? (
                             <tr>
                                 <td colSpan="7" className='text-center'>
-                                    <span className="lg:text-2xl text-center block font-semibold capitalize lg:bg-black bg-opacity-5 lg:w-1/4 mx-auto lg:absolute top-2/4 z-50">No Job delivered today</span>
+                                    <span className="lg:text-2xl text-center block font-semibold capitalize lg:w-1/4 mx-auto lg:absolute top-2/4 z-50">No Job delivered today</span>
                                     <Lottie className="lg:w-1/4 mx-auto" animationData={EmptyAmimation} />
                                 </td>
                             </tr>

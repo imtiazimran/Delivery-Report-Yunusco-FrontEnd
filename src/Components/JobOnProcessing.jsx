@@ -76,7 +76,7 @@ const JobOnProcessing = () => {
                             </tr>
                         ) : onProccess.length === 0 ? (
                             <tr className="mt-5">
-                                <span className="lg:text-2xl text-center block font-semibold z-50">No Job is in Proccessing <br />
+                                <span className="lg:text-2xl text-center block font-semibold lg:w-1/4 mx-auto lg:absolute top-2/4 z-50">No Job is in Proccessing <br />
                                     Please Add some Jobs First
                                 </span>
                                 <Lottie className="lg:w-2/4 mx-auto" animationData={EmptyAmimation} />
