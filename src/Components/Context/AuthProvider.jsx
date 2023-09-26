@@ -11,6 +11,8 @@ import {
 import app from '../firebase/firebase.config';
 
 const auth = getAuth(app)
+
+
 const authForGoogle = new GoogleAuthProvider(auth)
 
 export const AuthContext = createContext()
@@ -18,7 +20,7 @@ export const AuthContext = createContext()
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
-    console.log(user);
+    console.log("authProvider", user);
 
     // singup
     const signUp = (email, password) => {
@@ -39,16 +41,16 @@ const AuthProvider = ({ children }) => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
                 setUser(user)
-                const uid = user.uid;
-                // ...
-            } 
+            }
             setLoading(false)
         });
-        return () => unsubscribe();
+        return () => {
+            return unsubscribe();
+        }
     }, []);
 
 
-    const logOut = signOut(auth)
+    const logOut = () => signOut(auth)
 
     const authInfo = {
         user,

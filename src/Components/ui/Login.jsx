@@ -19,7 +19,6 @@ console.log(user);
         signIn(data.email, data.password)
             .then(res => {
                 const loggedUser = res.user;
-                const user = { name: loggedUser.name, email: loggedUser.email }
                 Swal.fire({
                     icon: 'success',
                     title: `Welcome ${loggedUser.email}`,

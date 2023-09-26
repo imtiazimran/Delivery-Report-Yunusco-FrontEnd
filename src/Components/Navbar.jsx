@@ -6,9 +6,12 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { JobContext } from './Context/JobProvider';
 import AddJobs from './AddJobs';
 import { AuthContext } from './Context/AuthProvider';
+import Swal from 'sweetalert2';
 
 const Navbar = () => {
-    const {user, logOut} = useContext(AuthContext)
+    const { user, logOut } = useContext(AuthContext)
+
+    console.log("from navbar", user);
 
     const { jobs } = useContext(JobContext)
 
@@ -18,7 +21,19 @@ const Navbar = () => {
         setIsOpen(true)
     }
 
-    const handleLogOut = () => logOut()
+    const handleLogOut = () => {
+        logOut()
+            .then(() => {
+                Swal.fire({
+                icon: 'success',
+                title: "Log Out Success",
+                showConfirmButton: "OK",
+                timer: 3000,
+            });
+            }).catch((error) => {
+                console.log(error);
+            });
+    }
 
     // console.log(user);
     const partialDeliveries = jobs.filter((item) => item.hasOwnProperty("deliveryType"))
@@ -156,27 +171,27 @@ const Navbar = () => {
 
                             {/*user panal*/}
                             {
-                                user ?  <div className="dropdown dropdown-end">
-                                <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-                                    <div className="w-10 rounded-full">
-                                        <img src={user.photoURL ? user.photoURL : "https://static-00.iconduck.com/assets.00/user-avatar-icon-512x512-vufpcmdn.png"} />
-                                    </div>
-                                </label>
-                                <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-                                    <li>
-                                        <a className="justify-between">
-                                            Profile
-                                            <span className="badge">New</span>
-                                        </a>
-                                    </li>
-                                    <li><a>Settings</a></li>
-                                    <li><button onClick={handleLogOut}>Logout</button></li>
-                                </ul>
-                            </div>
-                            : 
-                            <Link to={"/login"} className='btn-primary btn-outline rounded-sm px-2 py-3'>Log In</Link>
+                                user ? <div className="dropdown dropdown-end">
+                                    <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+                                        <div className="w-10 rounded-full">
+                                            <img src={user.photoURL ? user.photoURL : "https://static-00.iconduck.com/assets.00/user-avatar-icon-512x512-vufpcmdn.png"} />
+                                        </div>
+                                    </label>
+                                    <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                                        <li>
+                                            <a className="justify-between">
+                                                Profile
+                                                <span className="badge">New</span>
+                                            </a>
+                                        </li>
+                                        <li><a>Settings</a></li>
+                                        <li><button onClick={handleLogOut}>Logout</button></li>
+                                    </ul>
+                                </div>
+                                    :
+                                    <Link to={"/login"} className='btn-primary btn-outline rounded-sm px-2 py-3'>Log In</Link>
                             }
-                           
+
                         </div>
 
 
