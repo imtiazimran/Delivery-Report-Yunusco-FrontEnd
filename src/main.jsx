@@ -7,11 +7,14 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Home from './Components/Home.jsx';
-import AddJobs from './Components/AddJobs.jsx';
 import JobProvider from './Components/Context/JobProvider.jsx';
 import PreviousDelivery from './Components/PreviousDelivery.jsx';
 import TotalDelivery from './Components/TotalDelivery.jsx';
 import PartialJobs from './Components/PartialJobs.jsx';
+import Register from './Components/ui/Register.jsx';
+import AuthProvider from './Components/Context/AuthProvider.jsx';
+import Login from './Components/ui/Login.jsx';
+import PrivetRoute from './Components/PriveteRoute.jsx';
 
 const router = createBrowserRouter([
   {
@@ -24,15 +27,23 @@ const router = createBrowserRouter([
       },
       {
         path: "/previousDelivery",
-        element: <PreviousDelivery/>
+        element: <PreviousDelivery />
       },
       {
         path: "/totalDelivery",
-        element: <TotalDelivery/>
+        element: <PrivetRoute><TotalDelivery /></PrivetRoute>
       },
       {
-        path : "/partialDelivery",
-        element: <PartialJobs/>
+        path: "/partialDelivery",
+        element: <PartialJobs />
+      },
+      {
+        path: "/registration",
+        element: <Register />
+      },
+      {
+        path: "/login",
+        element: <Login />
       }
     ]
   },
@@ -40,7 +51,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <JobProvider>
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
     </JobProvider>
   </React.StrictMode>,
 )

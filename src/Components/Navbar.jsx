@@ -5,8 +5,11 @@ import { Fragment } from 'react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { JobContext } from './Context/JobProvider';
 import AddJobs from './AddJobs';
+import { AuthContext } from './Context/AuthProvider';
 
 const Navbar = () => {
+    const {user, logOut} = useContext(AuthContext)
+
     const { jobs } = useContext(JobContext)
 
     const [isOpen, setIsOpen] = useState(false)
@@ -15,21 +18,19 @@ const Navbar = () => {
         setIsOpen(true)
     }
 
+    const handleLogOut = () => logOut()
+
+    // console.log(user);
     const partialDeliveries = jobs.filter((item) => item.hasOwnProperty("deliveryType"))
     return (
         <div>
-        <AddJobs isOpen={isOpen} setIsOpen={setIsOpen}/>
+            <AddJobs isOpen={isOpen} setIsOpen={setIsOpen} />
             <div className="navbar ">
                 <div className="flex-1 justify-between">
                     <Link href='/' className=" text-orange-500 normal-case text-xl"> <img className='w-1/4' src="https://i.ibb.co/gwV6FjL/1553451971650-removebg-preview.png" alt="" /> </Link>
                     <div>
                         <div className="flex items-center gap-5">
-                            <Link to="/partialDelivery" className='lg:hidden'>
-                                <div className="indicator">
-                                    <span className="indicator-item badge badge-secondary ">{partialDeliveries.length}</span>
-                                    <button className="btn btn-sm">PD Jobs</button>
-                                </div>
-                            </Link>
+
                             <Menu as="div" className="relative inline-block text-left z-50 lg:hidden">
                                 <div>
                                     <Menu.Button className="inline-flex w-full justify-center rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
@@ -78,7 +79,7 @@ const Navbar = () => {
                                             <Menu.Item>
                                                 {({ active }) => (
                                                     <Link
-                                                    to={"/previousDelivery"}
+                                                        to={"/previousDelivery"}
                                                         className={`btn mt-2 ${active ? 'bg-violet-500 text-white' : 'text-gray-900'
                                                             } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                                     >
@@ -102,7 +103,7 @@ const Navbar = () => {
                                             <Menu.Item>
                                                 {({ active }) => (
                                                     <Link
-                                                    to={"/totalDelivery"}
+                                                        to={"/totalDelivery"}
                                                         className={` btn ${active ? 'bg-violet-500 text-white' : 'text-gray-900'
                                                             } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                                     >
@@ -121,10 +122,26 @@ const Navbar = () => {
                                                     </Link>
                                                 )}
                                             </Menu.Item>
+                                            <Menu.Item>
+                                                <Link to="/partialDelivery">
+                                                    <div className="indicator w-full text-sm py-2">
+                                                        <span className="indicator-item badge badge-secondary ">{partialDeliveries.length}</span>
+                                                        <button className="btn btn-sm w-full rounded-md">
+                                                            <span className='text-violet-500'>
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
+                                                                </svg>
+                                                            </span>
+                                                            PD Jobs</button>
+                                                    </div>
+                                                </Link>
+                                            </Menu.Item>
                                         </div>
                                     </Menu.Items>
                                 </Transition>
                             </Menu>
+
                             <div className='hidden lg:block'>
                                 <Link to="/partialDelivery">
                                     <div className="indicator">
@@ -136,6 +153,30 @@ const Navbar = () => {
                                 <Link className='mx-3 bg-blue-500 text-white p-1 rounded' to={"/previousDelivery"}>Previous Job</Link>
                                 <Link className='mx-3 bg-blue-500 text-white p-1 rounded' to={"/totalDelivery"}>Total Delivery</Link>
                             </div>
+
+                            {/*user panal*/}
+                            {
+                                user ?  <div className="dropdown dropdown-end">
+                                <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+                                    <div className="w-10 rounded-full">
+                                        <img src={user.photoURL ? user.photoURL : "https://static-00.iconduck.com/assets.00/user-avatar-icon-512x512-vufpcmdn.png"} />
+                                    </div>
+                                </label>
+                                <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                                    <li>
+                                        <a className="justify-between">
+                                            Profile
+                                            <span className="badge">New</span>
+                                        </a>
+                                    </li>
+                                    <li><a>Settings</a></li>
+                                    <li><button onClick={handleLogOut}>Logout</button></li>
+                                </ul>
+                            </div>
+                            : 
+                            <Link to={"/login"} className='btn-primary btn-outline rounded-sm px-2 py-3'>Log In</Link>
+                            }
+                           
                         </div>
 
 

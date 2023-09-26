@@ -9,12 +9,12 @@ const JobProvider = ({ children }) => {
     const [jobs, setJobs] = useState([])
     const [prevJobs, setPrevJobs] = useState([])
     const [isLoading, setIsLoading] = useState(true)
-    
     const [isOpen, setIsOpen] = useState(false)
     const [selectedJobForPartialDelivery, setSelectedJobForPartialDelivery] = useState(null);
     const [partialDeliveryQty, setPartialDeliveryQty] = useState(0);
 
     const baseUrl = "https://delivery-report-yunusco-back-end.vercel.app"
+    // const baseUrl = "http://localhost:8570"
 
     useEffect(() => {
         axios.get(`${baseUrl}/delivery`)
@@ -23,7 +23,7 @@ const JobProvider = ({ children }) => {
                 setJobs(res.data)
                 setIsLoading(false)
             })
-    }, [prevJobs])
+    }, [])
 
     useEffect(() => {
         axios.get(`${baseUrl}/delivered`)
@@ -32,9 +32,34 @@ const JobProvider = ({ children }) => {
                 setPrevJobs(res.data)
                 setIsLoading(false)
             })
-    }, [jobs])
+    }, [])
 
 
+    const addUser = async (user) => {
+        try {
+            await axios.post(`${baseUrl}/postUser`, user);
+            // setJobs(prevJobs => prevJobs.filter(j => j._id !== job._id));
+
+            // Display SweetAlert success alert
+            // Swal.fire({
+            //     icon: 'success',
+            //     title: `User Added`,
+            //     text: `User Successfully added to the database`,
+            // });
+        } catch (error) {
+            if (error.response && error.response.status === 400) {
+                Swal.fire({
+                    position: 'top-center',
+                    icon: 'error',
+                    title: 'Email Already Exists',
+                    text: 'user with this email already exists.',
+                    showConfirmButton: "OK"
+                });
+            }
+            console.error("Error Adding user:", error);
+            // Handle error and show a message to the user
+        }
+    };
     const handleDeliveredJob = async (job) => {
         try {
             await axios.put(`${baseUrl}/markDelivered/${job._id}`);
@@ -154,6 +179,7 @@ const JobProvider = ({ children }) => {
         setSelectedJobForPartialDelivery,
         partialDeliveryQty,
         setPartialDeliveryQty,
+        addUser,
         isLoading
     }
     return (

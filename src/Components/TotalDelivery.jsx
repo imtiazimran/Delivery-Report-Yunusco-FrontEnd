@@ -79,7 +79,6 @@ const TotalDelivery = () => {
     const filteredJobs = prevJobs.filter((job) =>
         job.po.toLowerCase().includes(searchQuery.toLowerCase()) || job.customar.toLowerCase().includes(searchQuery.toLocaleLowerCase())
     );
-
     // Calculate total previous delivery quantity
     const totalPrevDelivery = filteredJobs.reduce((accumulator, currentJob) => {
         const qtyAsNumber = parseInt(currentJob.qty); // Convert the string to an integer

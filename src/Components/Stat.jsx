@@ -60,27 +60,28 @@ const Stat = () => {
                         <div className="stat-desc">{yesterdayDate.toLocaleDateString()}</div>
                     </div>
                 </Link>
-                <div className="stat text-center">
-                    <div className="stat-title">On Going</div>
-                    <div className="stat-value">{currentDeliveryQty.toLocaleString("en-IN")}</div>
-                    <div className="stat-desc">↗︎ </div>
-                </div>
+                {
+                    currentDeliveryQty != 0 && <div className="stat text-center">
+                        <div className="stat-title">On Going</div>
+                        <div className="stat-value">{currentDeliveryQty.toLocaleString("en-IN")}</div>
+                        <div className="stat-desc">↗︎ </div>
+                    </div>
+                }
+
                 <Link to={"/totalDelivery"}>
                     <div className="stat text-center">
                         <div className="stat-title">Total Delivery</div>
                         <div className="stat-value">{totalDelivery.toLocaleString("en-IN")}</div>
                     </div>
                 </Link>
-                <Link to={"/partialDelivery"}>
-                    <div className="stat text-center">
-                        <div className="stat-title">Balance Quantity</div>
-                        <div className='stat-value'>{balanceQty.toLocaleString("en-IN")}</div>
-                    </div>
-                </Link>
-
-
-
-
+                {
+                    balanceQty != 0 && <Link to={"/partialDelivery"}>
+                        <div className="stat text-center">
+                            <div className="stat-title">Balance Quantity</div>
+                            <div className='stat-value'>{balanceQty.toLocaleString("en-IN")}</div>
+                        </div>
+                    </Link>
+                }
 
             </div>
         </div>
