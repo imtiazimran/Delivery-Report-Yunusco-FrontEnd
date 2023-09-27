@@ -39,7 +39,7 @@ const Login = () => {
                     <div className="text-center lg:text-left w-2/5 hidden lg:block">
                         <img className='w-full' src={loginImg} alt="" />
                     </div>
-                    <div className="card  flex-shrink-0 w-2/4 max-w-sm shadow-2xl bg-base-100">
+                    <div className="card  flex-shrink-0 lg:w-2/4 max-w-sm shadow-2xl bg-base-100">
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <div className="card-body">
                                 <div className="flex flex-col mb-5 form-control">
