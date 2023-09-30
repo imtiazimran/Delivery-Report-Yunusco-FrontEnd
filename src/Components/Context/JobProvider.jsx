@@ -23,7 +23,7 @@ const JobProvider = ({ children }) => {
                 setJobs(res.data)
                 setIsLoading(false)
             })
-    }, [])
+    }, [jobs])
 
     useEffect(() => {
         axios.get(`${baseUrl}/delivered`)
@@ -32,7 +32,7 @@ const JobProvider = ({ children }) => {
                 setPrevJobs(res.data)
                 setIsLoading(false)
             })
-    }, [])
+    }, [prevJobs])
 
 
     const addUser = async (user) => {
