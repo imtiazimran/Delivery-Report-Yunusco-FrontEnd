@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form';
 import { AuthContext } from '../Context/AuthProvider';
 import Swal from 'sweetalert2';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { JobContext } from '../Context/JobProvider';
 import GoogleLoginButton from './GoogleLogin';
 
@@ -34,7 +33,7 @@ const Register = () => {
                     showConfirmButton: "OK",
                     timer: 1500,
                 });
-                addUser({...user, status : "user"})
+                addUser({...user, role : "user"})
             })
             .then(res => {
                 navigate('/')

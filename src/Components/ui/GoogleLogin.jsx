@@ -24,7 +24,7 @@ const GoogleLoginButton = () => {
                     showConfirmButton: false,
                     timer: 1000,
                 });
-                addUser({ ...user, status: "user" })
+                addUser({ ...user, role: "user" })
                 navigate("/")
             })
             .catch(err => console.log(err))
