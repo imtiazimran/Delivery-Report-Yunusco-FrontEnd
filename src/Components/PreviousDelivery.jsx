@@ -3,6 +3,7 @@ import { JobContext } from './Context/JobProvider';
 import EmptyBox from "../assets/EmptyBox.json"
 import Loader from "../assets/loader2.json"
 import Lottie from "lottie-react";
+import { usePDF } from 'react-to-pdf';
 const PreviousDelivery = () => {
     const { prevJobs, isLoading, handleDeleteDeliveredJob } = useContext(JobContext);
     const [reduceADay, setReduceADay] = useState(1)
@@ -47,6 +48,9 @@ const PreviousDelivery = () => {
         return accumulator; // If conversion fails, return the accumulator unchanged
     }, 0);
 
+    
+    const { toPDF, targetRef } = usePDF({ filename: `${yesterdayDate.toLocaleDateString()} Delivery.pdf` });
+
     return (
         <div>
             <div className="text-2xl rounded-xl py-3 bg-violet-700 text-white text-center flex justify-center items-center gap-3">
@@ -61,13 +65,20 @@ const PreviousDelivery = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                     </svg>
                 </span>
+
+                <button className="rounded pdf px-3 hover:text-blue-400" onClick={() => toPDF()}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75l3 3m0 0l3-3m-3 3v-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+
+                </button>
             </div>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto" ref={targetRef}>
                 <table className="table">
                     {/* head */}
                     {
                         yesterdayDeliveries.length === 0 || <thead>
-                            <tr className="text-center">
+                            <tr className="text-center bg-yellow-500 text-white lg:text-xl">
                                 <th>#</th>
                                 <th>Customar</th>
                                 <th>Job</th>
@@ -103,18 +114,18 @@ const PreviousDelivery = () => {
                             ))
                         )}
                     </tbody>
-                   {
-                    yesterdayDeliveries.length === 0 || <tfoot>
-                    <tr className='text-center bg-yellow-500'>
-                        <th>#</th>
-                        <th></th>
-                        <th className='text-xl text-white'>Total Quantity</th>
-                        <th className='text-xl text-white '>{totalPrevDelivery.toLocaleString('en-IN')} Pcs</th>
-                        <th></th>
-                    </tr>
-                </tfoot>
-                   }
-                    
+                    {
+                        yesterdayDeliveries.length === 0 || <tfoot>
+                            <tr className='text-center bg-yellow-500'>
+                                <th>#</th>
+                                <th></th>
+                                <th className='text-xl text-white'>Total Quantity</th>
+                                <th className='text-xl text-white '>{totalPrevDelivery.toLocaleString('en-IN')} Pcs</th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    }
+
                 </table>
             </div>
         </div>
