@@ -35,7 +35,7 @@ const DeliveredToday = () => {
     }, 0);
 
 
-    const { toPDF, targetRef } = usePDF({ filename: 'page.pdf' });
+    const { toPDF, targetRef } = usePDF({ filename: 'Delivered Today.pdf' });
 
     return (
         <div>
