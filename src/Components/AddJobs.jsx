@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useContext } from 'react';
 import Swal from 'sweetalert2';
 import { AuthContext } from './Context/AuthProvider';
@@ -7,7 +7,7 @@ import { AuthContext } from './Context/AuthProvider';
 const AddJobs = ({ isOpen, setIsOpen }) => {
     const [isLoading, setIsloading] = useState(false)
 
-    const {user} = useContext(AuthContext)
+    const { user } = useContext(AuthContext)
 
     // console.log(user.displayName);
 
@@ -21,37 +21,59 @@ const AddJobs = ({ isOpen, setIsOpen }) => {
         const label = form.label.value
 
         const addJobs = {
-            customar, po, qty: parseInt(qty), label, addedBy : user?.displayName ? user?.displayName : user?.email
+            customar,
+            po,
+            qty: parseInt(qty),
+            label,
+            addedBy: user?.displayName ? user?.displayName : user?.email
         }
-        axios.post('https://delivery-report-yunusco-back-end.vercel.app/addJobs', addJobs)
-            .then(res => {
-                setIsloading(false)
-                setIsOpen(false)
-                if (res.data.insertedId) {
-                    Swal.fire({
-                        position: 'top-center',
-                        icon: 'success',
-                        title: 'Job Added',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    form.reset();
-                }
+        if (user) {
+
+            axios.post('https://delivery-report-yunusco-back-end.vercel.app/addJobs', addJobs)
+                .then(res => {
+                    setIsloading(false)
+                    setIsOpen(false)
+                    if (res.data.insertedId) {
+                        Swal.fire({
+                            position: 'top-center',
+                            icon: 'success',
+                            title: 'Job Added',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        form.reset();
+                    }
+                })
+                .catch(error => {
+                    setIsloading(false)
+                    setIsOpen(false)
+                    if (error.response && error.response.status === 400) {
+                        Swal.fire({
+                            position: 'top-center',
+                            icon: 'error',
+                            title: 'Job Already Exists',
+                            text: 'Job with this PO already exists.',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    }
+                });
+        } else {
+            setIsloading(false)
+            setIsOpen(false)
+            Swal.fire({
+                position: 'top-center',
+                icon: 'error',
+                title: "No User Found",
+                text: "Please log In to add jobs",
+                confirmButtonText: "Login",
+                showConfirmButton: true,
+                showCancelButton : true
             })
-            .catch(error => {
-                setIsloading(false)
-                setIsOpen(false)
-                if (error.response && error.response.status === 400) {
-                    Swal.fire({
-                        position: 'top-center',
-                        icon: 'error',
-                        title: 'Job Already Exists',
-                        text: 'Job with this PO already exists.',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                }
-            });
+            .then(()=>{
+                window.location = "/login"
+            })
+        }
     }
 
 
