@@ -6,8 +6,9 @@ import PD_Modal from "./ui/Modal";
 import EmptyAmimation from "../assets/Empty-Animation.json"
 import Loader from "../assets/loader2.json"
 import Lottie from "lottie-react";
+import { AuthContext } from "./Context/AuthProvider";
 const JobOnProcessing = () => {
-
+    const {user} = useContext(AuthContext)
     const { jobs,
         isLoading,
         handleDelete,
@@ -90,7 +91,7 @@ const JobOnProcessing = () => {
                                     <td>{job?.qty.toLocaleString('en-IN')}</td>
                                     <td className='uppercase'>{job?.label}</td>
                                     <td>
-                                        <button onClick={() => handleDeliveredJob(job)} className="btn-md btn-success btn-outline rounded">
+                                        <button onClick={() => handleDeliveredJob({...job, markedBy : user?.displayName ? user?.displayName : user?.email})} className="btn-md btn-success btn-outline rounded">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                             </svg>

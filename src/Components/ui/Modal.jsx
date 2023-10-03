@@ -9,11 +9,11 @@ export default function PD_Modal({
   selectedJobForPartialDelivery,
   setSelectedJobForPartialDelivery,
   partialDeliveryQty,
-  setPartialDeliveryQty }) {
+  setPartialDeliveryQty,
+ }) {
   function closeModal() {
     setIsOpen(false)
   }
-
 
   const handlePartialDelivery = async () => {
 
@@ -21,7 +21,7 @@ export default function PD_Modal({
       try {
         const response = await axios.put(
           `https://delivery-report-yunusco-back-end.vercel.app/updatePartialDelivery/${selectedJobForPartialDelivery._id}`,
-          { partialDeliveryQty }
+          { partialDeliveryQty, user }
         );
 
         // Update the job in your state or context with the response data

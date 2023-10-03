@@ -9,7 +9,7 @@ const Footer = () => {
                 <p className="font-bold">
                     Yunusco T&A (BD) Ltd <br /> Trusted Manufacturer For Accessories
                 </p>
-                    <div className='flex gap-8'>
+                    <div className='md:flex gap-8'>
                         <div>
                             <p>35/A-B Kalurghat Heavy I/A </p>
                             <p>Chittagong-4208, Bangladesh.</p>

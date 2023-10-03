@@ -11,8 +11,6 @@ const DeliveredToday = () => {
     // console.log(prevJobs)
     const currentDate = new Date();
 
-    // const componentRef = useRef();
-    const [isPdfGenerating, setIsPdfGenerating] = useState(false);
 
     // Calculate start of today's date (midnight)
     const startOfToday = new Date(currentDate);
@@ -26,7 +24,7 @@ const DeliveredToday = () => {
         }
         return false;
     });
-    const totalPrevDelivery = todaysDeliveries.reduce((accumulator, currentJob) => {
+    const totalDeliveryToday = todaysDeliveries.reduce((accumulator, currentJob) => {
         const qtyAsNumber = parseInt(currentJob.qty, 10); // Convert the string to an integer
         if (!isNaN(qtyAsNumber)) {
             return accumulator + qtyAsNumber;
@@ -41,7 +39,7 @@ const DeliveredToday = () => {
         <div>
             {
                 todaysDeliveries.length === 0 || <div className="text-2xl rounded-xl py-3 bg-green-700 text-white text-center"> {todaysDeliveries.length} Jobs Delivered Today
-                    <button className="rounded pdf px-3 hover:text-blue-400" onClick={() => toPDF()} disabled={isPdfGenerating}>
+                    <button className="rounded pdf px-3 hover:text-blue-400" onClick={() => toPDF()}>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75l3 3m0 0l3-3m-3 3v-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
@@ -97,7 +95,7 @@ const DeliveredToday = () => {
                                 <th>#</th>
                                 <th></th>
                                 <th className='text-xl text-white'>Total Quantity</th>
-                                <th className='text-xl text-white'>{totalPrevDelivery.toLocaleString('en-IN')} Pcs</th>
+                                <th className='text-xl text-white'>{totalDeliveryToday.toLocaleString('en-IN')} Pcs</th>
                                 <th></th>
                             </tr>
                         </tfoot>

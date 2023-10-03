@@ -49,19 +49,56 @@ const Stat = () => {
         return accumulator; // If conversion fails, return the accumulator unchanged
     }, 0);
 
+
+    // ------------------------------------ today Delivery Calculation----------------------------------
+    const startOfToday = new Date(currentDate);
+    startOfToday.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to 0
+    const todaysDeliveries = prevJobs.filter(currentJob => {
+        if (currentJob.goodsDeliveryDate) {
+            const deliveryDate = parseCustomDate(currentJob.goodsDeliveryDate);
+            return isSameDate(deliveryDate, startOfToday);
+        }
+        return false;
+    });
+    const DeliveredToday = todaysDeliveries.reduce((accumulator, currentJob) => {
+        const qtyAsNumber = parseInt(currentJob.qty, 10); // Convert the string to an integer
+        if (!isNaN(qtyAsNumber)) {
+            return accumulator + qtyAsNumber;
+        }
+        return accumulator; // If conversion fails, return the accumulator unchanged
+    }, 0);
+
+    // console.log(totalDeliveryToday);
+
     return (
         <div className='p-5 flex justify-center '>
             <div className="stats stats-vertical lg:stats-horizontal shadow ">
-
-                <Link to={"/previousDelivery"}>
-                    <div className="stat text-center">
-                        <div className="stat-title">Previous Delivery</div>
-                        <div className="stat-value">{totalPrevDelivery.toLocaleString('en-IN')}</div>
-                        <div className="stat-desc">{yesterdayDate.toLocaleDateString()}</div>
-                    </div>
-                </Link>
                 {
-                    currentDeliveryQty != 0 && <div className="stat text-center">
+                    todaysDeliveries != 0 &&
+                    <Link to={"/previousDelivery"}>
+                        <div className="stat text-center">
+                            <div className="stat-title">Delivered Today</div>
+                            <div className="stat-desc">{todaysDeliveries.length} Jobs</div>
+                            <div className="stat-value">{DeliveredToday.toLocaleString('en-IN')}</div>
+                            <div className="stat-desc">{startOfToday.toLocaleDateString()}</div>
+                        </div>
+                    </Link>
+                }
+                {
+                    yesterdayDeliveries != 0 &&
+                    <Link to={"/previousDelivery"}>
+                        <div className="stat text-center">
+                            <div className="stat-title">Previous Delivery</div>
+                            <div className="stat-desc">{yesterdayDeliveries.length} Jobs</div>
+                            <div className="stat-value">{totalPrevDelivery.toLocaleString('en-IN')}</div>
+                            <div className="stat-desc">{yesterdayDate.toLocaleDateString()}</div>
+                        </div>
+                    </Link>
+                }
+
+                {
+                    currentDeliveryQty != 0 &&
+                    <div className="stat text-center">
                         <div className="stat-title">On Going</div>
                         <div className="stat-value">{currentDeliveryQty.toLocaleString("en-IN")}</div>
                         <div className="stat-desc">↗︎ </div>

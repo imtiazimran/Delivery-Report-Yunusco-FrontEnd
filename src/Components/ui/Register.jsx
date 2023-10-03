@@ -49,6 +49,8 @@ const Register = () => {
                         <img className='w-full' src="https://cdni.iconscout.com/illustration/premium/thumb/online-registration-4489363-3723270.png" alt="" />
                     </div>
                     <div className="card  flex-shrink-0 lg:w-2/4 max-w-sm shadow-2xl bg-base-100">
+                    <GoogleLoginButton />
+                        <div className="divider">OR</div>
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <div className="card-body">
                                 <div className="flex flex-col mb-5 form-control">
@@ -116,7 +118,6 @@ const Register = () => {
                                 </div>
                             </div>
                         </form>
-                        <GoogleLoginButton/>
                         <Link className="p-2" to="/login">Already Have Account? <span className='text-blue-500'>Login!</span></Link>
                     </div>
                 </div>

@@ -40,6 +40,8 @@ const Login = () => {
                         <img className='w-full' src={loginImg} alt="" />
                     </div>
                     <div className="card  flex-shrink-0 lg:w-2/4 max-w-sm shadow-2xl bg-base-100">
+                        <GoogleLoginButton />
+                        <div className="divider">OR</div>
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <div className="card-body">
                                 <div className="flex flex-col mb-5 form-control">
@@ -74,7 +76,6 @@ const Login = () => {
                                 </div>
                             </div>
                         </form>
-                        <GoogleLoginButton/>
                         <Link className='p-2' to="/registration">Don't Have Account? <span className='text-blue-500'>Register!</span></Link>
                     </div>
                 </div>

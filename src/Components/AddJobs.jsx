@@ -1,13 +1,15 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useContext } from 'react';
 import Swal from 'sweetalert2';
+import { AuthContext } from './Context/AuthProvider';
 
 const AddJobs = ({ isOpen, setIsOpen }) => {
     const [isLoading, setIsloading] = useState(false)
 
+    const {user} = useContext(AuthContext)
 
-
-
+    // console.log(user.displayName);
 
     const handleSubmit = e => {
         setIsloading(true)
@@ -19,9 +21,8 @@ const AddJobs = ({ isOpen, setIsOpen }) => {
         const label = form.label.value
 
         const addJobs = {
-            customar, po, qty: parseInt(qty), label
+            customar, po, qty: parseInt(qty), label, addedBy : user?.displayName ? user?.displayName : user?.email
         }
-
         axios.post('https://delivery-report-yunusco-back-end.vercel.app/addJobs', addJobs)
             .then(res => {
                 setIsloading(false)
