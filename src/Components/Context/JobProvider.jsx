@@ -165,29 +165,40 @@ const JobProvider = ({ children }) => {
             confirmButtonText: 'Yes, delete it!'
         }).then(async (result) => {
             if (result.isConfirmed) {
-                try {
-                    await axios.delete(`${baseUrl}/deleteDeliveredJob/${job._id}`);
-                    setJobs(prevJobs => prevJobs.filter(j => j._id !== job._id));
+                if(isAdmin){
 
-                    // Display SweetAlert success alert
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Job Deleted',
-                        text: 'The job has been successfully Deleted from Total delivery.',
-                    });
-                } catch (error) {
-                    if (error) {
+                    try {
+                        await axios.delete(`${baseUrl}/deleteDeliveredJob/${job._id}`);
+                        setJobs(prevJobs => prevJobs.filter(j => j._id !== job._id));
+    
+                        // Display SweetAlert success alert
                         Swal.fire({
-                            position: 'top-center',
-                            icon: 'error',
-                            title: `404
-                            NOT FOUND`,
-                            text: `${error.message}`,
-                            showConfirmButton: "OK"
+                            icon: 'success',
+                            title: 'Job Deleted',
+                            text: 'The job has been successfully Deleted from Total delivery.',
                         });
+                    } catch (error) {
+                        if (error) {
+                            Swal.fire({
+                                position: 'top-center',
+                                icon: 'error',
+                                title: `404
+                                NOT FOUND`,
+                                text: `${error.message}`,
+                                showConfirmButton: "OK"
+                            });
+                        }
+                        console.error("Error delivering job:", error);
+                        // Handle error and show a message to the user
                     }
-                    console.error("Error delivering job:", error);
-                    // Handle error and show a message to the user
+                }else{
+                    Swal.fire({
+                        position: 'top-center',
+                        icon: 'error',
+                        title: "Unauthorize Oparetion",
+                        text: "Look Like You Don't have the permission to Delete Job",
+                        showConfirmButton: "OK"
+                    });
                 }
             }
         });
