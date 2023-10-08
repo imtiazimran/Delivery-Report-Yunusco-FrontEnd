@@ -75,14 +75,12 @@ const Stat = () => {
             <div className="stats stats-vertical lg:stats-horizontal shadow ">
                 {
                     todaysDeliveries != 0 &&
-                    <Link to={"/previousDelivery"}>
                         <div className="stat text-center">
                             <div className="stat-title">Delivered Today</div>
                             <div className="stat-desc">{todaysDeliveries.length} Jobs</div>
                             <div className="stat-value">{DeliveredToday.toLocaleString('en-IN')}</div>
                             <div className="stat-desc">{startOfToday.toLocaleDateString()}</div>
                         </div>
-                    </Link>
                 }
                 {
                     yesterdayDeliveries != 0 &&
