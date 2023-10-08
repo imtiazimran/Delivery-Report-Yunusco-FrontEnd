@@ -7,15 +7,17 @@ const TotalDelivery = () => {
     const {
         prevJobs,
         isLoading,
-        handleDeleteDeliveredJob
+        handleDeleteDeliveredJob,
+        selectedJobForUpdateData,
+        setSelectedJobForUpdateData,
+        updatedQuantity,
+        setUpdatedQuantity,
+        updatedDeliveryDate,
+        setUpdatedDeliveryDate,
+        handleUpdateDateQty,
     } = useContext(JobContext);
-    const editDateDialogRef = useRef(null);
     const [searchQuery, setSearchQuery] = useState("")
-
-    const [selectedJobForUpdateData, setSelectedJobForUpdateData] = useState(null)
-
-    const [updatedQuantity, setUpdatedQuantity] = useState("");
-    const [updatedDeliveryDate, setUpdatedDeliveryDate] = useState("");
+    const editDateDialogRef = useRef(null);
 
     const handleChangeDate = (job) => {
         document.getElementById('editDate').showModal()
@@ -23,7 +25,6 @@ const TotalDelivery = () => {
         setUpdatedDeliveryDate(job.goodsDeliveryDate)
         setUpdatedQuantity(job.qty)
     }
-
 
     const handleQuantityChange = (e) => {
         setUpdatedQuantity(e.target.value);
@@ -38,40 +39,11 @@ const TotalDelivery = () => {
             editDateDialogRef.current.close();
         }
     };
-    // const handleModalBlur = () => {
-    //     // Use a timeout to check if the focus has moved outside the modal
-    //     document.getElementById('editDate').onBlur(handleCloseModal())
-    // };
-
 
     const handleEditJob = async (e) => {
         e.preventDefault()
-        if (selectedJobForUpdateData && updatedQuantity > 0) {
-            try {
-                const response = await axios.put(
-                    `https://delivery-report-yunusco-back-end-imtiazimran.vercel.app/editedJob/${selectedJobForUpdateData._id}`,
-                    { updatedQuantity, updatedDeliveryDate }
-                );
-
-                // Update the job in your state or context with the response data
-                setSelectedJobForUpdateData(null);
-
-
-                if (editDateDialogRef.current) {
-                    editDateDialogRef.current.close();
-                }
-
-                // Show SweetAlert success notification
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Date/Quantity Updated',
-                    text: 'The Update Information has been done successfully .',
-                    confirmButtonText: 'OK',
-                });
-            } catch (error) {
-                console.log("Error updating  existing data:", error);
-            }
-        }
+        handleUpdateDateQty()
+        handleCloseModal()
     }
 
     // console.log(selectedJobForUpdateData)
@@ -121,7 +93,7 @@ const TotalDelivery = () => {
                             </tr>
                         ) : (
                             filteredJobs.map((job, i) => (
-                                <tr onDoubleClick={()=>
+                                <tr onDoubleClick={() =>
                                     handleDeleteDeliveredJob(job)} key={job._id} className="hover text-center ">
                                     <th>{i + 1}</th>
                                     <td className='capitalize'>{job.customar}</td>

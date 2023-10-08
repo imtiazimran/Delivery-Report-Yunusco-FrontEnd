@@ -109,10 +109,9 @@ const DeliveredToday = () => {
 
 
 function parseCustomDate(dateString) {
-    const [datePart, timePart] = dateString.split(' ');
+    const [datePart] = dateString.split(' ');
     const [day, month, year] = datePart.split('-');
-    const [hours, minutes, seconds] = timePart.split(':');
-    return new Date(year, month - 1, day, hours, minutes, seconds);
+    return new Date(year, month - 1, day);
 }
 
 // Helper function to check if two dates are the same

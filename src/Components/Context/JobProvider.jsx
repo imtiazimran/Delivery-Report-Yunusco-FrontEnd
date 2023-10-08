@@ -1,4 +1,4 @@
-import React, { createContext } from 'react';
+import React, { createContext, useRef } from 'react';
 import axios from "axios"
 import { useEffect, useState } from "react"
 import Swal from 'sweetalert2';
@@ -16,8 +16,15 @@ const JobProvider = ({ children }) => {
     const [selectedJobForPartialDelivery, setSelectedJobForPartialDelivery] = useState(null);
     const [partialDeliveryQty, setPartialDeliveryQty] = useState(0);
 
-    const baseUrl = "https://delivery-report-yunusco-back-end.vercel.app"
-    // const baseUrl = "http://localhost:8570"
+    const [selectedJobForUpdateData, setSelectedJobForUpdateData] = useState(null)
+    const [updatedQuantity, setUpdatedQuantity] = useState("");
+    const [updatedDeliveryDate, setUpdatedDeliveryDate] = useState("");
+    
+    const editDateDialogRef = useRef(null);
+
+
+    // const baseUrl = "https://delivery-report-yunusco-back-end.vercel.app"
+    const baseUrl = "http://localhost:8570"
 
     useEffect(() => {
         axios.get(`${baseUrl}/delivery`)
@@ -51,8 +58,8 @@ const JobProvider = ({ children }) => {
         axios.get(`${baseUrl}/isAdmin/${email}`)
             .then(res => {
                 setIsLoading(true)
-                
-                if(res.data.role === "admin"){
+
+                if (res.data.role === "admin") {
                     setIsAdmin(true)
                 }
                 setIsLoading(false)
@@ -77,6 +84,8 @@ const JobProvider = ({ children }) => {
             // Handle error and show a message to the user
         }
     };
+
+    // handle deliveredJob
     const handleDeliveredJob = async (job) => {
         try {
             await axios.put(`${baseUrl}/markDelivered/${job._id}`);
@@ -116,12 +125,12 @@ const JobProvider = ({ children }) => {
             confirmButtonText: 'Yes, delete it!'
         }).then(async (result) => {
             if (result.isConfirmed) {
-                if(isAdmin){
+                if (isAdmin) {
 
                     try {
                         await axios.delete(`${baseUrl}/deleteJob/${job._id}`);
                         setJobs(prevJobs => prevJobs.filter(j => j._id !== job._id));
-    
+
                         // Display SweetAlert success alert
                         Swal.fire({
                             icon: 'success',
@@ -141,7 +150,7 @@ const JobProvider = ({ children }) => {
                         console.error("Error delivering job:", error);
                         // Handle error and show a message to the user
                     }
-                } else{
+                } else {
                     Swal.fire({
                         position: 'top-center',
                         icon: 'error',
@@ -165,12 +174,12 @@ const JobProvider = ({ children }) => {
             confirmButtonText: 'Yes, delete it!'
         }).then(async (result) => {
             if (result.isConfirmed) {
-                if(isAdmin){
+                if (isAdmin) {
 
                     try {
                         await axios.delete(`${baseUrl}/deleteDeliveredJob/${job._id}`);
                         setJobs(prevJobs => prevJobs.filter(j => j._id !== job._id));
-    
+
                         // Display SweetAlert success alert
                         Swal.fire({
                             icon: 'success',
@@ -191,7 +200,7 @@ const JobProvider = ({ children }) => {
                         console.error("Error delivering job:", error);
                         // Handle error and show a message to the user
                     }
-                }else{
+                } else {
                     Swal.fire({
                         position: 'top-center',
                         icon: 'error',
@@ -204,6 +213,36 @@ const JobProvider = ({ children }) => {
         });
     };
 
+    const handleUpdateDateQty = async () => {
+        if (selectedJobForUpdateData && updatedQuantity > 0) {
+            try {
+                const response = await axios.put(
+                    `${baseUrl}/editedJob/${selectedJobForUpdateData._id}`,
+                    { updatedQuantity, updatedDeliveryDate }
+                );
+
+                // Update the job in your state or context with the response data
+                setSelectedJobForUpdateData(null);
+
+
+                if (editDateDialogRef.current) {
+                    editDateDialogRef.current.close();
+                }
+
+                // Show SweetAlert success notification
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Date/Quantity Updated',
+                    text: 'The Update Information has been done successfully .',
+                    confirmButtonText: 'OK',
+                });
+            } catch (error) {
+                console.log("Error updating  existing data:", error);
+            }
+        }
+    }
+
+    
 
     const jobInfo = {
         jobs,
@@ -221,7 +260,15 @@ const JobProvider = ({ children }) => {
         setPartialDeliveryQty,
         addUser,
         handleAdminSearch,
-        isLoading
+        isLoading,
+        selectedJobForUpdateData,
+        setSelectedJobForUpdateData,
+        updatedQuantity,
+        setUpdatedQuantity,
+        updatedDeliveryDate,
+        setUpdatedDeliveryDate,
+        handleUpdateDateQty,
+        editDateDialogRef
     }
     return (
         <JobContext.Provider value={jobInfo}>

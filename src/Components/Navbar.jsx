@@ -39,7 +39,7 @@ const Navbar = () => {
     return (
         <div>
             <AddJobs isOpen={isOpen} setIsOpen={setIsOpen} />
-            <div className="navbar ">
+            <div className="navbar sticky top-0">
                 <div className="flex-1 justify-between">
                     <Link href='/' className=" text-orange-500 normal-case text-xl"> <img className='w-1/4' src="https://i.ibb.co/gwV6FjL/1553451971650-removebg-preview.png" alt="" /> </Link>
                     <div>
