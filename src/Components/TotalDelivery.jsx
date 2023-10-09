@@ -22,8 +22,13 @@ const TotalDelivery = () => {
 
 
 
+    const [sortedData, setSortedData] = useState([]); // State to hold sorted data
     const [searchQuery, setSearchQuery] = useState("")
     const editDateDialogRef = useRef(null);
+
+
+    // Function to sort data by date in descending order
+   
 
     const handleChangeDate = (job) => {
         document.getElementById('editDate').showModal()
@@ -66,6 +71,28 @@ const TotalDelivery = () => {
         return accumulator; // If conversion fails, return the accumulator unchanged
     }, 0);
 
+    const sortDataByDate = () => {
+        const sorted = [...filteredJobs].sort((a, b) => {
+            const dateA = new Date(
+                a.goodsDeliveryDate.slice(6, 10), // Year
+                a.goodsDeliveryDate.slice(3, 5) - 1, // Month (0-indexed)
+                a.goodsDeliveryDate.slice(0, 2) // Day
+            );
+            const dateB = new Date(
+                b.goodsDeliveryDate.slice(6, 10), // Year
+                b.goodsDeliveryDate.slice(3, 5) - 1, // Month (0-indexed)
+                b.goodsDeliveryDate.slice(0, 2) // Day
+            );
+            return dateB - dateA;
+        });
+        setSortedData(sorted);
+    };
+    
+
+    useEffect(() => {
+        sortDataByDate(); // Initial sorting
+    }, [filteredJobs]);
+
     return (
         <div className='mt-16'>
             <div className="text-2xl py-3 bg-sky-700 text-white text-center">Total Delivery  </div>
@@ -98,7 +125,7 @@ const TotalDelivery = () => {
                                 </td>
                             </tr>
                         ) : (
-                            filteredJobs.map((job, i) => (
+                            sortedData.map((job, i) => (
                                 <tr
                                     data-aos="zoom-in-left"
                                     data-aos-easing="linear"
