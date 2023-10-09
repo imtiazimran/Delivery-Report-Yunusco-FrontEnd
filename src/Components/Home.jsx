@@ -7,7 +7,7 @@ import DeliveredToday from './DeliveredToday';
 
 const Home = () => {
     return (
-        <div className='w-4/5 mx-auto'>
+        <div className='w-4/5 mx-auto mt-16'>
             <Stat/>
             <JobOnProcessing/>
             <br />
