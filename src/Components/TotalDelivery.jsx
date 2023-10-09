@@ -1,7 +1,10 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { JobContext } from './Context/JobProvider';
-import axios from 'axios';
-import Swal from 'sweetalert2';
+import Loader from "../assets/loader2.json"
+import Lottie from 'lottie-react';
+
+import AOS from 'aos';
+// AOS.init();
 
 const TotalDelivery = () => {
     const {
@@ -16,6 +19,13 @@ const TotalDelivery = () => {
         setUpdatedDeliveryDate,
         handleUpdateDateQty,
     } = useContext(JobContext);
+
+    useEffect(() => {
+        AOS.init();
+    }, []);
+
+
+
     const [searchQuery, setSearchQuery] = useState("")
     const editDateDialogRef = useRef(null);
 
@@ -88,13 +98,20 @@ const TotalDelivery = () => {
                         {isLoading ? (
                             <tr>
                                 <td colSpan="5" className="text-center">
-                                    <span className="loading loading-bars loading-lg"></span>
+                                    <Lottie className="lg:w-1/4 mx-auto" animationData={Loader} />
                                 </td>
                             </tr>
                         ) : (
                             filteredJobs.map((job, i) => (
-                                <tr onDoubleClick={() =>
-                                    handleDeleteDeliveredJob(job)} key={job._id} className="hover text-center ">
+                                <tr
+                                    data-aos="zoom-in-left"
+                                    data-aos-easing="linear"
+                                    data-aos-duration="400"
+                                    onDoubleClick={() => handleDeleteDeliveredJob(job)}
+                                    key={job._id}
+                                    className="hover text-center"
+                                >
+
                                     <th>{i + 1}</th>
                                     <td className='capitalize'>{job.customar}</td>
                                     <td>JBH00{job.po}</td>

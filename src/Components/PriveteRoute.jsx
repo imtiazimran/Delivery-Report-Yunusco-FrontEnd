@@ -1,7 +1,8 @@
 import { useContext } from "react";
 import { Navigate } from "react-router-dom";
 import { AuthContext } from "./Context/AuthProvider";
-
+import Loader from "../assets/loader2.json"
+import Lottie from "lottie-react";
 const PrivetRoute = ({ children }) => {
     const { user, loading } = useContext(AuthContext);
         if (user) {
@@ -12,8 +13,7 @@ const PrivetRoute = ({ children }) => {
     if (loading) {
         return (
             <div className="w-full h-screen flex justify-center items-center">
-                <span className="loading loading-bars loading-lg"></span>
-                loading.....
+            <Lottie className="lg:w-1/4 mx-auto" animationData={Loader} />
             </div>
         );
     }
