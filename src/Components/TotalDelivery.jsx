@@ -3,8 +3,7 @@ import { JobContext } from './Context/JobProvider';
 import Loader from "../assets/loader2.json"
 import Lottie from 'lottie-react';
 
-import AOS from 'aos';
-// AOS.init();
+
 
 const TotalDelivery = () => {
     const {
@@ -20,9 +19,6 @@ const TotalDelivery = () => {
         handleUpdateDateQty,
     } = useContext(JobContext);
 
-    useEffect(() => {
-        AOS.init();
-    }, []);
 
 
 
@@ -71,7 +67,7 @@ const TotalDelivery = () => {
     }, 0);
 
     return (
-        <div>
+        <div className='mt-16'>
             <div className="text-2xl py-3 bg-sky-700 text-white text-center">Total Delivery  </div>
             <div className="form-control">
                 <div className="input-group input-group-sm justify-center my-5">
