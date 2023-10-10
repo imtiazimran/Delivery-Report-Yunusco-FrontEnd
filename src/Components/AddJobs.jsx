@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { useContext } from 'react';
 import Swal from 'sweetalert2';
 import { AuthContext } from './Context/AuthProvider';
+import Lottie from 'lottie-react';
+import Loader from "../assets/loader2.json"
 
 const AddJobs = ({ isOpen, setIsOpen }) => {
     const [isLoading, setIsloading] = useState(false)
@@ -68,11 +70,11 @@ const AddJobs = ({ isOpen, setIsOpen }) => {
                 text: "Please log In to add jobs",
                 confirmButtonText: "Login",
                 showConfirmButton: true,
-                showCancelButton : true
+                showCancelButton: true
             })
-            .then(()=>{
-                window.location = "/login"
-            })
+                .then(() => {
+                    window.location = "/login"
+                })
         }
     }
 
@@ -96,70 +98,75 @@ const AddJobs = ({ isOpen, setIsOpen }) => {
                 id="addJob"
                 className="modal"
             >
-                <div className="modal-box">
+                {
+                    isLoading ?
+                        <Lottie className="lg:w-1/4 mx-auto" animationData={Loader} />
+                        :
+                        <div className="modal-box">
 
-                    <button onClick={handleCloseModal} className="btn btn-sm btn-outline absolute right-2 top-2">Close</button>
-                    <form onSubmit={handleSubmit} className='lg:w-3/4 mx-auto py-10 w-3/4'>
+                            <button onClick={handleCloseModal} className="btn btn-sm btn-outline absolute right-2 top-2">Close</button>
+                            <form onSubmit={handleSubmit} className='lg:w-3/4 mx-auto py-10 w-3/4'>
 
-                        <div className="flex flex-col mb-5">
-                            <label htmlFor="title" className="mb-2">
-                                Customar
-                            </label>
-                            <input
-                                required
-                                className="w-full rounded-md"
-                                type="text"
-                                id="title"
-                                name='customar'
-                                placeholder="Exp: Apex Textile"
-                            />
-                        </div>
-                        <div className="flex flex-col mb-5">
-                            <label htmlFor="title" className="mb-2">
-                                Job No
-                            </label>
-                            <input
-                                required
-                                className="w-full rounded-md"
-                                type="number"
-                                id="title"
-                                name='po'
-                                placeholder="Exp: 342050"
-                            />
-                        </div>
+                                <div className="flex flex-col mb-5">
+                                    <label htmlFor="title" className="mb-2">
+                                        Customar
+                                    </label>
+                                    <input
+                                        required
+                                        className="w-full rounded-md"
+                                        type="text"
+                                        id="title"
+                                        name='customar'
+                                        placeholder="Exp: Apex Textile"
+                                    />
+                                </div>
+                                <div className="flex flex-col mb-5">
+                                    <label htmlFor="title" className="mb-2">
+                                        Job No
+                                    </label>
+                                    <input
+                                        required
+                                        className="w-full rounded-md"
+                                        type="number"
+                                        id="title"
+                                        name='po'
+                                        placeholder="Exp: 342050"
+                                    />
+                                </div>
 
-                        <div className="flex flex-col mb-5">
-                            <label htmlFor="title" className="mb-2">
-                                Quantity
-                            </label>
-                            <input
-                                required
-                                className="w-full rounded-md"
-                                type="number"
-                                id="title"
-                                name='qty'
-                                placeholder="Quantity"
-                            />
-                        </div>
-                        <div className="flex flex-col mb-5">
-                            <label htmlFor="title" className="mb-2">
-                                Label Name
-                            </label>
-                            <input
-                                required
-                                className="w-full rounded-md uppercase"
-                                type="text"
-                                id="title"
-                                name='label'
-                                placeholder="Exp: HM14149"
-                            />
-                        </div>
+                                <div className="flex flex-col mb-5">
+                                    <label htmlFor="title" className="mb-2">
+                                        Quantity
+                                    </label>
+                                    <input
+                                        required
+                                        className="w-full rounded-md"
+                                        type="number"
+                                        id="title"
+                                        name='qty'
+                                        placeholder="Quantity"
+                                    />
+                                </div>
+                                <div className="flex flex-col mb-5">
+                                    <label htmlFor="title" className="mb-2">
+                                        Label Name
+                                    </label>
+                                    <input
+                                        required
+                                        className="w-full rounded-md uppercase"
+                                        type="text"
+                                        id="title"
+                                        name='label'
+                                        placeholder="Exp: HM14149"
+                                    />
+                                </div>
 
-                        <button disabled={isLoading} type="submit" className='btn btn-outline btn-info btn-sm'> {
-                            isLoading ? <span className="loading loading-infinity loading-md"></span> : <span>Submit</span>
-                        }</button>
-                    </form>
-                </div>
+                                <button disabled={isLoading} type="submit" className='btn btn-outline btn-info btn-sm'> {
+                                    isLoading ? <span className="loading loading-infinity loading-md"></span> : <span>Submit</span>
+                                }</button>
+                            </form>
+                        </div>
+                }
             </dialog>
         </div>
     );

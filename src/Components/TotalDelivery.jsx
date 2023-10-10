@@ -2,8 +2,9 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { JobContext } from './Context/JobProvider';
 import Loader from "../assets/loader2.json"
 import Lottie from 'lottie-react';
+// import AOS from "aos"
 
-
+// AOS.init()
 
 const TotalDelivery = () => {
     const {
@@ -93,6 +94,8 @@ const TotalDelivery = () => {
         sortDataByDate(); // Initial sorting
     }, [filteredJobs]);
 
+
+
     return (
         <div className='mt-16'>
             <div className="text-2xl py-3 bg-sky-700 text-white text-center">Total Delivery  </div>
@@ -127,12 +130,9 @@ const TotalDelivery = () => {
                         ) : (
                             sortedData.map((job, i) => (
                                 <tr
-                                    data-aos="zoom-in-left"
-                                    data-aos-easing="linear"
-                                    data-aos-duration="400"
+                                className={` hover text-center`}
                                     onDoubleClick={() => handleDeleteDeliveredJob(job)}
                                     key={job._id}
-                                    className="hover text-center"
                                 >
 
                                     <th>{i + 1}</th>
