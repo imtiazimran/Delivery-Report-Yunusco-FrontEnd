@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 const Stat = () => {
     const { jobs, prevJobs } = useContext(JobContext)
 
+
     // --------------------Current Delivery Calculation--------------------------
 
     const currentJobs = jobs.filter((item) => !item.hasOwnProperty("deliveryType"))
@@ -15,6 +16,24 @@ const Stat = () => {
 
     // ------------------Previous Delivery--------------------------------
     const currentDate = new Date();
+
+    const currentMonth = currentDate.getMonth();
+    const currentYear = currentDate.getFullYear();
+    const currentMonthJobs = prevJobs.filter((job) => {
+        const dateParts = job.goodsDeliveryDate.split('-');
+        if (dateParts.length === 3) {
+            const deliveryDate = new Date(
+                parseInt(dateParts[2], 10), // Year
+                parseInt(dateParts[1], 10) - 1, // Month (0-indexed)
+                parseInt(dateParts[0], 10) // Day
+            );
+            return (
+                deliveryDate.getMonth() === currentMonth &&
+                deliveryDate.getFullYear() === currentYear
+            );
+        }
+        return false;
+    });
 
     // Calculate yesterday's date
     const yesterdayDate = new Date(currentDate);
@@ -41,7 +60,7 @@ const Stat = () => {
 
     // ------------------------------------ Total Delivery Calculation----------------------------------
 
-    const totalDelivery = prevJobs.reduce((accumulator, currentJob) => {
+    const currentMonthTotalDelivery = currentMonthJobs.reduce((accumulator, currentJob) => {
         const qtyAsNumber = parseInt(currentJob.qty); // Convert the string to an integer
         if (!isNaN(qtyAsNumber)) {
             return accumulator + qtyAsNumber;
@@ -71,16 +90,16 @@ const Stat = () => {
     // console.log(totalDeliveryToday);
 
     return (
-        <div className='p-5 flex justify-center '>
-            <div className="stats stats-vertical lg:stats-horizontal shadow ">
+        <div className='md:p-5 py-16 bg-gradient-to-r from-gray-600 to-gray-800 flex justify-center  '>
+            <div className="stats stats-vertical md:stats-horizontal shadow w-10/12">
                 {
                     todaysDeliveries != 0 &&
-                        <div className="stat text-center">
-                            <div className="stat-title">Delivered Today</div>
-                            <div className="stat-desc">{todaysDeliveries.length} Jobs</div>
-                            <div className="stat-value">{DeliveredToday.toLocaleString('en-IN')}</div>
-                            <div className="stat-desc">{startOfToday.toLocaleDateString()}</div>
-                        </div>
+                    <div className="stat text-center">
+                        <div className="stat-title">Delivered Today</div>
+                        <div className="stat-desc">{todaysDeliveries.length} Jobs</div>
+                        <div className="stat-value text-3xl">{DeliveredToday.toLocaleString('en-IN')}</div>
+                        <div className="stat-desc">{startOfToday.toLocaleDateString()}</div>
+                    </div>
                 }
                 {
                     yesterdayDeliveries != 0 &&
@@ -88,7 +107,7 @@ const Stat = () => {
                         <div className="stat text-center">
                             <div className="stat-title">Previous Delivery</div>
                             <div className="stat-desc">{yesterdayDeliveries.length} Jobs</div>
-                            <div className="stat-value">{totalPrevDelivery.toLocaleString('en-IN')}</div>
+                            <div className="stat-value md:text-3xl">{totalPrevDelivery.toLocaleString('en-IN')}</div>
                             <div className="stat-desc">{yesterdayDate.toLocaleDateString()}</div>
                         </div>
                     </Link>
@@ -104,9 +123,11 @@ const Stat = () => {
                 }
 
                 <Link to={"/totalDelivery"}>
-                    <div className="stat text-center">
+                    <div className="stat text-center ">
                         <div className="stat-title">Total Delivery</div>
-                        <div className="stat-value">{totalDelivery.toLocaleString("en-IN")}</div>
+                        <div className="stat-desc">{currentMonthJobs.length} Jobs</div>
+                        <div className="stat-value text-3xl">{currentMonthTotalDelivery.toLocaleString("en-IN")}</div>
+                        <div className="stat-desc">From {new Date(new Date().getFullYear(), new Date().getMonth(), 1).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
                     </div>
                 </Link>
                 {

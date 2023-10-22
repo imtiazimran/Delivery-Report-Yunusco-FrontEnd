@@ -19,7 +19,8 @@ const JobProvider = ({ children }) => {
     const [selectedJobForUpdateData, setSelectedJobForUpdateData] = useState(null)
     const [updatedQuantity, setUpdatedQuantity] = useState("");
     const [updatedDeliveryDate, setUpdatedDeliveryDate] = useState("");
-    
+    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1); // Initialize with the current month
+
     const editDateDialogRef = useRef(null);
 
 
@@ -33,16 +34,33 @@ const JobProvider = ({ children }) => {
                 setJobs(res.data)
                 setIsLoading(false)
             })
-    }, [jobs])
+    }, [])
 
     useEffect(() => {
+        setIsLoading(true);
         axios.get(`${baseUrl}/delivered`)
-            .then(res => {
-                setIsLoading(true)
-                setPrevJobs(res.data)
-                setIsLoading(false)
+            .then((res) => {
+                setPrevJobs(res.data);
             })
-    }, [prevJobs])
+            .catch((error) => {
+                console.error("Error fetching jobs:", error);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+    }, []);
+    // Function to switch to the previous month
+    const switchToPreviousMonth = () => {
+        const newMonth = currentMonth === 1 ? 12 : currentMonth - 1;
+        setCurrentMonth(newMonth);
+    };
+
+    // Function to switch to the next month
+    const switchToNextMonth = () => {
+        const newMonth = currentMonth === 12 ? 1 : currentMonth + 1;
+        setCurrentMonth(newMonth);
+    };
+
     // get all the users
     useEffect(() => {
         axios.get(`${baseUrl}/users`)
@@ -51,7 +69,7 @@ const JobProvider = ({ children }) => {
                 setUsers(res.data)
                 setIsLoading(false)
             })
-    }, [users])
+    }, [])
 
     // get logged user only
     const handleAdminSearch = (email) => {
@@ -242,7 +260,7 @@ const JobProvider = ({ children }) => {
         }
     }
 
-    
+
 
     const jobInfo = {
         jobs,
@@ -268,7 +286,9 @@ const JobProvider = ({ children }) => {
         updatedDeliveryDate,
         setUpdatedDeliveryDate,
         handleUpdateDateQty,
-        editDateDialogRef
+        editDateDialogRef,
+        switchToPreviousMonth,
+        switchToNextMonth
     }
     return (
         <JobContext.Provider value={jobInfo}>

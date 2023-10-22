@@ -17,7 +17,7 @@ const TotalDelivery = () => {
         setUpdatedQuantity,
         updatedDeliveryDate,
         setUpdatedDeliveryDate,
-        handleUpdateDateQty,
+        handleUpdateDateQty
     } = useContext(JobContext);
 
 
@@ -26,10 +26,11 @@ const TotalDelivery = () => {
     const [sortedData, setSortedData] = useState([]); // State to hold sorted data
     const [searchQuery, setSearchQuery] = useState("")
     const editDateDialogRef = useRef(null);
+    const [reduceMonth, setReduceMonth] = useState(1)
 
 
     // Function to sort data by date in descending order
-   
+
 
     const handleChangeDate = (job) => {
         document.getElementById('editDate').showModal()
@@ -61,16 +62,10 @@ const TotalDelivery = () => {
     // console.log(selectedJobForUpdateData)
 
     const filteredJobs = prevJobs.filter((job) =>
-        job.po.toLowerCase().includes(searchQuery.toLowerCase()) || job.customar.toLowerCase().includes(searchQuery.toLocaleLowerCase())
+        job.po.toLowerCase().includes(searchQuery.toLowerCase())
+        || job.customar.toLowerCase().includes(searchQuery.toLocaleLowerCase())
     );
-    // Calculate total previous delivery quantity
-    const totalPrevDelivery = filteredJobs.reduce((accumulator, currentJob) => {
-        const qtyAsNumber = parseInt(currentJob.qty); // Convert the string to an integer
-        if (!isNaN(qtyAsNumber)) {
-            return accumulator + qtyAsNumber;
-        }
-        return accumulator; // If conversion fails, return the accumulator unchanged
-    }, 0);
+
 
     const sortDataByDate = () => {
         const sorted = [...filteredJobs].sort((a, b) => {
@@ -88,17 +83,68 @@ const TotalDelivery = () => {
         });
         setSortedData(sorted);
     };
-    
+
+    const preMonth = () => {
+        setReduceMonth(reduceMonth - 1)
+    }
+
+    const nextMonth = () => {
+        // Disable the forward button when date is equal to yesterdayDate
+        setReduceMonth(reduceMonth + 1);
+    }
+
+    // Filter jobs by the current month
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + reduceMonth;
+    const currentYear = currentDate.getFullYear();
+    const currentMonthJobs = sortedData.filter((job) => {
+        const dateParts = job.goodsDeliveryDate.split('-');
+        if (dateParts.length === 3) {
+            const deliveryDate = new Date(
+                parseInt(dateParts[2], 10), // Year
+                parseInt(dateParts[1], 10), // Month (0-indexed)
+                parseInt(dateParts[0], 10) // Day
+
+            );
+            return (
+                deliveryDate.getMonth() === currentMonth &&
+                deliveryDate.getFullYear() === currentYear
+            );
+        }
+        return false;
+    });
+
+    // Calculate total previous delivery quantity
+    const totalPrevDelivery = currentMonthJobs.reduce((accumulator, currentJob) => {
+        const qtyAsNumber = parseInt(currentJob.qty); // Convert the string to an integer
+        if (!isNaN(qtyAsNumber)) {
+            return accumulator + qtyAsNumber;
+        }
+        return accumulator; // If conversion fails, return the accumulator unchanged
+    }, 0);
+
 
     useEffect(() => {
         sortDataByDate(); // Initial sorting
-    }, [filteredJobs]);
+    }, [prevJobs]);
 
 
 
     return (
-        <div className='mt-16'>
-            <div className="text-2xl py-3 bg-sky-700 text-white text-center">Total Delivery  </div>
+        <div className='mt-16 backgruond-color'>
+            <div className="text-2xl rounded-xl py-3 bg-violet-700 text-white text-center flex justify-center items-center gap-3">
+                <span onClick={preMonth} className='cursor-pointer'>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                    </svg>
+                </span>
+                <span>From {new Date(new Date().getFullYear(), currentMonth - 1 ).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+                <span onClick={nextMonth} className={`cursor-pointer`}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                    </svg>
+                </span>
+            </div>
             <div className="form-control">
                 <div className="input-group input-group-sm justify-center my-5">
                     <input onChange={(e) => setSearchQuery(e.target.value)} type="text" placeholder="Search…" className="input input-sm input-bordered" />
@@ -108,10 +154,10 @@ const TotalDelivery = () => {
                 </div>
             </div>
             <div className="overflow-x-auto">
-                <table className="table">
+                <table className="table ">
                     {/* head */}
                     <thead>
-                        <tr className="text-center">
+                        <tr className="text-center text-white bg-yellow-600 text-xl">
                             <th>#</th>
                             <th>Customar</th>
                             <th>Job</th>
@@ -128,9 +174,9 @@ const TotalDelivery = () => {
                                 </td>
                             </tr>
                         ) : (
-                            sortedData.map((job, i) => (
+                            currentMonthJobs.map((job, i) => (
                                 <tr
-                                className={` hover text-center`}
+                                    className={` text-center`}
                                     onDoubleClick={() => handleDeleteDeliveredJob(job)}
                                     key={job._id}
                                 >

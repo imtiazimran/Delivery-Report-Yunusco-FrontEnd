@@ -51,8 +51,8 @@ const PreviousDelivery = () => {
     const { toPDF, targetRef } = usePDF({ filename: `${yesterdayDate.toLocaleDateString()} Delivery.pdf` });
 
     return (
-        <div className='mt-16'>
-            <div className="text-2xl rounded-xl py-3 bg-violet-700 text-white text-center flex justify-center items-center gap-3">
+        <div className='mt-16 py-16 w-11/12 mx-auto backgruond-color'>
+            <div className="text-2xl rounded-xl py-3 mb-16 bg-violet-700 text-white text-center flex justify-center items-center gap-3">
                 <span onClick={preDalivery} className='cursor-pointer'>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
@@ -103,7 +103,7 @@ const PreviousDelivery = () => {
                             </tr>
                         ) : (
                             yesterdayDeliveries.map((job, i) => (
-                                <tr onDoubleClick={() => handleDeleteDeliveredJob(job)} key={job._id} className="hover text-center">
+                                <tr onDoubleClick={() => handleDeleteDeliveredJob(job)} key={job._id} className=" text-center">
                                     <th>{i + 1}</th>
                                     <td className='capitalize'>{job.customar}</td>
                                     <td>JBH00{job.po}</td>

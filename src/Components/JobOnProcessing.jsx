@@ -39,7 +39,7 @@ const JobOnProcessing = () => {
 
 
     return (
-        <div>
+        <div className=" pb-16 ">
 
             <PD_Modal
                 isOpen={isOpen}
@@ -51,14 +51,14 @@ const JobOnProcessing = () => {
             />
 
             {
-                onProccess.length === 0 || <div className="rounded-xl text-2xl py-3 bg-sky-700 text-white text-center"><span className="loading loading-ring loading-xs"></span> Jobs On Processing <span className="loading loading-ring loading-xs"></span></div>
+                onProccess.length === 0 || <div className="rounded-xl md:w-11/12 mx-auto text-2xl py-3 bg-sky-700 text-white text-center"><span className="loading loading-ring loading-xs"></span> Jobs On Processing <span className="loading loading-ring loading-xs"></span></div>
             }
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto mx-auto text-white">
                 <table className="table">
                     {/* head */}
                     {
                         onProccess.length === 0 || <thead>
-                            <tr className="text-center">
+                            <tr className="text-center text-white">
                                 <th>#</th>
                                 <th>Customar</th>
                                 <th>Job</th>
@@ -76,15 +76,15 @@ const JobOnProcessing = () => {
                                 </td>
                             </tr>
                         ) : onProccess.length === 0 ? (
-                            <tr className="mt-5">
-                                <span className="lg:text-2xl text-center block font-semibold lg:w-1/4 mx-auto lg:absolute top-2/4 z-50">No Job is in Proccessing <br />
+                            <tr className="mt-5 ">
+                                <span className="lg:text-2xl text-xl bg-cyan-900 text-white py-4 text-center block font-semibold md:w-1/4 mx-auto lg:absolute top-1/4 z-50">No Job is in Proccessing <br />
                                     Please Add some Jobs First
                                 </span>
                                 <Lottie className="lg:w-2/4 mx-auto" animationData={EmptyAmimation} />
                             </tr>
                         ) : (
                             onProccess.map((job, i) => (
-                                <tr key={job._id} className="hover text-center">
+                                <tr key={job._id} className="text-center py-16">
                                     <th>{i + 1}</th>
                                     <td className='capitalize'>{job?.customar}</td>
                                     <td>JBH00{job?.po}</td>

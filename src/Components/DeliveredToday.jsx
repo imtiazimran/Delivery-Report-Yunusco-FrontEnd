@@ -74,9 +74,9 @@ const DeliveredToday = () => {
     const { toPDF, targetRef } = usePDF({ filename: 'Delivered Today.pdf' });
 
     return (
-        <div>
+        <div className='pb-16'>
             {
-                todaysDeliveries.length === 0 || <div className="text-2xl rounded-xl py-3 bg-green-700 text-white text-center"> {todaysDeliveries.length} Jobs Delivered Today
+                todaysDeliveries.length === 0 || <div className="text-2xl  bg-cyan-900 text-white py-4  text-center"> {todaysDeliveries.length} Jobs Delivered Today
                     <button className="rounded pdf px-3 hover:text-blue-400" onClick={() => toPDF()}>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75l3 3m0 0l3-3m-3 3v-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -91,7 +91,7 @@ const DeliveredToday = () => {
                     {/* head */}
                     {
                         todaysDeliveries.length === 0 || <thead>
-                            <tr className="text-center">
+                            <tr className="text-center text-white my-5">
                                 <th>#</th>
                                 <th>Customar</th>
                                 <th>Job</th>
@@ -110,14 +110,14 @@ const DeliveredToday = () => {
                         ) : todaysDeliveries.length === 0 ? (
                             <tr>
                                 <td colSpan="7" className='text-center'>
-                                    <span className="lg:text-2xl text-center block font-semibold capitalize lg:w-1/4 mx-auto lg:absolute top-2/4 z-50">No Job delivered today <br /> <Link to={"previousDelivery"} >View Previous Delivery</Link>   </span>
+                                    <span className="lg:text-2xl text-xl bg-cyan-900 text-white py-4 text-center block font-semibold capitalize lg:w-1/4 mx-auto lg:absolute top-1/4 z-50">No Job delivered today <br /> <Link to={"previousDelivery"} >View Previous Delivery</Link>   </span>
                                     <Lottie className="lg:w-1/4 mx-auto" animationData={EmptyAmimation} />
                                 </td>
                             </tr>
                         )
                             : (
                                 todaysDeliveries.map((job, i) => (
-                                    <tr onDoubleClick={() => handleDeleteDeliveredJob(job)} key={job._id} className="hover text-center ">
+                                    <tr onDoubleClick={() => handleDeleteDeliveredJob(job)} key={job._id} className=" text-center">
                                         <th>{i + 1}</th>
                                         <td className='capitalize'>{job.customar}</td>
                                         <td>JBH00{job.po}</td>
