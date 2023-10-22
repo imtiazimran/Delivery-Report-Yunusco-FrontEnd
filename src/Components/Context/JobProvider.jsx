@@ -34,7 +34,7 @@ const JobProvider = ({ children }) => {
                 setJobs(res.data)
                 setIsLoading(false)
             })
-    }, [])
+    }, [jobs])
 
     useEffect(() => {
         setIsLoading(true);
@@ -48,7 +48,7 @@ const JobProvider = ({ children }) => {
             .finally(() => {
                 setIsLoading(false);
             });
-    }, []);
+    }, [prevJobs]);
     // Function to switch to the previous month
     const switchToPreviousMonth = () => {
         const newMonth = currentMonth === 1 ? 12 : currentMonth - 1;
