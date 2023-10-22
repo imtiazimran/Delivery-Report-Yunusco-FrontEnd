@@ -61,14 +61,11 @@ const TotalDelivery = () => {
 
     // console.log(selectedJobForUpdateData)
 
-    const filteredJobs = prevJobs.filter((job) =>
-        job.po.toLowerCase().includes(searchQuery.toLowerCase())
-        || job.customar.toLowerCase().includes(searchQuery.toLocaleLowerCase())
-    );
+   
 
 
     const sortDataByDate = () => {
-        const sorted = [...filteredJobs].sort((a, b) => {
+        const sorted = [...currentMonthJobs].sort((a, b) => {
             const dateA = new Date(
                 a.goodsDeliveryDate.slice(6, 10), // Year
                 a.goodsDeliveryDate.slice(3, 5) - 1, // Month (0-indexed)
@@ -97,7 +94,7 @@ const TotalDelivery = () => {
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth() + reduceMonth;
     const currentYear = currentDate.getFullYear();
-    const currentMonthJobs = sortedData.filter((job) => {
+    const currentMonthJobs = prevJobs.filter((job) => {
         const dateParts = job.goodsDeliveryDate.split('-');
         if (dateParts.length === 3) {
             const deliveryDate = new Date(
@@ -128,7 +125,10 @@ const TotalDelivery = () => {
         sortDataByDate(); // Initial sorting
     }, [prevJobs]);
 
-
+    const filteredJobs = sortedData.filter((job) =>
+    job.po.toLowerCase().includes(searchQuery.toLowerCase())
+    || job.customar.toLowerCase().includes(searchQuery.toLocaleLowerCase())
+);
 
     return (
         <div className='mt-16 backgruond-color'>
@@ -147,7 +147,7 @@ const TotalDelivery = () => {
             </div>
             <div className="form-control">
                 <div className="input-group input-group-sm justify-center my-5">
-                    <input onChange={(e) => setSearchQuery(e.target.value)} type="text" placeholder="Search…" className="input input-sm input-bordered" />
+                    <input onChange={(e) => setSearchQuery(e.target.value)} type="text" placeholder="Search…" className="input input-sm input-bordered text-slate-900" />
                     <button className="btn btn-sm btn-square">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                     </button>
@@ -174,7 +174,7 @@ const TotalDelivery = () => {
                                 </td>
                             </tr>
                         ) : (
-                            currentMonthJobs.map((job, i) => (
+                            filteredJobs.map((job, i) => (
                                 <tr
                                     className={` text-center`}
                                     onDoubleClick={() => handleDeleteDeliveredJob(job)}
