@@ -70,7 +70,7 @@ const PreviousDelivery = () => {
     const { toPDF, targetRef } = usePDF({ filename: `${yesterdayDate.toLocaleDateString()} Delivery.pdf` });
 
     return (
-        <div className='mt-16 py-16 w-11/12 mx-auto backgruond-color'>
+        <div className='mt-16 py-10 mx-auto backgruond-color'>
             <div className="text-2xl rounded-xl py-3 mb-16 bg-violet-700 text-white text-center flex flex-col md:flex-row justify-center items-center gap-3">
                 <div className='text-white text-center flex justify-center items-center gap-3'>
                     <span onClick={preDalivery} className='cursor-pointer'>
@@ -104,7 +104,7 @@ const PreviousDelivery = () => {
 
 
             </div>
-            <div className="overflow-x-auto" ref={targetRef}>
+            <div className="overflow-x-auto md:px-10" ref={targetRef}>
                 <table className="table">
                     {/* head */}
                     {

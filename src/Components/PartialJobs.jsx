@@ -31,7 +31,7 @@ const PartialJobs = () => {
 
     const partialQty = partialDeliveries.reduce((accumolator, currentJob) => accumolator + parseInt(currentJob.qty), 0)
     return (
-        <div className='mt-16'>
+        <div className='mt-16 py-8 backgruond-color'>
             <PD_Modal
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}

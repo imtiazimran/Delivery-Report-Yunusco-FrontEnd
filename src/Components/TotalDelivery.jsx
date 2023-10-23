@@ -137,7 +137,7 @@ const TotalDelivery = () => {
     );
 
     return (
-        <div className='mt-16 backgruond-color'>
+        <div className='mt-16 py-8 backgruond-color'>
             <div className="text-2xl rounded-xl py-3 bg-violet-700 text-white text-center flex justify-center items-center gap-3">
                 <span onClick={preMonth} className='cursor-pointer'>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -159,7 +159,7 @@ const TotalDelivery = () => {
                     </button>
                 </div>
             </div>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto md:px-10">
                 <table className="table ">
                     {/* head */}
                     {
