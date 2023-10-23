@@ -240,7 +240,7 @@ const TotalDelivery = () => {
                     <div className="modal-box">
                         <h3 className="font-bold text-lg text-center">JBH000{selectedJobForUpdateData?.po}</h3>
                         <button onClick={handleCloseModal} className="btn btn-sm btn-outline absolute right-2 top-2">Close</button>
-                        <form method="dialog" onSubmit={handleEditJob} className="mx-auto w-4/5">
+                        <form method="dialog" onSubmit={handleEditJob} className="mx-auto w-4/5 text-black">
                             <label className=" block my-5">
                                 <span className="block">Quantity</span>
                                 <input name="qty" value={updatedQuantity} onChange={handleQuantityChange} type="text" className="input input-bordered input-sm w-full max-w-xs" />

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { JobContext } from './Context/JobProvider';
 import EmptyBox from "../assets/EmptyBox.json"
 import Loader from "../assets/loader2.json"
@@ -9,11 +9,30 @@ const PreviousDelivery = () => {
     const [reduceADay, setReduceADay] = useState(1)
     const currentDate = new Date();
 
+    const dateInputRef = useRef(null);
+
+    const [selectedDate, setSelectedDate] = useState(currentDate); // State for the selected date
 
 
-    // Calculate yesterday's date
-    const yesterdayDate = new Date(currentDate);
-    yesterdayDate.setDate(currentDate.getDate() - reduceADay);
+
+
+    // Function to get the selected date from the input
+    const getSelectedDate = () => {
+        const selectedDateString = dateInputRef.current.value;
+        const newSelectedDate = new Date(selectedDateString);
+        setSelectedDate(newSelectedDate);
+
+        // Update "yesterdayDate" based on the selected date
+        const newYesterdayDate = new Date(newSelectedDate);
+        newYesterdayDate.setDate(newSelectedDate.getDate());
+        setReduceADay(0)
+        // You can choose to use this new date, or you can keep using "yesterdayDate" as needed in your code.
+    };
+
+
+    // "yesterdayDate" should be calculated based on "selectedDate"
+    const yesterdayDate = new Date(selectedDate);
+    yesterdayDate.setDate(selectedDate.getDate() - reduceADay);
 
     const preDalivery = () => {
         setReduceADay(reduceADay + 1)
@@ -47,30 +66,43 @@ const PreviousDelivery = () => {
         return accumulator; // If conversion fails, return the accumulator unchanged
     }, 0);
 
-    
+
     const { toPDF, targetRef } = usePDF({ filename: `${yesterdayDate.toLocaleDateString()} Delivery.pdf` });
 
     return (
         <div className='mt-16 py-16 w-11/12 mx-auto backgruond-color'>
-            <div className="text-2xl rounded-xl py-3 mb-16 bg-violet-700 text-white text-center flex justify-center items-center gap-3">
-                <span onClick={preDalivery} className='cursor-pointer'>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-                    </svg>
-                </span>
-                <span> Delivery Date {yesterdayDate.toLocaleDateString()}</span>
-                <span onClick={forwardDelivery} className={`cursor-pointer ${isSameDate(currentDate, yesterdayDate) ? 'disabled' : ''}`}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                    </svg>
-                </span>
+            <div className="text-2xl rounded-xl py-3 mb-16 bg-violet-700 text-white text-center flex flex-col md:flex-row justify-center items-center gap-3">
+                <div className='text-white text-center flex justify-center items-center gap-3'>
+                    <span onClick={preDalivery} className='cursor-pointer'>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                        </svg>
+                    </span>
+                    <span> Delivery Date {yesterdayDate.toLocaleDateString()}</span>
+                    <span onClick={forwardDelivery} className={`cursor-pointer ${isSameDate(currentDate, yesterdayDate) ? 'disabled' : ''}`}>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                    </span>
+                </div>
 
-                <button className="rounded pdf px-3 hover:text-blue-400" onClick={() => toPDF()}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75l3 3m0 0l3-3m-3 3v-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                <div>
+                    <button className="rounded pdf px-3 hover:text-blue-400" onClick={() => toPDF()}>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75l3 3m0 0l3-3m-3 3v-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
 
-                </button>
+                    </button>
+                    <input
+                        ref={dateInputRef}
+                        onChange={getSelectedDate}
+                        type="date"
+                        className="bg-violet-700 border-double border-slate-900"
+                    />
+                </div>
+
+
+
             </div>
             <div className="overflow-x-auto" ref={targetRef}>
                 <table className="table">
@@ -86,7 +118,6 @@ const PreviousDelivery = () => {
                             </tr>
                         </thead>
                     }
-
                     <tbody>
                         {isLoading ? (
                             <tr>
@@ -97,7 +128,9 @@ const PreviousDelivery = () => {
                         ) : yesterdayDeliveries.length === 0 ? (
                             <tr>
                                 <td colSpan="7" className='text-center'>
-                                    <span className="lg:text-2xl text-center block font-semibold capitalize  lg:w-1/4 mx-auto z-50">No Job delivered on {yesterdayDate.toLocaleDateString()}</span>
+                                    <span className="lg:text-2xl text-center block font-semibold capitalize  lg:w-1/4 mx-auto z-50">
+                                        <span> No Job delivered on {yesterdayDate.toLocaleDateString()}</span>
+                                    </span>
                                     <Lottie className="w-3/4 lg:w-2/5 mx-auto" animationData={EmptyBox} />
                                 </td>
                             </tr>
