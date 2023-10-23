@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { JobContext } from './Context/JobProvider';
 import Loader from "../assets/loader2.json"
 import Lottie from 'lottie-react';
+import NothingFound from "../assets/nothingFound.json"
 // import AOS from "aos"
 
 // AOS.init()
@@ -27,6 +28,8 @@ const TotalDelivery = () => {
     const [searchQuery, setSearchQuery] = useState("")
     const editDateDialogRef = useRef(null);
     const [reduceMonth, setReduceMonth] = useState(1)
+    const [currentMonthJobs, setCurrentMonthJobs] = useState([])
+    const [currentMonth, setCurrentMonth] = useState('')
 
 
     // Function to sort data by date in descending order
@@ -61,7 +64,7 @@ const TotalDelivery = () => {
 
     // console.log(selectedJobForUpdateData)
 
-   
+
 
 
     const sortDataByDate = () => {
@@ -90,26 +93,29 @@ const TotalDelivery = () => {
         setReduceMonth(reduceMonth + 1);
     }
 
-    // Filter jobs by the current month
-    const currentDate = new Date();
-    const currentMonth = currentDate.getMonth() + reduceMonth;
-    const currentYear = currentDate.getFullYear();
-    const currentMonthJobs = prevJobs.filter((job) => {
-        const dateParts = job.goodsDeliveryDate.split('-');
-        if (dateParts.length === 3) {
-            const deliveryDate = new Date(
-                parseInt(dateParts[2], 10), // Year
-                parseInt(dateParts[1], 10), // Month (0-indexed)
-                parseInt(dateParts[0], 10) // Day
-
-            );
-            return (
-                deliveryDate.getMonth() === currentMonth &&
-                deliveryDate.getFullYear() === currentYear
-            );
-        }
-        return false;
-    });
+    useEffect(() => {
+        const currentDate = new Date();
+        const updatedCurrentMonth = currentDate.getMonth() + reduceMonth;
+        setCurrentMonth(updatedCurrentMonth)
+        const currentYear = currentDate.getFullYear();
+        const filteredJobs = prevJobs.filter((job) => {
+            const dateParts = job.goodsDeliveryDate.split('-');
+            if (dateParts.length === 3) {
+                const deliveryDate = new Date(
+                    parseInt(dateParts[2], 10), // Year
+                    parseInt(dateParts[1], 10), // Month (0-indexed)
+                    parseInt(dateParts[0], 10) // Day
+                );
+                return (
+                    deliveryDate.getMonth() === updatedCurrentMonth &&
+                    deliveryDate.getFullYear() === currentYear
+                );
+            }
+            return false;
+        });
+        setCurrentMonthJobs(filteredJobs);
+    }, [prevJobs, reduceMonth]);
+    // console.log(currentMonthJobs, "current Month:", "State: ", reduceMonth);
 
     // Calculate total previous delivery quantity
     const totalPrevDelivery = currentMonthJobs.reduce((accumulator, currentJob) => {
@@ -123,12 +129,12 @@ const TotalDelivery = () => {
 
     useEffect(() => {
         sortDataByDate(); // Initial sorting
-    }, [prevJobs]);
+    }, [currentMonthJobs]);
 
     const filteredJobs = sortedData.filter((job) =>
-    job.po.toLowerCase().includes(searchQuery.toLowerCase())
-    || job.customar.toLowerCase().includes(searchQuery.toLocaleLowerCase())
-);
+        job.po.toLowerCase().includes(searchQuery.toLowerCase())
+        || job.customar.toLowerCase().includes(searchQuery.toLocaleLowerCase())
+    );
 
     return (
         <div className='mt-16 backgruond-color'>
@@ -138,7 +144,7 @@ const TotalDelivery = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
                     </svg>
                 </span>
-                <span>From {new Date(new Date().getFullYear(), currentMonth - 1 ).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+                <span>From {new Date(new Date().getFullYear(), currentMonth - 1).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
                 <span onClick={nextMonth} className={`cursor-pointer`}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
@@ -156,21 +162,31 @@ const TotalDelivery = () => {
             <div className="overflow-x-auto">
                 <table className="table ">
                     {/* head */}
-                    <thead>
-                        <tr className="text-center text-white bg-yellow-600 text-xl">
-                            <th>#</th>
-                            <th>Customar</th>
-                            <th>Job</th>
-                            <th>Quantity</th>
-                            <th>Label Name</th>
-                            <th>Delivery Date</th>
-                        </tr>
-                    </thead>
+                    {
+                        filteredJobs.length === 0 ||
+                        <thead>
+                            <tr className="text-center text-white bg-yellow-600 text-xl">
+                                <th>#</th>
+                                <th>Customar</th>
+                                <th>Job</th>
+                                <th>Quantity</th>
+                                <th>Label Name</th>
+                                <th>Delivery Date</th>
+                            </tr>
+                        </thead>
+                    }
                     <tbody>
                         {isLoading ? (
                             <tr>
                                 <td colSpan="5" className="text-center">
                                     <Lottie className="lg:w-1/4 mx-auto" animationData={Loader} />
+                                </td>
+                            </tr>
+                        ) : filteredJobs.length === 0 ? (
+                            <tr>
+                                <td colSpan="7" className="text-center">
+                                    <span className="lg:text-2xl text-center block font-semibold capitalize bg-opacity-5 lg:w-1/4 mx-auto lg:absolute top-2/4 z-50">Sorry i Only have the Recods From Septembar 2023</span>
+                                    <Lottie className="lg:w-1/4 mx-auto" animationData={NothingFound} />
                                 </td>
                             </tr>
                         ) : (
@@ -200,16 +216,19 @@ const TotalDelivery = () => {
                             ))
                         )}
                     </tbody>
-                    <tfoot>
-                        <tr className='text-center bg-yellow-600'>
-                            <th>#</th>
-                            <th></th>
-                            <th className='text-xl text-white'>Total Quantity</th>
-                            <th className='text-xl text-white'>{totalPrevDelivery.toLocaleString('en-IN')} Pcs</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </tfoot>
+                    {
+                        filteredJobs.length === 0 ||
+                        <tfoot>
+                            <tr className='text-center bg-yellow-600'>
+                                <th>#</th>
+                                <th></th>
+                                <th className='text-xl text-white'>Total Quantity</th>
+                                <th className='text-xl text-white'>{totalPrevDelivery.toLocaleString('en-IN')} Pcs</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    }
                 </table>
 
                 {/* Open the modal using document.getElementById('ID').showModal() method */}
