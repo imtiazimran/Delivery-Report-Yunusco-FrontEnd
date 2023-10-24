@@ -4,30 +4,15 @@ import EmptyBox from "../assets/EmptyBox.json"
 import Loader from "../assets/loader2.json"
 import Lottie from "lottie-react";
 import { usePDF } from 'react-to-pdf';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 const PreviousDelivery = () => {
     const { prevJobs, isLoading, handleDeleteDeliveredJob } = useContext(JobContext);
     const [reduceADay, setReduceADay] = useState(1)
     const currentDate = new Date();
-
-    const dateInputRef = useRef(null);
-
+    const datePickerRef = useRef(null);
     const [selectedDate, setSelectedDate] = useState(currentDate); // State for the selected date
 
-
-
-
-    // Function to get the selected date from the input
-    const getSelectedDate = () => {
-        const selectedDateString = dateInputRef.current.value;
-        const newSelectedDate = new Date(selectedDateString);
-        setSelectedDate(newSelectedDate);
-
-        // Update "yesterdayDate" based on the selected date
-        const newYesterdayDate = new Date(newSelectedDate);
-        newYesterdayDate.setDate(newSelectedDate.getDate());
-        setReduceADay(0)
-        // You can choose to use this new date, or you can keep using "yesterdayDate" as needed in your code.
-    };
 
 
     // "yesterdayDate" should be calculated based on "selectedDate"
@@ -69,10 +54,27 @@ const PreviousDelivery = () => {
 
     const { toPDF, targetRef } = usePDF({ filename: `${yesterdayDate.toLocaleDateString()} Delivery.pdf` });
 
+    const handleDatePickerChange = (date) => {
+        setReduceADay(0)
+        setSelectedDate(date);
+    };
+
+    const openDatePicker = () => {
+        if (datePickerRef.current) {
+            datePickerRef.current.setOpen(true);
+        }
+    };
+
     return (
         <div className='mt-16 py-10 mx-auto backgruond-color'>
-            <div className="text-2xl rounded-xl py-3 mb-16 bg-violet-700 text-white text-center flex flex-col md:flex-row justify-center items-center gap-3">
+            <div className="text-xl rounded-xl py-3 mb-16 bg-violet-700 text-white text-center flex flex-col md:flex-row justify-center items-center gap-3">
+
                 <div className='text-white text-center flex justify-center items-center gap-3'>
+                    <button className="rounded pdf px-3 hover:text-blue-400" onClick={() => toPDF()}>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75l3 3m0 0l3-3m-3 3v-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </button>
                     <span onClick={preDalivery} className='cursor-pointer'>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
@@ -84,25 +86,21 @@ const PreviousDelivery = () => {
                             <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                         </svg>
                     </span>
-                </div>
 
-                <div>
-                    <button className="rounded pdf px-3 hover:text-blue-400" onClick={() => toPDF()}>
+                    <button onClick={openDatePicker}>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75l3 3m0 0l3-3m-3 3v-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z" />
                         </svg>
 
                     </button>
-                    <input
-                        ref={dateInputRef}
-                        onChange={getSelectedDate}
-                        type="date"
-                        className="bg-violet-700 border-double border-slate-900 text-white"
+                    <DatePicker
+                        className='hidden'
+                        selected={selectedDate}
+                        onChange={handleDatePickerChange}
+                        dateFormat="dd/MM/yyyy"
+                        ref={datePickerRef}
                     />
                 </div>
-
-
-
             </div>
             <div className="overflow-x-auto md:px-10" ref={targetRef}>
                 <table className="table">

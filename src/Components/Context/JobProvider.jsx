@@ -24,8 +24,6 @@ const JobProvider = ({ children }) => {
 
 
 
-    console.log(currentUser);
-
     const baseUrl = "https://delivery-report-yunusco-back-end.vercel.app"
     // const baseUrl = "http://localhost:8570"
 
