@@ -11,7 +11,7 @@ import Swal from 'sweetalert2';
 const Navbar = () => {
     const { user, logOut } = useContext(AuthContext)
 
-    const { jobs } = useContext(JobContext)
+    const { jobs, isAdmin } = useContext(JobContext)
 
     const [isOpen, setIsOpen] = useState(false)
 
@@ -184,10 +184,9 @@ const Navbar = () => {
                                             </a>
                                         </li>
                                         <li>
-                                            <a className="justify-between">
-                                                Setting
-                                                <span className="badge">Comming soon</span>
-                                            </a>
+                                            <Link to="/users" className={`justify-between ${isAdmin ? "" : "hidden"}`}>
+                                                Manage Users
+                                            </Link>
                                         </li>
                                         <li><button onClick={handleLogOut}>Logout</button></li>
                                     </ul>

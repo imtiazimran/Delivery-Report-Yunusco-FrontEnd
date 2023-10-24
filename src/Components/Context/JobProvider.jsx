@@ -23,8 +23,8 @@ const JobProvider = ({ children }) => {
     const editDateDialogRef = useRef(null);
 
 
-    const baseUrl = "https://delivery-report-yunusco-back-end.vercel.app"
-    // const baseUrl = "http://localhost:8570"
+    // const baseUrl = "https://delivery-report-yunusco-back-end.vercel.app"
+    const baseUrl = "http://localhost:8570"
 
     useEffect(() => {
         axios.get(`${baseUrl}/delivery`)
@@ -65,12 +65,65 @@ const JobProvider = ({ children }) => {
             .then(res => {
                 setIsLoading(true)
 
-                if (res.data.role === "admin") {
+                if (res.data.role === "Admin") {
                     setIsAdmin(true)
                 }
                 setIsLoading(false)
             })
     }
+    const deleteUserFromDataBase = user =>{
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                if (isAdmin) {
+
+                    try {
+                        axios.delete(`${baseUrl}/user/${_id}`)
+                        setUsers(user => users.filter(u => u._id !== user._id));
+
+                        // Display SweetAlert success alert
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'User Deleted',
+                            text: `${user.name} Deleted From Database.`,
+                        });
+                    } catch (error) {
+                        if (error) {
+                            Swal.fire({
+                                position: 'top-center',
+                                icon: 'error',
+                                title: `${error.message}`,
+                                text: 'An Error Occured during this Oparation',
+                                showConfirmButton: "OK"
+                            });
+                        }
+                        console.error("Error delivering job:", error);
+                        // Handle error and show a message to the user
+                    }
+                } else {
+                    Swal.fire({
+                        position: 'top-center',
+                        icon: 'error',
+                        title: "Unauthorize Oparetion",
+                        text: "Look Like You Don't have the permission to Delete Job",
+                        showConfirmButton: "OK"
+                    });
+                }
+            }
+        });
+
+        
+    }
+
+    // add user to the database while login
     const addUser = async (user) => {
         try {
             await axios.post(`${baseUrl}/postUser`, user);
@@ -274,7 +327,10 @@ const JobProvider = ({ children }) => {
         updatedDeliveryDate,
         setUpdatedDeliveryDate,
         handleUpdateDateQty,
-        editDateDialogRef
+        editDateDialogRef,
+        users,
+        isAdmin,
+        deleteUserFromDataBase
     }
     return (
         <JobContext.Provider value={jobInfo}>

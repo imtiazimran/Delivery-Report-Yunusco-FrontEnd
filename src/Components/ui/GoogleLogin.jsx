@@ -17,7 +17,7 @@ const GoogleLoginButton = () => {
         continueWithgoogle()
             .then(res => {
                 const loggeduser = res.user;
-                const user = { name: loggeduser.displayName, email: loggeduser.email, image: loggeduser.imgURL }
+                const user = { name: loggeduser.displayName, email: loggeduser.email, image: loggeduser.photoURL }
                 Swal.fire({
                     icon: 'success',
                     title: 'Login Success',

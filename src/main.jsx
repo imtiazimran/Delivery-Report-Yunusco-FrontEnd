@@ -15,6 +15,7 @@ import Register from './Components/ui/Register.jsx';
 import AuthProvider from './Components/Context/AuthProvider.jsx';
 import Login from './Components/ui/Login.jsx';
 import PrivetRoute from './Components/PriveteRoute.jsx';
+import ManageUsers from './Components/ManageUsers.jsx';
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <Login />
+      },
+      {
+        path : "/users",
+        element : <ManageUsers/>
       }
     ]
   },

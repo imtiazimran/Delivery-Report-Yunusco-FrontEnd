@@ -97,7 +97,7 @@ const PreviousDelivery = () => {
                         ref={dateInputRef}
                         onChange={getSelectedDate}
                         type="date"
-                        className="bg-violet-700 border-double border-slate-900"
+                        className="bg-violet-700 border-double border-slate-900 text-white"
                     />
                 </div>
 
