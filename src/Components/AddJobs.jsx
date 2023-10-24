@@ -10,7 +10,7 @@ const AddJobs = ({ isOpen, setIsOpen }) => {
     const [isLoading, setIsloading] = useState(false)
 
     const { user } = useContext(AuthContext)
-
+ 
     // console.log(user.displayName);
 
     const handleSubmit = e => {

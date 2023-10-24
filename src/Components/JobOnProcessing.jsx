@@ -54,7 +54,7 @@ const JobOnProcessing = () => {
                 onProccess.length === 0 || <div className="rounded-xl md:w-11/12 mx-auto text-2xl py-3 bg-sky-700 text-white text-center"><span className="loading loading-ring loading-xs"></span> Jobs On Processing <span className="loading loading-ring loading-xs"></span></div>
             }
             <div className="overflow-x-auto mx-auto text-white">
-                <table className="table">
+                <table className="table md:w-11/12 mx-auto">
                     {/* head */}
                     {
                         onProccess.length === 0 || <thead>
@@ -87,7 +87,7 @@ const JobOnProcessing = () => {
                                 <tr key={job._id} className="text-center py-16">
                                     <th>{i + 1}</th>
                                     <td className='capitalize'>{job?.customar}</td>
-                                    <td>JBH00{job?.po}</td>
+                                    <td>JBH000{job?.po}</td>
                                     <td>{job?.qty.toLocaleString('en-IN')}</td>
                                     <td className='uppercase'>{job?.label}</td>
                                     <td>
