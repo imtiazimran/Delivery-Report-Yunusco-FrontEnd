@@ -26,8 +26,8 @@ const JobProvider = ({ children }) => {
 
     console.log(currentUser);
 
-    // const baseUrl = "https://delivery-report-yunusco-back-end.vercel.app"
-    const baseUrl = "http://localhost:8570"
+    const baseUrl = "https://delivery-report-yunusco-back-end.vercel.app"
+    // const baseUrl = "http://localhost:8570"
 
 
     // get On Processing jobs
@@ -96,7 +96,7 @@ const JobProvider = ({ children }) => {
     // get logged user only
     const handleAdminSearch = (email) => {
         // Check if a request is already in progress
-        
+
         axios.get(`${baseUrl}/currentUser/${email}`)
             .then(res => {
                 setIsLoading(true);
