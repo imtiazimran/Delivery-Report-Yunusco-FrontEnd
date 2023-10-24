@@ -23,8 +23,11 @@ const JobProvider = ({ children }) => {
     const editDateDialogRef = useRef(null);
 
 
-    const baseUrl = "https://delivery-report-yunusco-back-end.vercel.app"
-    // const baseUrl = "http://localhost:8570"
+
+    console.log(currentUser);
+
+    // const baseUrl = "https://delivery-report-yunusco-back-end.vercel.app"
+    const baseUrl = "http://localhost:8570"
 
 
     // get On Processing jobs
@@ -35,7 +38,7 @@ const JobProvider = ({ children }) => {
                 setJobs(res.data)
                 setIsLoading(false)
             })
-    }, [jobs])
+    }, [])
 
     // get all delivered jobs
     useEffect(() => {
@@ -50,7 +53,35 @@ const JobProvider = ({ children }) => {
             .finally(() => {
                 setIsLoading(false);
             });
-    }, [prevJobs]);
+    }, []);
+
+
+    // This effect runs when 'jobs' changes, but checks 'isLoading' to prevent endless calls
+    useEffect(() => {
+        if (!isLoading) {
+            axios.get(`${baseUrl}/delivery`)
+                .then(res => {
+                    setJobs(res.data);
+                })
+                .catch((error) => {
+                    console.error("Error fetching jobs:", error);
+                });
+        }
+    }, [isLoading]);
+
+    // This effect runs when 'prevJobs' changes, but checks 'isLoading' to prevent endless calls
+    useEffect(() => {
+        if (!isLoading) {
+            axios.get(`${baseUrl}/delivered`)
+                .then((res) => {
+                    setPrevJobs(res.data);
+                })
+                .catch((error) => {
+                    console.error("Error fetching previous jobs:", error);
+                });
+        }
+    }, [isLoading]);
+
 
     // get all the users
     useEffect(() => {
@@ -64,16 +95,25 @@ const JobProvider = ({ children }) => {
 
     // get logged user only
     const handleAdminSearch = (email) => {
+        // Check if a request is already in progress
+        
         axios.get(`${baseUrl}/currentUser/${email}`)
             .then(res => {
-                setIsLoading(true)
-                setCurrentUser(res.data)
+                setIsLoading(true);
+                setCurrentUser(res.data);
                 if (res.data.role === "Admin") {
-                    setIsAdmin(true)
+                    setIsAdmin(true);
                 }
-                setIsLoading(false)
             })
+            .catch(error => {
+                // Handle error here
+                console.log(error);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
     }
+
     const deleteUserFromDataBase = user => {
 
         Swal.fire({
@@ -137,14 +177,14 @@ const JobProvider = ({ children }) => {
                 text: `Is Editor From Now On.`,
             });
         } catch (error) {
-                Swal.fire({
-                    position: 'top-center',
-                    icon: 'error',
-                    title: 'Error While Uptading User Role',
-                    text: `${error.message}`,
-                    showConfirmButton: "OK"
-                });
-            
+            Swal.fire({
+                position: 'top-center',
+                icon: 'error',
+                title: 'Error While Uptading User Role',
+                text: `${error.message}`,
+                showConfirmButton: "OK"
+            });
+
             console.error("Error delivering job:", error);
             // Handle error and show a message to the user
         }
@@ -160,14 +200,14 @@ const JobProvider = ({ children }) => {
                 text: `Is Admin From Now On.`,
             });
         } catch (error) {
-                Swal.fire({
-                    position: 'top-center',
-                    icon: 'error',
-                    title: 'Error While Uptading User Role',
-                    text: `${error.message}`,
-                    showConfirmButton: "OK"
-                });
-            
+            Swal.fire({
+                position: 'top-center',
+                icon: 'error',
+                title: 'Error While Uptading User Role',
+                text: `${error.message}`,
+                showConfirmButton: "OK"
+            });
+
             console.error("Error delivering job:", error);
             // Handle error and show a message to the user
         }
@@ -195,9 +235,45 @@ const JobProvider = ({ children }) => {
     };
 
 
+    // Add Job 
+
+    const AddJobs = job => {
+        axios.post(`${baseUrl}/addJobs`, job)
+        setIsLoading(true)
+            .then(res => {
+                if (res.data.insertedId) {
+                    setIsloading(false)
+                    Swal.fire({
+                        position: 'top-center',
+                        icon: 'success',
+                        title: 'Job Added',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    form.reset();
+                }
+            })
+            .catch(error => {
+                setIsloading(false)
+                setIsOpen(false)
+                if (error.response && error.response.status === 400) {
+                    Swal.fire({
+                        position: 'top-center',
+                        icon: 'error',
+                        title: 'Job Already Exists',
+                        text: 'Job with this PO already exists.',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            });
+    }
+
+
 
     // handle deliveredJob
     const handleDeliveredJob = async (job) => {
+        setIsLoading(true)
         try {
             await axios.put(`${baseUrl}/markDelivered/${job._id}`);
             setJobs(jobs => jobs.filter(j => j._id !== job._id));
@@ -221,6 +297,9 @@ const JobProvider = ({ children }) => {
             console.error("Error delivering job:", error);
             // Handle error and show a message to the user
         }
+        finally {
+            setIsLoading(false)
+        }
     };
 
     const handleDelete = async (job) => {
@@ -237,7 +316,7 @@ const JobProvider = ({ children }) => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 if (currentUser?.role === "Admin" || currentUser?.role === "Editor") {
-
+                    setIsLoading(true)
                     try {
                         await axios.delete(`${baseUrl}/deleteJob/${job._id}`);
                         setJobs(prevJobs => prevJobs.filter(j => j._id !== job._id));
@@ -261,6 +340,9 @@ const JobProvider = ({ children }) => {
                         console.error("Error delivering job:", error);
                         // Handle error and show a message to the user
                     }
+                    finally {
+                        setIsLoading(false)
+                    }
                 } else {
                     Swal.fire({
                         position: 'top-center',
@@ -273,6 +355,7 @@ const JobProvider = ({ children }) => {
             }
         });
     };
+
     const handleDeleteDeliveredJob = async (job) => {
         // Show a confirmation dialog using Swal.fire
         Swal.fire({
@@ -286,7 +369,7 @@ const JobProvider = ({ children }) => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 if (currentUser?.role === "Admin" || currentUser?.role === "Editor") {
-
+                    setIsLoading(true)
                     try {
                         await axios.delete(`${baseUrl}/deleteDeliveredJob/${job._id}`);
                         setJobs(prevJobs => prevJobs.filter(j => j._id !== job._id));
@@ -311,6 +394,9 @@ const JobProvider = ({ children }) => {
                         console.error("Error delivering job:", error);
                         // Handle error and show a message to the user
                     }
+                    finally {
+                        setIsLoading(false)
+                    }
                 } else {
                     Swal.fire({
                         position: 'top-center',
@@ -326,6 +412,7 @@ const JobProvider = ({ children }) => {
 
     const handleUpdateDateQty = async () => {
         if (selectedJobForUpdateData && updatedQuantity > 0) {
+            setIsLoading(true)
             try {
                 const response = await axios.put(
                     `${baseUrl}/editedJob/${selectedJobForUpdateData._id}`,
@@ -349,6 +436,9 @@ const JobProvider = ({ children }) => {
                 });
             } catch (error) {
                 console.log("Error updating  existing data:", error);
+            }
+            finally {
+                setIsLoading(false)
             }
         }
     }
@@ -380,6 +470,7 @@ const JobProvider = ({ children }) => {
         setUpdatedDeliveryDate,
         handleUpdateDateQty,
         editDateDialogRef,
+        AddJobs,
         users,
         isAdmin,
         deleteUserFromDataBase,

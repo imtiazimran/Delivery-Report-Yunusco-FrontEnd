@@ -5,12 +5,14 @@ import Swal from 'sweetalert2';
 import { AuthContext } from './Context/AuthProvider';
 import Lottie from 'lottie-react';
 import Loader from "../assets/loader2.json"
+import { JobContext } from './Context/JobProvider';
 
 const AddJobs = ({ isOpen, setIsOpen }) => {
-    const [isLoading, setIsloading] = useState(false)
+
+    const { AddJobs, isLoading } = useContext(JobContext)
 
     const { user } = useContext(AuthContext)
- 
+
     // console.log(user.displayName);
 
     const handleSubmit = e => {
@@ -30,36 +32,8 @@ const AddJobs = ({ isOpen, setIsOpen }) => {
             addedBy: user?.displayName ? user?.displayName : user?.email
         }
         if (user) {
-
-            axios.post('https://delivery-report-yunusco-back-end.vercel.app/addJobs', addJobs)
-                .then(res => {
-                    setIsloading(false)
-                    setIsOpen(false)
-                    if (res.data.insertedId) {
-                        Swal.fire({
-                            position: 'top-center',
-                            icon: 'success',
-                            title: 'Job Added',
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                        form.reset();
-                    }
-                })
-                .catch(error => {
-                    setIsloading(false)
-                    setIsOpen(false)
-                    if (error.response && error.response.status === 400) {
-                        Swal.fire({
-                            position: 'top-center',
-                            icon: 'error',
-                            title: 'Job Already Exists',
-                            text: 'Job with this PO already exists.',
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                    }
-                });
+            AddJobs(addJobs)
+            setIsOpen(false)
         } else {
             setIsloading(false)
             setIsOpen(false)

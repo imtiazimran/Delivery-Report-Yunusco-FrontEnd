@@ -21,9 +21,11 @@ export const AuthContext = createContext()
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
-    const {handleAdminSearch} = useContext(JobContext)
+    const { handleAdminSearch } = useContext(JobContext)
 
-    handleAdminSearch(user?.email)
+    useEffect(() => {
+    }, [])
+
 
     // singup
     const signUp = (email, password) => {
@@ -44,6 +46,7 @@ const AuthProvider = ({ children }) => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
                 setUser(user)
+                handleAdminSearch(user.email)
             }
             setLoading(false)
         });
