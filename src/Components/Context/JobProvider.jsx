@@ -23,8 +23,8 @@ const JobProvider = ({ children }) => {
     const editDateDialogRef = useRef(null);
 
 
-    // const baseUrl = "https://delivery-report-yunusco-back-end.vercel.app"
-    const baseUrl = "http://localhost:8570"
+    const baseUrl = "https://delivery-report-yunusco-back-end.vercel.app"
+    // const baseUrl = "http://localhost:8570"
 
     useEffect(() => {
         axios.get(`${baseUrl}/delivery`)
