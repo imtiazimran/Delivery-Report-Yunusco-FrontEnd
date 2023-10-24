@@ -15,7 +15,7 @@ const JobProvider = ({ children }) => {
     const [isOpen, setIsOpen] = useState(false)
     const [selectedJobForPartialDelivery, setSelectedJobForPartialDelivery] = useState(null);
     const [partialDeliveryQty, setPartialDeliveryQty] = useState(0);
-
+    const [currentUser, setCurrentUser] = useState([])
     const [selectedJobForUpdateData, setSelectedJobForUpdateData] = useState(null)
     const [updatedQuantity, setUpdatedQuantity] = useState("");
     const [updatedDeliveryDate, setUpdatedDeliveryDate] = useState("");
@@ -23,9 +23,11 @@ const JobProvider = ({ children }) => {
     const editDateDialogRef = useRef(null);
 
 
-    const baseUrl = "https://delivery-report-yunusco-back-end.vercel.app"
-    // const baseUrl = "http://localhost:8570"
+    // const baseUrl = "https://delivery-report-yunusco-back-end.vercel.app"
+    const baseUrl = "http://localhost:8570"
 
+
+    // get On Processing jobs
     useEffect(() => {
         axios.get(`${baseUrl}/delivery`)
             .then(res => {
@@ -35,6 +37,7 @@ const JobProvider = ({ children }) => {
             })
     }, [jobs])
 
+    // get all delivered jobs
     useEffect(() => {
         axios.get(`${baseUrl}/delivered`)
             .then((res) => {
@@ -47,7 +50,7 @@ const JobProvider = ({ children }) => {
             .finally(() => {
                 setIsLoading(false);
             });
-    }, []);
+    }, [prevJobs]);
 
     // get all the users
     useEffect(() => {
@@ -61,17 +64,17 @@ const JobProvider = ({ children }) => {
 
     // get logged user only
     const handleAdminSearch = (email) => {
-        axios.get(`${baseUrl}/isAdmin/${email}`)
+        axios.get(`${baseUrl}/currentUser/${email}`)
             .then(res => {
                 setIsLoading(true)
-
+                setCurrentUser(res.data)
                 if (res.data.role === "Admin") {
                     setIsAdmin(true)
                 }
                 setIsLoading(false)
             })
     }
-    const deleteUserFromDataBase = user =>{
+    const deleteUserFromDataBase = user => {
 
         Swal.fire({
             title: 'Are you sure?',
@@ -83,10 +86,10 @@ const JobProvider = ({ children }) => {
             confirmButtonText: 'Yes, delete it!'
         }).then(async (result) => {
             if (result.isConfirmed) {
-                if (isAdmin) {
+                if (currentUser.role === "Admin") {
 
                     try {
-                        axios.delete(`${baseUrl}/user/${_id}`)
+                        axios.delete(`${baseUrl}/user/${user._id}`)
                         setUsers(user => users.filter(u => u._id !== user._id));
 
                         // Display SweetAlert success alert
@@ -120,7 +123,54 @@ const JobProvider = ({ children }) => {
             }
         });
 
-        
+
+    }
+
+    const makeEditor = async user => {
+        try {
+            await axios.patch(`${baseUrl}/user/editor/${user._id}`);
+
+            // Display SweetAlert success alert
+            Swal.fire({
+                icon: 'success',
+                title: `${user.name} `,
+                text: `Is Editor From Now On.`,
+            });
+        } catch (error) {
+                Swal.fire({
+                    position: 'top-center',
+                    icon: 'error',
+                    title: 'Error While Uptading User Role',
+                    text: `${error.message}`,
+                    showConfirmButton: "OK"
+                });
+            
+            console.error("Error delivering job:", error);
+            // Handle error and show a message to the user
+        }
+    }
+    const makeAdmin = async user => {
+        try {
+            await axios.patch(`${baseUrl}/user/admin/${user._id}`);
+
+            // Display SweetAlert success alert
+            Swal.fire({
+                icon: 'success',
+                title: `${user.name} `,
+                text: `Is Admin From Now On.`,
+            });
+        } catch (error) {
+                Swal.fire({
+                    position: 'top-center',
+                    icon: 'error',
+                    title: 'Error While Uptading User Role',
+                    text: `${error.message}`,
+                    showConfirmButton: "OK"
+                });
+            
+            console.error("Error delivering job:", error);
+            // Handle error and show a message to the user
+        }
     }
 
     // add user to the database while login
@@ -144,11 +194,13 @@ const JobProvider = ({ children }) => {
         }
     };
 
+
+
     // handle deliveredJob
     const handleDeliveredJob = async (job) => {
         try {
             await axios.put(`${baseUrl}/markDelivered/${job._id}`);
-            setJobs(prevJobs => prevJobs.filter(j => j._id !== job._id));
+            setJobs(jobs => jobs.filter(j => j._id !== job._id));
 
             // Display SweetAlert success alert
             Swal.fire({
@@ -184,7 +236,7 @@ const JobProvider = ({ children }) => {
             confirmButtonText: 'Yes, delete it!'
         }).then(async (result) => {
             if (result.isConfirmed) {
-                if (isAdmin) {
+                if (currentUser?.role === "Admin" || currentUser?.role === "Editor") {
 
                     try {
                         await axios.delete(`${baseUrl}/deleteJob/${job._id}`);
@@ -233,7 +285,7 @@ const JobProvider = ({ children }) => {
             confirmButtonText: 'Yes, delete it!'
         }).then(async (result) => {
             if (result.isConfirmed) {
-                if (isAdmin) {
+                if (currentUser?.role === "Admin" || currentUser?.role === "Editor") {
 
                     try {
                         await axios.delete(`${baseUrl}/deleteDeliveredJob/${job._id}`);
@@ -330,7 +382,9 @@ const JobProvider = ({ children }) => {
         editDateDialogRef,
         users,
         isAdmin,
-        deleteUserFromDataBase
+        deleteUserFromDataBase,
+        makeAdmin,
+        makeEditor
     }
     return (
         <JobContext.Provider value={jobInfo}>

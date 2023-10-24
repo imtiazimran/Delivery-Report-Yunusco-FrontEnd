@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { JobContext } from './Context/JobProvider';
 
 const ManageUsers = () => {
-    const { isAdmin, users, deleteUserFromDataBase } = useContext(JobContext)
+    const { isAdmin, users, deleteUserFromDataBase , makeAdmin, makeEditor } = useContext(JobContext)
     // console.log(isAdmin, users);
     return (
         <div className='py-20 backgruond-color'>
@@ -18,8 +18,9 @@ const ManageUsers = () => {
                                 <p>Email : {user.email}</p>
                                 <p>Current Role : {user.role}</p>
                                 <div className="card-actions justify-between py-4">
-                                    <button onClick={()=> deleteUserFromDataBase(user)} className="btn btn-sm btn-secondary">Delete</button>
-                                    <button className="btn btn-sm btn-primary">Make Admin</button>
+                                    <button disabled={!isAdmin} onClick={()=> deleteUserFromDataBase(user)} className="btn btn-xs btn-secondary">Delete</button>
+                                    <button disabled={user.role === "Admin"} onClick={()=> makeAdmin(user)} className="btn btn-xs btn-primary">Make Admin</button>
+                                    <button disabled={user.role === "Editor" || user.role === "Admin"} onClick={()=> makeEditor(user)} className="btn btn-xs btn-accent">Make Editor</button>
                                 </div>
                             </div>
                         </div>
