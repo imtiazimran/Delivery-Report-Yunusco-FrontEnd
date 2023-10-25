@@ -24,8 +24,8 @@ const JobProvider = ({ children }) => {
 
 
 
-    const baseUrl = "https://delivery-report-yunusco-back-end.vercel.app"
-    // const baseUrl = "http://localhost:8570"
+    // const baseUrl = "https://delivery-report-yunusco-back-end.vercel.app"
+    const baseUrl = "http://localhost:8570"
 
 
     // get On Processing jobs
@@ -235,12 +235,13 @@ const JobProvider = ({ children }) => {
 
     // Add Job 
 
-    const AddJobs = job => {
-        axios.post(`${baseUrl}/addJobs`, job)
+    const AddJobs = (job) => {
         setIsLoading(true)
+
+        axios.post(`${baseUrl}/addJobs`, job)
             .then(res => {
+                setIsLoading(false)
                 if (res.data.insertedId) {
-                    setIsloading(false)
                     Swal.fire({
                         position: 'top-center',
                         icon: 'success',
@@ -252,8 +253,7 @@ const JobProvider = ({ children }) => {
                 }
             })
             .catch(error => {
-                setIsloading(false)
-                setIsOpen(false)
+                setIsLoading(false)
                 if (error.response && error.response.status === 400) {
                     Swal.fire({
                         position: 'top-center',
@@ -460,6 +460,7 @@ const JobProvider = ({ children }) => {
         addUser,
         handleAdminSearch,
         isLoading,
+        setIsLoading,
         selectedJobForUpdateData,
         setSelectedJobForUpdateData,
         updatedQuantity,

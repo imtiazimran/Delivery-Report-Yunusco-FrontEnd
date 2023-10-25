@@ -9,14 +9,13 @@ import { JobContext } from './Context/JobProvider';
 
 const AddJobs = ({ isOpen, setIsOpen }) => {
 
-    const { AddJobs, isLoading } = useContext(JobContext)
+    const { AddJobs, isLoading, setIsLoading } = useContext(JobContext)
 
     const { user } = useContext(AuthContext)
 
     // console.log(user.displayName);
 
     const handleSubmit = e => {
-        setIsloading(true)
         e.preventDefault()
         const form = e.target;
         const customar = form.customar.value
@@ -35,8 +34,7 @@ const AddJobs = ({ isOpen, setIsOpen }) => {
             AddJobs(addJobs)
             setIsOpen(false)
         } else {
-            setIsloading(false)
-            setIsOpen(false)
+            setIsLoading(false)
             Swal.fire({
                 position: 'top-center',
                 icon: 'error',
