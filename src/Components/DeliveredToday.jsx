@@ -22,6 +22,7 @@ const DeliveredToday = () => {
     // console.log(prevJobs)
     const currentDate = new Date();
 
+    
 
     // Calculate start of today's date (midnight)
     const startOfToday = new Date(currentDate);
@@ -75,67 +76,57 @@ const DeliveredToday = () => {
 
     return (
         <div className='pb-16'>
-            {
-                todaysDeliveries.length === 0 || <div className="text-2xl  bg-cyan-900 text-white py-4  text-center"> {todaysDeliveries.length} Jobs Delivered Today
+            {todaysDeliveries.length === 0 || (
+                <div className="text-2xl bg-cyan-900 text-white py-4 text-center"> {todaysDeliveries.length} Jobs Delivered Today
                     <button className="rounded pdf px-3 hover:text-blue-400" onClick={() => toPDF()}>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75l3 3m0 0l3-3m-3 3v-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-
                     </button>
                 </div>
-            }
+            )}
 
             <div className="overflow-x-auto" ref={targetRef}>
-                <table className="table">
-                    {/* head */}
-                    {
-                        todaysDeliveries.length === 0 || <thead>
+                {isLoading ? (
+                    <div className="text-center">
+                        <Lottie className="lg:w-1/4 mx-auto" animationData={Loader} />
+                    </div>
+                ) : todaysDeliveries.length === 0 ? (
+                    <div className="text-center">
+                        <span className="lg:text-2xl text-xl bg-cyan-900 text-white py-4 text-center block font-semibold capitalize lg:w-1/4 mx-auto lg:absolute top-1/4 z-50">No Job delivered today <br /> <Link to={"previousDelivery"} >View Previous Delivery</Link>   </span>
+                        <Lottie className="lg:w-1/4 mx-auto" animationData={EmptyAmimation} />
+                    </div>
+                ) : (
+                    <table className="table">
+                        {/* head */}
+                        <thead>
                             <tr className="text-center text-white my-5">
                                 <th>#</th>
-                                <th>Customar</th>
+                                <th>Customer</th>
                                 <th>Job</th>
                                 <th>Quantity</th>
                                 <th>Label Name</th>
                             </tr>
                         </thead>
-                    }
-                    <tbody>
-                        {isLoading ? (
-                            <tr>
-                                <td colSpan="5" className="text-center">
-                                    <Lottie className="lg:w-1/4 mx-auto" animationData={Loader} />
-                                </td>
-                            </tr>
-                        ) : todaysDeliveries.length === 0 ? (
-                            <tr>
-                                <td colSpan="7" className='text-center'>
-                                    <span className="lg:text-2xl text-xl bg-cyan-900 text-white py-4 text-center block font-semibold capitalize lg:w-1/4 mx-auto lg:absolute top-1/4 z-50">No Job delivered today <br /> <Link to={"previousDelivery"} >View Previous Delivery</Link>   </span>
-                                    <Lottie className="lg:w-1/4 mx-auto" animationData={EmptyAmimation} />
-                                </td>
-                            </tr>
-                        )
-                            : (
-                                todaysDeliveries.map((job, i) => (
-                                    <tr onDoubleClick={() => handleDeleteDeliveredJob(job)} key={job._id} className=" text-center">
-                                        <th>{i + 1}</th>
-                                        <td className='capitalize'>{job.customar}</td>
-                                        <td>JBH00{job.po}</td>
-                                        <td className='flex justify-center items-center gap-1'>
+                        <tbody>
+                            {todaysDeliveries.map((job, i) => (
+                                <tr onDoubleClick={() => handleDeleteDeliveredJob(job)} key={job._id} className="text-center">
+                                    <th>{i + 1}</th>
+                                    <td className='capitalize'>{job.customar}</td>
+                                    <td>JBH00{job.po}</td>
+                                    <td className='flex justify-center items-center gap-1'>
                                         <span>{job.qty.toLocaleString('en-IN')}</span>
                                         <button className='text-primary' onClick={() => handleChangeDate(job)}>
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                                             </svg>
                                         </button>
-                                        </td>
-                                        <td className='uppercase'>{job.label}</td>
-                                    </tr>
-                                ))
-                            )}
-                    </tbody>
-                    {
-                        todaysDeliveries.length === 0 || <tfoot>
+                                    </td>
+                                    <td className='uppercase'>{job.label}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                        <tfoot>
                             <tr className='text-center bg-yellow-600 rounded'>
                                 <th>#</th>
                                 <th></th>
@@ -144,10 +135,8 @@ const DeliveredToday = () => {
                                 <th></th>
                             </tr>
                         </tfoot>
-                    }
-
-                </table>
-
+                    </table>
+                )}
                 <dialog
                     id="editDate"
                     className="modal"

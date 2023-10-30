@@ -20,7 +20,7 @@ const JobProvider = ({ children }) => {
     const [updatedQuantity, setUpdatedQuantity] = useState("");
     const [updatedDeliveryDate, setUpdatedDeliveryDate] = useState("");
 
-    const editDateDialogRef = useRef(null);
+    const editDateDialogRef = useRef(null); 
 
 
 
