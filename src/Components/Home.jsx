@@ -8,7 +8,6 @@ const Home = () => {
     return (
         <div className='backgruond-color mt-16'>
             <Stat />
-            <JobOnProcessing />
             <DeliveredToday />
         </div>
     );

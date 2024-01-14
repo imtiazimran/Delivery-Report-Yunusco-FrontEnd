@@ -20,7 +20,7 @@ const JobProvider = ({ children }) => {
     const [updatedQuantity, setUpdatedQuantity] = useState("");
     const [updatedDeliveryDate, setUpdatedDeliveryDate] = useState("");
 
-    const editDateDialogRef = useRef(null); 
+    const editDateDialogRef = useRef(null);
 
 
 
@@ -254,6 +254,37 @@ const JobProvider = ({ children }) => {
             })
             .catch(error => {
                 setIsLoading(false)
+                console.log(error)
+                if (error.response && error.response.status === 400) {
+                    Swal.fire({
+                        position: 'top-center',
+                        icon: 'error',
+                        title: 'Job Already Exists',
+                        text: 'Job with this PO already exists.',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            });
+    }
+    const AddPartialJob = (job) => {
+        setIsLoading(true)
+
+        axios.post(`${baseUrl}/insertNewPartialDelivery`, job)
+            .then(res => {
+                setIsLoading(false)
+                Swal.fire({
+                    position: 'top-center',
+                    icon: 'success',
+                    title: 'Job Added',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+
+            })
+            .catch(error => {
+                setIsLoading(false)
+                console.log(error)
                 if (error.response && error.response.status === 400) {
                     Swal.fire({
                         position: 'top-center',
@@ -456,6 +487,7 @@ const JobProvider = ({ children }) => {
         selectedJobForPartialDelivery,
         setSelectedJobForPartialDelivery,
         partialDeliveryQty,
+        AddPartialJob,
         setPartialDeliveryQty,
         addUser,
         handleAdminSearch,
