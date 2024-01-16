@@ -62,13 +62,12 @@ const TotalDelivery = () => {
         handleCloseModal()
     }
 
-    // console.log(selectedJobForUpdateData)
 
 
 
 
     const sortDataByDate = () => {
-        const sorted = [...currentMonthJobs].sort((a, b) => {
+        const sorted = [...prevJobs].sort((a, b) => {
             const dateA = new Date(
                 a.goodsDeliveryDate.slice(6, 10), // Year
                 a.goodsDeliveryDate.slice(3, 5) - 1, // Month (0-indexed)
@@ -93,32 +92,32 @@ const TotalDelivery = () => {
         setReduceMonth(reduceMonth + 1);
     }
 
-    useEffect(() => {
-        const currentDate = new Date();
-        const updatedCurrentMonth = currentDate.getMonth() + reduceMonth;
-        setCurrentMonth(updatedCurrentMonth)
-        const currentYear = currentDate.getFullYear();
-        const filteredJobs = prevJobs.filter((job) => {
-            const dateParts = job.goodsDeliveryDate.split('-');
-            if (dateParts.length === 3) {
-                const deliveryDate = new Date(
-                    parseInt(dateParts[2], 10), // Year
-                    parseInt(dateParts[1], 10), // Month (0-indexed)
-                    parseInt(dateParts[0], 10) // Day
-                );
-                return (
-                    deliveryDate.getMonth() === updatedCurrentMonth &&
-                    deliveryDate.getFullYear() === currentYear
-                );
-            }
-            return false;
-        });
-        setCurrentMonthJobs(filteredJobs);
-    }, [prevJobs, reduceMonth]);
+    // useEffect(() => {
+    //     const currentDate = new Date();
+    //     const updatedCurrentMonth = currentDate.getMonth() + reduceMonth;
+    //     setCurrentMonth(updatedCurrentMonth)
+    //     const currentYear = currentDate.getFullYear();
+    //     const filteredJobs = prevJobs.filter((job) => {
+    //         const dateParts = job.goodsDeliveryDate.split('-');
+    //         if (dateParts.length === 3) {
+    //             const deliveryDate = new Date(
+    //                 parseInt(dateParts[2], 10), // Year
+    //                 parseInt(dateParts[1], 10), // Month (0-indexed)
+    //                 parseInt(dateParts[0], 10) // Day
+    //             );
+    //             return (
+    //                 deliveryDate.getMonth() === updatedCurrentMonth &&
+    //                 deliveryDate.getFullYear() === currentYear
+    //             );
+    //         }
+    //         return false;
+    //     });
+    //     setCurrentMonthJobs(filteredJobs);
+    // }, [prevJobs, reduceMonth]);
     // console.log(currentMonthJobs, "current Month:", "State: ", reduceMonth);
 
     // Calculate total previous delivery quantity
-    const totalPrevDelivery = currentMonthJobs.reduce((accumulator, currentJob) => {
+    const totalPrevDelivery = prevJobs.reduce((accumulator, currentJob) => {
         const qtyAsNumber = parseInt(currentJob.qty); // Convert the string to an integer
         if (!isNaN(qtyAsNumber)) {
             return accumulator + qtyAsNumber;
