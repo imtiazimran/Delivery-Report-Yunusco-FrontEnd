@@ -117,13 +117,7 @@ const TotalDelivery = () => {
     // console.log(currentMonthJobs, "current Month:", "State: ", reduceMonth);
 
     // Calculate total previous delivery quantity
-    const totalPrevDelivery = prevJobs.reduce((accumulator, currentJob) => {
-        const qtyAsNumber = parseInt(currentJob.qty); // Convert the string to an integer
-        if (!isNaN(qtyAsNumber)) {
-            return accumulator + qtyAsNumber;
-        }
-        return accumulator; // If conversion fails, return the accumulator unchanged
-    }, 0);
+
 
 
     useEffect(() => {
@@ -135,9 +129,17 @@ const TotalDelivery = () => {
         || job.customar.toLowerCase().includes(searchQuery.toLocaleLowerCase())
     );
 
+    const totalPrevDelivery = filteredJobs.reduce((accumulator, currentJob) => {
+        const qtyAsNumber = parseInt(currentJob.qty); // Convert the string to an integer
+        if (!isNaN(qtyAsNumber)) {
+            return accumulator + qtyAsNumber;
+        }
+        return accumulator; // If conversion fails, return the accumulator unchanged
+    }, 0);
+
     return (
         <div className='mt-16 py-8 backgruond-color'>
-            <div className="text-2xl rounded-xl py-3 bg-violet-700 text-white text-center flex justify-center items-center gap-3">
+            {/* <div className="text-2xl rounded-xl py-3 bg-violet-700 text-white text-center flex justify-center items-center gap-3">
                 <span onClick={preMonth} className='cursor-pointer'>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
@@ -149,7 +151,7 @@ const TotalDelivery = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                     </svg>
                 </span>
-            </div>
+    </div>*/}
             <div className="form-control">
                 <div className="input-group input-group-sm justify-center my-5">
                     <input onChange={(e) => setSearchQuery(e.target.value)} type="text" placeholder="Search…" className="input input-sm input-bordered text-slate-900" />
