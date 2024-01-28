@@ -118,9 +118,11 @@ const DeliveryReportChart = () => {
     return null;
   };
 
+  
 
   return (
     <div ref={chartContainerRef} className="w-full max-w-screen-full mx-auto bg-slate-800">
+    <h1 className='md:text-xl text-center font-semibold py-5 bg-slate-600'>Delivery Chart of {currentDate.toLocaleString('default', { month: 'long' })}</h1>
       <BarChart
         width={chartWidth}
         height={chartHeight}
