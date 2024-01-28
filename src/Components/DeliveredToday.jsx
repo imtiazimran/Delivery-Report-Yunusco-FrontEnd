@@ -86,13 +86,13 @@ const DeliveredToday = () => {
                 </div>
             )}
 
-            <div className="overflow-x-auto" ref={targetRef}>
+            <div className="overflow-x-auto relative" ref={targetRef}>
                 {isLoading ? (
                     <div className="text-center">
                         <Lottie className="lg:w-1/4 mx-auto" animationData={Loader} />
                     </div>
                 ) : todaysDeliveries.length === 0 ? (
-                    <div className="text-center">
+                    <div className="text-center ">
                         <span className="lg:text-2xl text-xl bg-cyan-900 text-white py-4 text-center block font-semibold capitalize lg:w-1/4 mx-auto lg:absolute top-1/4 z-50">No Job delivered today <br /> <Link to={"previousDelivery"} >View Previous Delivery</Link>   </span>
                         <Lottie className="lg:w-1/4 mx-auto" animationData={EmptyAmimation} />
                     </div>
