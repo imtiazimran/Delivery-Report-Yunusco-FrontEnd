@@ -161,14 +161,14 @@ const TotalDelivery = () => {
                 </div>
             </div>
             <div className="overflow-x-auto md:px-10">
-                <table className="table ">
+                <table className="table">
                     {/* head */}
                     {
                         filteredJobs.length === 0 ||
                         <thead>
-                            <tr className="text-center text-white bg-yellow-600 text-xl">
+                            <tr className="text-center text-slate-200 bg-yellow-600 text-xl">
                                 <th>#</th>
-                                <th>Customar</th>
+                                <th>Customer</th>
                                 <th>Job</th>
                                 <th>Quantity</th>
                                 <th>Label Name</th>

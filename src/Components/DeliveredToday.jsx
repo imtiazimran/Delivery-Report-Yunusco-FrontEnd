@@ -100,7 +100,7 @@ const DeliveredToday = () => {
                     <table className="table">
                         {/* head */}
                         <thead>
-                            <tr className="text-center text-white my-5">
+                            <tr className="text-center text-white bg-yellow-600 text-xl">
                                 <th>#</th>
                                 <th>Customer</th>
                                 <th>Job</th>

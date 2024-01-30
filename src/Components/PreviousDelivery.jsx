@@ -109,7 +109,7 @@ const PreviousDelivery = () => {
                         yesterdayDeliveries.length === 0 || <thead>
                             <tr className="text-center bg-yellow-500 text-white lg:text-xl">
                                 <th>#</th>
-                                <th>Customar</th>
+                                <th>Customer</th>
                                 <th>Job</th>
                                 <th>Quantity</th>
                                 <th>Label Name</th>
