@@ -129,7 +129,7 @@ const JobProvider = ({ children }) => {
                     try {
                         axios.delete(`${baseUrl}/user/${user._id}`)
                         setUsers(user => users.filter(u => u._id !== user._id));
-
+                            
                         // Display SweetAlert success alert
                         Swal.fire({
                             icon: 'success',

@@ -77,24 +77,36 @@ const DeliveryReportChart = () => {
     return false;
   });
 
+  const currentMonthTotalDelivery = currentMonthJobs.reduce((accumulator, currentJob) => {
+    const qtyAsNumber = parseInt(currentJob.qty); // Convert the string to an integer
+    if (!isNaN(qtyAsNumber)) {
+      return accumulator + qtyAsNumber;
+    }
+    return accumulator; // If conversion fails, return the accumulator unchanged
+  }, 0);
 
-  // Assuming currentMonthJobs is an array of objects with a goodsDeliveryDate property
-  const chartData = currentMonthJobs.reduce((accumulator, job) => {
+
+  const sortedJobs = currentMonthJobs.sort((a, b) => {
+    // Convert delivery dates to Date objects for comparison
+    const dateA = new Date(a.goodsDeliveryDate);
+    const dateB = new Date(b.goodsDeliveryDate);
+    return dateA - dateB;
+  });
+
+  const chartData = sortedJobs.reduce((accumulator, job) => {
     const date = job.goodsDeliveryDate.substring(0, 2); // Extracting the first 2 characters of the date
-
     // Check if the date already exists in the accumulator array
     const existingDateIndex = accumulator.findIndex(item => item.date === date);
-
     // If the date doesn't exist, add it to the accumulator
     if (existingDateIndex === -1) {
       accumulator.push({
-        day: accumulator.length + 1, // Incremental day number
-        qty: job.qty,
+        day: parseInt(date, 10), // Use the actual date instead of incrementing
+        qty: parseInt(job.qty),
         date: date,
       });
     } else {
       // If the date already exists, update the qty (assuming you want to sum the quantities)
-      accumulator[existingDateIndex].qty += job.qty;
+      accumulator[existingDateIndex].qty += parseInt(job.qty);
     }
 
     return accumulator;
@@ -118,11 +130,12 @@ const DeliveryReportChart = () => {
     return null;
   };
 
-  
+
 
   return (
     <div ref={chartContainerRef} className="w-full max-w-screen-full mx-auto bg-slate-800">
-    <h1 className='md:text-xl text-center font-semibold py-5 bg-slate-600'>Delivery Chart of {currentDate.toLocaleString('default', { month: 'long' })}</h1>
+      <h1 className='md:text-xl text-center font-semibold py-5 bg-slate-600'>Delivery Chart of {currentDate.toLocaleString('default', { month: 'long' })}</h1>
+      <h2 className='py-5 text-center text-xl'>{currentDate.toLocaleString('default', { month: 'long' })} Delivery: {currentMonthTotalDelivery.toLocaleString()}</h2>
       <BarChart
         width={chartWidth}
         height={chartHeight}
