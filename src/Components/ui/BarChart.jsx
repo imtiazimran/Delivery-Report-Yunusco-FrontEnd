@@ -2,37 +2,25 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { JobContext } from '../Context/JobProvider';
 
-const deliveryData = [
-  { day: 1, qty: 100 },
-  { day: 2, qty: 150 },
-  { day: 3, qty: 200 },
-  { day: 4, qty: 200 },
-  { day: 5, qty: 200 },
-  { day: 6, qty: 200 },
-  { day: 7, qty: 200 },
-  { day: 8, qty: 200 },
-  { day: 9, qty: 200 },
-  { day: 10, qty: 200 },
-  { day: 11, qty: 200 },
-  { day: 12, qty: 200 },
-  { day: 13, qty: 200 },
-  { day: 14, qty: 200 },
-  { day: 15, qty: 200 },
-  { day: 16, qty: 200 },
-  { day: 17, qty: 2000 },
-  { day: 18, qty: 200 },
-  { day: 19, qty: 200 },
-  { day: 20, qty: 200 },
-  { day: 21, qty: 200 },
-  { day: 22, qty: 200 },
-  { day: 23, qty: 200 },
-];
 
 const DeliveryReportChart = () => {
   const { prevJobs } = useContext(JobContext)
   const [chartWidth, setChartWidth] = useState(600); // Initial width
   const [chartHeight, setChartHeight] = useState(300); // Initial height
   const chartContainerRef = useRef('');
+  const [reduceMonth, setReduceMonth] = useState(-1)
+  const [currentMonthJobs, setCurrentMonthJobs] = useState([])
+  const [currentMonth, setCurrentMonth] = useState('')
+
+
+  const preMonth = () => {
+    setReduceMonth(reduceMonth - 1)
+  }
+
+  const nextMonth = () => {
+    // Disable the forward button when date is equal to yesterdayDate
+    setReduceMonth(reduceMonth + 1);
+  }
 
   // Adjust chart dimensions based on container size
   useEffect(() => {
@@ -58,24 +46,63 @@ const DeliveryReportChart = () => {
   }, []);
 
   const currentDate = new Date();
+  const updatedCurrentMonth = currentDate.getMonth() + reduceMonth;
 
-  const currentMonth = currentDate.getMonth();
-  const currentYear = currentDate.getFullYear();
-  const currentMonthJobs = prevJobs.filter((job) => {
-    const dateParts = job.goodsDeliveryDate.split('-');
-    if (dateParts.length === 3) {
-      const deliveryDate = new Date(
-        parseInt(dateParts[2], 10), // Year
-        parseInt(dateParts[1], 10) - 1, // Month (0-indexed)
-        parseInt(dateParts[0], 10) // Day
-      );
-      return (
-        deliveryDate.getMonth() === currentMonth &&
-        deliveryDate.getFullYear() === currentYear
-      );
-    }
-    return false;
-  });
+  useEffect(() => {
+    setCurrentMonth(updatedCurrentMonth)
+    const currentYear = currentDate.getFullYear();
+    const filteredJobs = prevJobs.filter((job) => {
+      const dateParts = job.goodsDeliveryDate.split('-');
+      if (dateParts.length === 3) {
+        const deliveryDate = new Date(
+          parseInt(dateParts[2], 10), // Year
+          parseInt(dateParts[1], 10) - 1, // Month (0-indexed)
+          parseInt(dateParts[0], 10) // Day
+        );
+        return (
+          deliveryDate.getMonth() === updatedCurrentMonth &&
+          deliveryDate.getFullYear() === currentYear
+        );
+      }
+      return false;
+    });
+    setCurrentMonthJobs(filteredJobs);
+  }, [prevJobs, reduceMonth]);
+
+
+
+  // const currentDate = new Date();
+
+  // const currentMonth = currentDate.getMonth();
+  // const currentYear = currentDate.getFullYear();
+  // const currentMonthJobs = prevJobs.filter((job) => {
+  //   const dateParts = job.goodsDeliveryDate.split('-');
+  //   if (dateParts.length === 3) {
+  //     const deliveryDate = new Date(
+  //       parseInt(dateParts[2], 10), // Year
+  //       parseInt(dateParts[1], 10) - 1, // Month (0-indexed)
+  //       parseInt(dateParts[0], 10) // Day
+  //     );
+  //     return (
+  //       deliveryDate.getMonth() === currentMonth &&
+  //       deliveryDate.getFullYear() === currentYear
+  //     );
+  //   }
+  //   return false;
+  // });
+
+  // console.log(currentMonth);
+
+  // const increaseMonth = (currentMonth) => {
+  //   // Increase the current month by 1, handling the case where the current month is December (index 11)
+  //   return currentMonth === 11 ? 0 : currentMonth + 1;
+  // };
+
+  // const decreaseMonth = (currentMonth) => {
+  //   // Decrease the current month by 1, handling the case where the current month is January (index 0)
+  //   console.log(currentMonth);
+  //   return currentMonth === 0 ? 11 : currentMonth - 1;
+  // };
 
   const currentMonthTotalDelivery = currentMonthJobs.reduce((accumulator, currentJob) => {
     const qtyAsNumber = parseInt(currentJob.qty); // Convert the string to an integer
@@ -130,12 +157,13 @@ const DeliveryReportChart = () => {
     return null;
   };
 
-
-
   return (
     <div ref={chartContainerRef} className="w-full max-w-screen-full mx-auto bg-slate-800">
       <h1 className='md:text-xl text-center font-semibold py-5 bg-slate-600'>Delivery Chart of {currentDate.toLocaleString('default', { month: 'long' })}</h1>
-      <h2 className='py-5 text-center text-xl'>{currentDate.toLocaleString('default', { month: 'long' })} Delivery: {currentMonthTotalDelivery.toLocaleString()}</h2>
+
+      <div className='flex justify-center text-xl gap-4'><button onClick={() => preMonth()}>previous month</button>  <button onClick={() => nextMonth()}>next month</button></div>
+
+      <h2 className='py-5 text-center text-xl'>{currentDate.getMonth()} Delivery: {currentMonthTotalDelivery.toLocaleString()}</h2>
       <BarChart
         width={chartWidth}
         height={chartHeight}

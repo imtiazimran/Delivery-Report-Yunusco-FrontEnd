@@ -7,6 +7,7 @@ import loginImg from "/login.svg"
 import GoogleLoginButton from './GoogleLogin';
 import Lottie from 'lottie-react';
 import Loader from "../../assets/loader2.json"
+import FacebookLoginButton from './FacebookLogin';
 
 const Login = () => {
     const { signIn, loading } = useContext(AuthContext)
@@ -33,7 +34,7 @@ const Login = () => {
             })
     }
     return (
-        <div className='min-h-screen bg-base-200'>
+        <div className='min-h-screen bg-base-200 mt-14'>
 
             <h1 className="text-5xl font-bold py-5 text-center">Login !</h1>
             {
