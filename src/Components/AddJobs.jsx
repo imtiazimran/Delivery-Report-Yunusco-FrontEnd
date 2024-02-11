@@ -30,6 +30,9 @@ const AddJobs = ({ isOpen, setIsOpen }) => {
             totalQty = parseInt(form?.totalQty?.value);
             partialDeliveryQty = parseInt(form?.partialDeliveryQty?.value);
         }
+
+
+        const formattedDate = `${('0' + selectedDate.getDate()).slice(-2)}-${('0' + (selectedDate.getMonth() + 1)).slice(-2)}-${selectedDate.getFullYear()}`;
         const addJobs = {
             customar,
             po,
@@ -38,9 +41,9 @@ const AddJobs = ({ isOpen, setIsOpen }) => {
             partialDeliveryQty,
             label,
             addedBy: user?.displayName ? user?.displayName : user?.email,
-            goodsDeliveryDate: selectedDate.toLocaleDateString('en-GB')
+            goodsDeliveryDate: formattedDate
         };
-        console.log( selectedDate.toLocaleDateString("en-GB"));
+
 
         if (user) {
             if (enabled) {
