@@ -15,7 +15,6 @@ const AddJobs = ({ isOpen, setIsOpen }) => {
     const currentDate = new Date();
     const datePickerRef = useRef(null);
     const [selectedDate, setSelectedDate] = useState(currentDate);
-    // console.log(user.displayName);
 
     const handleSubmit = e => {
         e.preventDefault()

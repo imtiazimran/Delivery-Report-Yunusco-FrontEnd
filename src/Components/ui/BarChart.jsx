@@ -157,13 +157,27 @@ const DeliveryReportChart = () => {
     return null;
   };
 
+
   return (
     <div ref={chartContainerRef} className="w-full max-w-screen-full mx-auto bg-slate-800">
-      <h1 className='md:text-xl text-center font-semibold py-5 bg-slate-600'>Delivery Chart of {currentDate.toLocaleString('default', { month: 'long' })}</h1>
+      <h1 className='md:text-xl text-center font-semibold py-5 bg-slate-600'>
+        Delivery Chart of {updatedCurrentMonth === 0 ? "January" :
+          updatedCurrentMonth === 1 ? "February" :
+            updatedCurrentMonth === 2 ? "March" :
+              updatedCurrentMonth === 3 ? "April" :
+                updatedCurrentMonth === 4 ? "May" :
+                  updatedCurrentMonth === 5 ? "June" :
+                    updatedCurrentMonth === 6 ? "July" :
+                      updatedCurrentMonth === 7 ? "August" :
+                        updatedCurrentMonth === 8 ? "September" :
+                          updatedCurrentMonth === 9 ? "October" :
+                            updatedCurrentMonth === 10 ? "November" :
+                              "December"}
+      </h1>
 
       <div className='flex justify-center text-xl gap-4'><button onClick={() => preMonth()}>previous month</button>  <button onClick={() => nextMonth()}>next month</button></div>
 
-      <h2 className='py-5 text-center text-xl'>{currentDate.getMonth()} Delivery: {currentMonthTotalDelivery.toLocaleString()}</h2>
+      <h2 className='py-5 text-center text-xl'>Total Delivery: {currentMonthTotalDelivery.toLocaleString()}</h2>
       <BarChart
         width={chartWidth}
         height={chartHeight}
