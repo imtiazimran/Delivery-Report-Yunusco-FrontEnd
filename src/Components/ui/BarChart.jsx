@@ -11,7 +11,7 @@ const DeliveryReportChart = () => {
   const [reduceMonth, setReduceMonth] = useState(-1)
   const [currentMonthJobs, setCurrentMonthJobs] = useState([])
   const [currentMonth, setCurrentMonth] = useState('')
-
+ 
 
   const preMonth = () => {
     setReduceMonth(reduceMonth - 1)
@@ -139,7 +139,19 @@ const DeliveryReportChart = () => {
     return accumulator;
   }, []);
 
-
+  const printPDF = () => {
+    setTimeout(() => {
+        if (chartContainerRef.current) {
+            const content = chartContainerRef.current.innerHTML;
+            const originalDocument = document.body.innerHTML;
+            document.body.innerHTML = content;
+            window.print();
+            document.body.innerHTML = originalDocument;
+        } else {
+            console.error("Error: Unable to find targetRef.");
+        }
+    }, 1000); // Adjust the delay as needed
+};
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
@@ -160,7 +172,13 @@ const DeliveryReportChart = () => {
 
   return (
     <div ref={chartContainerRef} className="w-full max-w-screen-full mx-auto bg-slate-800">
+
       <h1 className='md:text-xl text-center font-semibold py-5 bg-slate-600'>
+      <button className="rounded pdf px-3 hover:text-blue-400" onClick={() => printPDF()}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75l3 3m0 0l3-3m-3 3v-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </button>
         Delivery Chart of {updatedCurrentMonth === 0 ? "January" :
           updatedCurrentMonth === 1 ? "February" :
             updatedCurrentMonth === 2 ? "March" :

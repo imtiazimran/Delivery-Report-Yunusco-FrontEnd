@@ -38,8 +38,10 @@ const AddJobs = ({ isOpen, setIsOpen }) => {
             partialDeliveryQty,
             label,
             addedBy: user?.displayName ? user?.displayName : user?.email,
-            goodsDeliveryDate: selectedDate.toLocaleDateString().split('/').join('-')
+            goodsDeliveryDate: selectedDate.toLocaleDateString('en-GB')
         };
+        console.log( selectedDate.toLocaleDateString("en-GB"));
+
         if (user) {
             if (enabled) {
                 AddJobs(addJobs)

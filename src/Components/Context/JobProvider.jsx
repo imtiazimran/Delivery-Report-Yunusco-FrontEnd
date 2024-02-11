@@ -305,14 +305,13 @@ const JobProvider = ({ children }) => {
         setIsLoading(true)
         try {
             await axios.put(`${baseUrl}/markDelivered/${job._id}`);
-            setJobs(jobs => jobs.filter(j => j._id !== job._id));
-
             // Display SweetAlert success alert
             Swal.fire({
                 icon: 'success',
                 title: `JBH000${job.po} Marked as Delivered`,
                 text: `Job successfully marked as delivered.`,
             });
+            window.location.reload()
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 Swal.fire({
@@ -348,7 +347,7 @@ const JobProvider = ({ children }) => {
                     setIsLoading(true)
                     try {
                         await axios.delete(`${baseUrl}/deleteJob/${job._id}`);
-                        setJobs(prevJobs => prevJobs.filter(j => j._id !== job._id));
+                        window.location.reload()
 
                         // Display SweetAlert success alert
                         Swal.fire({
@@ -401,8 +400,7 @@ const JobProvider = ({ children }) => {
                     setIsLoading(true)
                     try {
                         await axios.delete(`${baseUrl}/deleteDeliveredJob/${job._id}`);
-                        setJobs(prevJobs => prevJobs.filter(j => j._id !== job._id));
-
+                        window.location.reload()
                         // Display SweetAlert success alert
                         Swal.fire({
                             icon: 'success',
@@ -447,11 +445,10 @@ const JobProvider = ({ children }) => {
                     `${baseUrl}/editedJob/${selectedJobForUpdateData._id}`,
                     { updatedQuantity, updatedDeliveryDate }
                 );
-
                 // Update the job in your state or context with the response data
                 setSelectedJobForUpdateData(null);
 
-
+                    window.location.reload()
                 if (editDateDialogRef.current) {
                     editDateDialogRef.current.close();
                 }

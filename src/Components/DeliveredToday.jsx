@@ -30,7 +30,7 @@ const DeliveredToday = () => {
 
     // Filter deliveries for today's date
     const todaysDeliveries = prevJobs.filter(currentJob => {
-        if (currentJob.goodsDeliveryDate) {
+        if (currentJob.goodsDeliveryDate.toLocaleString()) {
             const deliveryDate = parseCustomDate(currentJob.goodsDeliveryDate);
             return isSameDate(deliveryDate, startOfToday);
         }
@@ -74,11 +74,25 @@ const DeliveredToday = () => {
 
     const { toPDF, targetRef } = usePDF({ filename: 'Delivered Today.pdf' });
 
+    const printPDF = () => {
+        setTimeout(() => {
+            if (targetRef.current) {
+                const content = targetRef.current.innerHTML;
+                const originalDocument = document.body.innerHTML;
+                document.body.innerHTML = content;
+                window.print();
+                document.body.innerHTML = originalDocument;
+            } else {
+                console.error("Error: Unable to find targetRef.");
+            }
+        }, 1000); // Adjust the delay as needed
+    };
+
     return (
         <div className='pb-16'>
             {todaysDeliveries.length === 0 || (
                 <div className="text-2xl bg-cyan-900 text-white py-4 text-center"> {todaysDeliveries.length} Jobs Delivered Today
-                    <button className="rounded pdf px-3 hover:text-blue-400" onClick={() => toPDF()}>
+                    <button className="rounded pdf px-3 hover:text-blue-400" onClick={() => printPDF()}>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75l3 3m0 0l3-3m-3 3v-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
@@ -166,7 +180,7 @@ const DeliveredToday = () => {
 
 function parseCustomDate(dateString) {
     const [datePart] = dateString.split(' ');
-    const [day, month, year] = datePart.split('-');
+    const [day, month, year] = datePart.split('/');
     return new Date(year, month - 1, day);
 }
 

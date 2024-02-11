@@ -64,17 +64,31 @@ const PreviousDelivery = () => {
             datePickerRef.current.setOpen(true);
         }
     };
+    const printPDF = () => {
+        setTimeout(() => {
+            if (targetRef.current) {
+                const content = targetRef.current.innerHTML;
+                const originalDocument = document.body.innerHTML;
+                document.body.innerHTML = content;
+                window.print();
+                document.body.innerHTML = originalDocument;
+            } else {
+                console.error("Error: Unable to find targetRef.");
+            }
+        }, 1000); // Adjust the delay as needed
+    };
 
     return (
         <div className='mt-16 py-10 mx-auto backgruond-color'>
             <div className="text-xl rounded-xl py-3 mb-16 bg-violet-700 text-white text-center flex flex-col md:flex-row justify-center items-center gap-3">
 
                 <div className='text-white text-center flex justify-center items-center gap-3'>
-                    <button className="rounded pdf px-3 hover:text-blue-400" onClick={() => toPDF()}>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75l3 3m0 0l3-3m-3 3v-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </button>
+                    
+                <button className="rounded pdf px-3 hover:text-blue-400" onClick={() => printPDF()}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75l3 3m0 0l3-3m-3 3v-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </button>
                     <span onClick={preDalivery} className='cursor-pointer'>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
@@ -164,10 +178,16 @@ const PreviousDelivery = () => {
 
 // Helper function to parse a date in the format "DD-MM-YYYY HH:MM:SS"
 function parseCustomDate(dateString) {
+    let delimiter = '-';
+    if (dateString.includes('/')) {
+        delimiter = '/';
+    }
+
     const [datePart] = dateString.split(' ');
-    const [day, month, year] = datePart.split('-');
+    const [day, month, year] = datePart.split(delimiter);
     return new Date(year, month - 1, day);
 }
+
 
 // Helper function to check if two dates are the same
 function isSameDate(date1, date2) {

@@ -23,7 +23,6 @@ const TotalDelivery = () => {
 
 
 
-
     const [sortedData, setSortedData] = useState([]); // State to hold sorted data
     const [searchQuery, setSearchQuery] = useState("")
     const editDateDialogRef = useRef(null);
@@ -127,6 +126,9 @@ const TotalDelivery = () => {
     const filteredJobs = sortedData.filter((job) =>
         job.po.toLowerCase().includes(searchQuery.toLowerCase())
         || job.customar.toLowerCase().includes(searchQuery.toLocaleLowerCase())
+        || job.label.toLocaleLowerCase().includes(searchQuery.toLocaleLowerCase())
+        || job.goodsDeliveryDate.toLocaleLowerCase().includes(searchQuery.toLocaleLowerCase())
+        || job.qty.toString().toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const totalPrevDelivery = filteredJobs.reduce((accumulator, currentJob) => {
