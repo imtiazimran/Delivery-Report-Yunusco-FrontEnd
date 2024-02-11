@@ -22,7 +22,7 @@ const DeliveredToday = () => {
     // console.log(prevJobs)
     const currentDate = new Date();
 
-    
+
 
     // Calculate start of today's date (midnight)
     const startOfToday = new Date(currentDate);
@@ -179,8 +179,13 @@ const DeliveredToday = () => {
 
 
 function parseCustomDate(dateString) {
+    let delimiter = '-';
+    if (dateString.includes('/')) {
+        delimiter = '/';
+    }
+
     const [datePart] = dateString.split(' ');
-    const [day, month, year] = datePart.split('/');
+    const [day, month, year] = datePart.split(delimiter);
     return new Date(year, month - 1, day);
 }
 
