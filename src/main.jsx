@@ -16,6 +16,7 @@ import AuthProvider from './Components/Context/AuthProvider.jsx';
 import Login from './Components/ui/Login.jsx';
 import PrivetRoute from './Components/PriveteRoute.jsx';
 import ManageUsers from './Components/ManageUsers.jsx';
+import AddSamples from './Components/Sample/AddSamples.jsx';
 
 const router = createBrowserRouter([
   {
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
       {
         path : "/users",
         element : <ManageUsers/>
+      },
+      {
+        path: "/addSamples",
+        element: <PrivetRoute><AddSamples /></PrivetRoute>
       }
     ]
   },

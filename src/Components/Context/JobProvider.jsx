@@ -19,7 +19,7 @@ const JobProvider = ({ children }) => {
     const [selectedJobForUpdateData, setSelectedJobForUpdateData] = useState(null)
     const [updatedQuantity, setUpdatedQuantity] = useState("");
     const [updatedDeliveryDate, setUpdatedDeliveryDate] = useState("");
-
+    const [sample, setSample] = useState([])
     const editDateDialogRef = useRef(null);
 
 // console.log(prevJobs)
@@ -27,6 +27,30 @@ const JobProvider = ({ children }) => {
     const baseUrl = "https://delivery-report-yunusco-back-end.vercel.app"
     // const baseUrl = "http://localhost:8570"
 
+
+    // get samples
+    useEffect(() => {
+        axios.get(`${baseUrl}/sample`)
+            .then(res => {
+                setIsLoading(true)
+                setSample(res.data)
+                setIsLoading(false)
+            })
+            .catch(error => console.log(error))
+            .finally(() => setIsLoading(false))
+    })
+
+    useEffect(() => {
+        if (!isLoading) {
+            axios.get(`${baseUrl}/sample`)
+                .then(res => {
+                    setSample(res.data);
+                })
+                .catch((error) => {
+                    console.error("Error fetching sapmles:", error);
+                });
+        }
+    }, [isLoading]);
 
     // get On Processing jobs
     useEffect(() => {
@@ -231,6 +255,71 @@ const JobProvider = ({ children }) => {
             // Handle error and show a message to the user
         }
     };
+
+// Add Sample 
+const AddSample = (sample) => {
+    setIsLoading(true)
+    axios.post(`${baseUrl}/addSample`, sample)
+        .then(res => {
+            setIsLoading(false)
+            if (res.data.insertedId) {
+                Swal.fire({
+                    position: 'top-center',
+                    icon: 'success',
+                    title: 'Sample Added',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        })
+        .catch(error => {
+            setIsLoading(false)
+            console.log(error)
+        });
+}
+// update Sample
+const updateSample = (sample) => {
+    setIsLoading(true)
+    axios.put(`${baseUrl}/updateSample/${sample._id}`, sample)
+        .then(res => {
+            setIsLoading(false)
+            if (res.data.acknowledged) {
+                Swal.fire({
+                    position: 'top-center',
+                    icon: 'success',
+                    title: 'Sample Updated',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        })
+        .catch(error => {
+            setIsLoading(false)
+            console.log(error)
+        });
+}
+
+// delete Sample
+const deleteSample = (id) => {
+    setIsLoading(true)
+    axios.delete(`${baseUrl}/deleteSample/${id}`)
+        .then(res => {
+            setIsLoading(false)
+            if (res.data.deletedCount) {
+                Swal.fire({
+                    position: 'top-center',
+                    icon: 'success',
+                    title: 'Sample Deleted',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        })
+        .catch(error => {
+            setIsLoading(false)
+            console.log(error)
+        });
+}
 
 
     // Add Job 
@@ -503,7 +592,11 @@ const JobProvider = ({ children }) => {
         isAdmin,
         deleteUserFromDataBase,
         makeAdmin,
-        makeEditor
+        makeEditor,
+        sample,
+        AddSample,
+        updateSample,
+        deleteSample,
     }
     return (
         <JobContext.Provider value={jobInfo}>
