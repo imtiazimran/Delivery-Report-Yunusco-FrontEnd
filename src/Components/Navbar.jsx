@@ -7,6 +7,7 @@ import { JobContext } from './Context/JobProvider';
 import AddJobs from './AddJobs';
 import { AuthContext } from './Context/AuthProvider';
 import Swal from 'sweetalert2';
+import AddSample from './Sample/AddSamples';
 
 const Navbar = () => {
     const { user, logOut } = useContext(AuthContext)
@@ -14,9 +15,14 @@ const Navbar = () => {
     const { jobs, isAdmin } = useContext(JobContext)
 
     const [isOpen, setIsOpen] = useState(false)
+    const [isSampleModalOpen, setIsSampleModalOpen] = useState(false)
 
     const handleAddJobModal = () => {
         setIsOpen(true)
+    }
+
+    const handleAddSampleModal = () => {
+        setIsSampleModalOpen(true)
     }
 
     const handleLogOut = () => {
@@ -39,6 +45,7 @@ const Navbar = () => {
     return (
         <div>
             <AddJobs isOpen={isOpen} setIsOpen={setIsOpen} />
+            <AddSample isOpen={isSampleModalOpen} setIsOpen={setIsSampleModalOpen} />
             <div className="navbar fixed top-0 left-0 right-0 bg-gradient-to-r from-blue-100 to-purple-500 z-50">
                 <div className="flex-1 justify-between">
                     <Link href='/' className=" text-orange-500 normal-case text-xl"> <img className='w-1/4' src="https://i.ibb.co/gwV6FjL/1553451971650-removebg-preview.png" alt="" /> </Link>
@@ -87,6 +94,28 @@ const Navbar = () => {
                                                             />
                                                         )}
                                                         Add Job
+                                                    </button>
+                                                )}
+                                            </Menu.Item>
+                                            <Menu.Item>
+                                                {({ active }) => (
+                                                    <button
+                                                        onClick={handleAddSampleModal}
+                                                        className={`btn ${active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                                                            } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                                                    >
+                                                        {active ? (
+                                                            <EditActiveIcon
+                                                                className="mr-2 h-5 w-5"
+                                                                aria-hidden="true"
+                                                            />
+                                                        ) : (
+                                                            <EditInactiveIcon
+                                                                className="mr-2 h-5 w-5"
+                                                                aria-hidden="true"
+                                                            />
+                                                        )}
+                                                        Add Sample
                                                     </button>
                                                 )}
                                             </Menu.Item>
@@ -164,6 +193,7 @@ const Navbar = () => {
                                     </div>
                                 </Link>
                                 <button onClick={handleAddJobModal} className='mx-3 bg-blue-500 text-white p-1 rounded'>Add Job</button>
+                                <button onClick={handleAddSampleModal} className='mx-3 bg-blue-500 text-white p-1 rounded'>Add Sample</button>
                                 <Link className='mx-3 bg-blue-500 text-white p-1 rounded' to={"/previousDelivery"}>Previous Job</Link>
                                 <Link className='mx-3 bg-blue-500 text-white p-1 rounded' to={"/totalDelivery"}>Total Delivery</Link>
                             </div>
