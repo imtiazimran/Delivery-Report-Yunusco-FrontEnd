@@ -39,6 +39,7 @@ const Navbar = () => {
                 console.log(error);
             });
     }
+    // console.log(isSampleModalOpen);
 
     // console.log(user);
     const partialDeliveries = jobs.filter((item) => item.hasOwnProperty("deliveryType"))
