@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { JobContext } from '../Context/JobProvider';
 import { Tab } from '@headlessui/react';
+import moment from 'moment';
 
 const Sample = () => {
     const { sample, isLoading, deleteSample, updateSample } = useContext(JobContext);
@@ -13,7 +14,7 @@ const Sample = () => {
         "All Samples": sample
     };
 
-
+    // console.log(categories)
 
 
     function classNames(...classes) {
@@ -65,51 +66,58 @@ const Sample = () => {
                                     'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2'
                                 )}
                             >
-                                {posts.length > 0 ? (
-                                    <p className='text-center text-red-500'>No data found</p>
-                                ) : (
-                                    <ul>
-                                        {posts.map((post) => (
-                                            <li
-                                                key={post._id}
-                                                onDoubleClick={() => deleteSample(post._id)}
-                                                className="relative rounded-md p-3 hover:bg-gray-100"
-                                            >
-                                                <div className='flex justify-between items-center'>
-                                                    <h3 className="text-lg font-medium leading-5 capitalize">
-                                                        {post.customer}
-                                                    </h3>
-                                                    {
-                                                        post.Status === "Pending" &&
-                                                        <button onClick={() => updateSample({ ...post, Status: "Delivered" })} className='absolute right-2 text-green-600 hover:text-blue-600'>
-                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                                                            </svg>
-                                                        </button>
-                                                    }
-                                                </div>
-
-                                                <ul className="mt-1 flex justify-between text-sm font-normal leading-4 text-gray-500">
-                                                    <li>
-                                                        <li className='capitalize'>From: {post.from}</li>
-                                                        <li className='capitalize'>To: {post.to}</li>
-                                                        <li className='capitalize'>Brand: <span className='uppercase'>{post.brand}</span></li>
-                                                        <li className='capitalize'>Color: {post.color}</li>
-                                                        <li className='capitalize'>St No: {post.stNo}</li>
-                                                    </li>
-                                                    <li>
-                                                        <li className='capitalize'>Label: <span className='uppercase'>{post.label}</span> </li>
-                                                        <li>Quantity: {post.qty}</li>
-                                                        <li className='capitalize'>Size: <span className='uppercase'>{post.size}</span> </li>
-                                                        <li>Added By: {post.AddedBy}</li>
-                                                        <li className='capitalize' >Status: <span className='uppercase'>{post.Status}</span> </li>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                )
+                                {
+                                    posts.length === 0 && <h3 className="text-md text-red-500 text-center font-medium leading-5 capitalize">No Data Found</h3>
                                 }
+                                <ul>
+                                    {posts.map((post) => (
+                                        <li
+                                            key={post._id}
+                                            onDoubleClick={() => deleteSample(post._id)}
+                                            className="relative rounded-md p-3 hover:bg-gray-100"
+                                        >
+                                            <div className='flex justify-between items-center'>
+                                                <h3 className="text-lg font-medium leading-5 capitalize">
+                                                    {post.customer}
+                                                </h3>
+                                                {
+                                                    post.Status === "Pending" &&
+                                                    <button onClick={() => updateSample({ ...post, Status: "Delivered", DeliveryDate: new Date() })} className='absolute right-2 text-green-600 hover:text-blue-600'>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                                        </svg>
+                                                    </button>
+                                                }
+                                            </div>
+
+                                            <ul className="mt-1 flex justify-between text-sm font-normal leading-4 text-gray-500">
+                                                <li>
+                                                    <li className='capitalize'>From: {post.from}</li>
+                                                    <li className='capitalize'>To: {post.to}</li>
+                                                    <li className='capitalize'>Brand: <span className='uppercase'>{post.brand}</span></li>
+                                                    <li className='capitalize'>Color: {post.color}</li>
+                                                    <li className='capitalize'>St No: {post.stNo}</li>
+                                                    {post.DeliveryDate && (
+                                                        <li>Delivery Date: {moment(post.DeliveryDate).format('DD/MM/YYYY')}</li>
+                                                    )}
+
+                                                    {post.ReceiveDate && (
+                                                        <li>Receive Date: {moment(post.ReceiveDate).format('DD/MM/YYYY')}</li>
+                                                    )}
+
+                                                </li>
+                                                <li>
+                                                    <li className='capitalize'>Label: <span className='uppercase'>{post.label}</span> </li>
+                                                    <li>Quantity: {post.qty}</li>
+                                                    <li className='capitalize'>Size: <span className='uppercase'>{post.size}</span> </li>
+                                                    <li>Added By: {post.AddedBy}</li>
+                                                    <li className='capitalize' >Status: <span className='uppercase'>{post.Status}</span> </li>
+
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    ))}
+                                </ul>
                             </Tab.Panel>
                         ))
                         }
