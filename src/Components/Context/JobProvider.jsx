@@ -22,7 +22,7 @@ const JobProvider = ({ children }) => {
     const [sample, setSample] = useState([])
     const editDateDialogRef = useRef(null);
 
-// console.log(prevJobs)
+    // console.log(prevJobs)
 
     const baseUrl = "https://delivery-report-yunusco-back-end.vercel.app"
     // const baseUrl = "http://localhost:8570"
@@ -153,7 +153,7 @@ const JobProvider = ({ children }) => {
                     try {
                         axios.delete(`${baseUrl}/user/${user._id}`)
                         setUsers(user => users.filter(u => u._id !== user._id));
-                            
+
                         // Display SweetAlert success alert
                         Swal.fire({
                             icon: 'success',
@@ -256,70 +256,102 @@ const JobProvider = ({ children }) => {
         }
     };
 
-// Add Sample 
-const AddSample = (sample) => {
-    setIsLoading(true)
-    axios.post(`${baseUrl}/addSample`, sample)
-        .then(res => {
-            setIsLoading(false)
-            if (res.data.insertedId) {
-                Swal.fire({
-                    position: 'top-center',
-                    icon: 'success',
-                    title: 'Sample Added',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            }
-        })
-        .catch(error => {
-            setIsLoading(false)
-            console.log(error)
-        });
-}
-// update Sample
-const updateSample = (sample) => {
-    setIsLoading(true)
-    axios.put(`${baseUrl}/updateSample/${sample._id}`, sample)
-        .then(res => {
-            setIsLoading(false)
-            if (res.data.acknowledged) {
-                Swal.fire({
-                    position: 'top-center',
-                    icon: 'success',
-                    title: 'Sample Updated',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            }
-        })
-        .catch(error => {
-            setIsLoading(false)
-            console.log(error)
-        });
-}
+    // Add Sample 
+    const AddSample = (sample) => {
+        setIsLoading(true)
+        axios.post(`${baseUrl}/addSample`, sample)
+            .then(res => {
+                setIsLoading(false)
+                if (res.data.insertedId) {
+                    Swal.fire({
+                        position: 'top-center',
+                        icon: 'success',
+                        title: 'Sample Added',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            })
+            .catch(error => {
+                setIsLoading(false)
+                console.log(error)
+            });
+    }
+    // update Sample
+    const updateSample = (sample) => {
+        setIsLoading(true)
+        axios.put(`${baseUrl}/updateSample/${sample._id}`, sample)
+            .then(res => {
+                setIsLoading(false)
+                if (res.data.acknowledged) {
+                    Swal.fire({
+                        position: 'top-center',
+                        icon: 'success',
+                        title: 'Sample Updated',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            })
+            .catch(error => {
+                setIsLoading(false)
+                console.log(error)
+            });
+    }
 
-// delete Sample
-const deleteSample = (id) => {
-    setIsLoading(true)
-    axios.delete(`${baseUrl}/deleteSample/${id}`)
-        .then(res => {
-            setIsLoading(false)
-            if (res.data.deletedCount) {
-                Swal.fire({
-                    position: 'top-center',
-                    icon: 'success',
-                    title: 'Sample Deleted',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
+    // delete Sample
+
+    const deleteSample = (id) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You will not be able to recover this sample!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, keep it'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                if (currentUser?.role === "Admin" || currentUser?.role === "Editor") {
+                    setIsLoading(true)
+                    try {
+                        await axios.delete(`${baseUrl}/deleteSample/${id}`);
+                        window.location.reload()
+
+                        // Display SweetAlert success alert
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Job Deleted',
+                            text: 'The Sample has been successfully Deleted',
+                        });
+                    } catch (error) {
+                        if (error) {
+                            Swal.fire({
+                                position: 'top-center',
+                                icon: 'error',
+                                title: `${error.message}`,
+                                text: 'An Error Occured during this Oparation',
+                                showConfirmButton: "OK"
+                            });
+                        }
+                        console.error("Error delivering job:", error);
+                        // Handle error and show a message to the user
+                    }
+                    finally {
+                        setIsLoading(false)
+                    }
+                } else {
+                    Swal.fire({
+                        position: 'top-center',
+                        icon: 'error',
+                        title: "Unauthorize Oparetion",
+                        text: "Look Like You Don't have the permission to Delete Samples",
+                        showConfirmButton: "OK"
+                    });
+                }
             }
-        })
-        .catch(error => {
-            setIsLoading(false)
-            console.log(error)
         });
-}
+    };
+
 
 
     // Add Job 
@@ -537,7 +569,7 @@ const deleteSample = (id) => {
                 // Update the job in your state or context with the response data
                 setSelectedJobForUpdateData(null);
 
-                    window.location.reload()
+                window.location.reload()
                 if (editDateDialogRef.current) {
                     editDateDialogRef.current.close();
                 }

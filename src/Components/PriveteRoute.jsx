@@ -4,7 +4,7 @@ import { AuthContext } from "./Context/AuthProvider";
 import Loader from "../assets/loader2.json"
 import Lottie from "lottie-react";
 const PrivetRoute = ({ children }) => {
-    const { user, loading } = useContext(AuthContext);
+    const {loading, user } = useContext(AuthContext);
         if (user) {
             // Redirect to the page
             return children;

@@ -53,6 +53,7 @@ const AddJobs = ({ isOpen, setIsOpen }) => {
             }
             setIsOpen(false)
         } else {
+            setIsOpen(false)
             setIsLoading(false)
             Swal.fire({
                 position: 'top-center',

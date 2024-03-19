@@ -102,7 +102,7 @@ const Navbar = () => {
                                                 {({ active }) => (
                                                     <button
                                                         onClick={handleAddSampleModal}
-                                                        className={`btn ${active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                                                        className={`btn mt-2 ${active ? 'bg-violet-500 text-white' : 'text-gray-900'
                                                             } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                                                     >
                                                         {active ? (
@@ -167,6 +167,28 @@ const Navbar = () => {
                                                 )}
                                             </Menu.Item>
                                             <Menu.Item>
+                                                {({ active }) => (
+                                                    <Link
+                                                        to={"/sample"}
+                                                        className={`mt-2 btn ${active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                                                            } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                                                    >
+                                                        {active ? (
+                                                            <ArchiveActiveIcon
+                                                                className="mr-2 h-5 w-5"
+                                                                aria-hidden="true"
+                                                            />
+                                                        ) : (
+                                                            <ArchiveInactiveIcon
+                                                                className="mr-2 h-5 w-5"
+                                                                aria-hidden="true"
+                                                            />
+                                                        )}
+                                                        View Sample
+                                                    </Link>
+                                                )}
+                                            </Menu.Item>
+                                            <Menu.Item>
                                                 <Link to="/partialDelivery">
                                                     <div className="indicator w-full text-sm py-2">
                                                         <span className="indicator-item badge badge-secondary ">{partialDeliveries.length}</span>
@@ -197,6 +219,7 @@ const Navbar = () => {
                                 <button onClick={handleAddSampleModal} className='mx-3 bg-blue-500 text-white p-1 rounded'>Add Sample</button>
                                 <Link className='mx-3 bg-blue-500 text-white p-1 rounded' to={"/previousDelivery"}>Previous Job</Link>
                                 <Link className='mx-3 bg-blue-500 text-white p-1 rounded' to={"/totalDelivery"}>Total Delivery</Link>
+                                <Link className='mx-3 bg-blue-500 text-white p-1 rounded' to={"/sample"}>View Sample</Link>
                             </div>
 
                             {/*user panal*/}
