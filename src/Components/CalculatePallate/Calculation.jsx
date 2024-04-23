@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { AnimatePresence, motion } from "framer-motion"
@@ -14,30 +15,33 @@ const CalculatePalette = () => {
 
     const onSubmit = (data) => {
         const calculateStickerDistribution = (capacity, sizes) => {
-            let totalQty = sizes.reduce((acc, qty) => acc + qty, 0);
-            let totalSheetsNeeded = Math.ceil(totalQty / parseInt(capacity));
-            let stickerDistribution = sizes.map(qty => Math.ceil(qty / totalSheetsNeeded));
+
+
+            const totalQty = sizes.reduce((acc, qty) => acc + qty, 0);
+            const totalSheetsNeeded = Math.ceil(totalQty / capacity);
+
+            // Calculate the distribution for each size
+            const stickerDistribution = sizes.map(qty => Math.ceil(qty / totalSheetsNeeded));
+
+            // Adjust the distribution to fit within the capacity
             let totalStickersOnSheets = stickerDistribution.reduce((acc, qty) => acc + qty, 0);
-    
-            // Check if each sticker distribution meets the capacity
-            for (let i = 0; i < sizes.length; i++) {
-                while (stickerDistribution[i] * totalSheetsNeeded < sizes[i]) {
-                    totalSheetsNeeded++;
-                    totalStickersOnSheets += sizes[i];
-                    stickerDistribution = sizes.map(qty => Math.ceil(qty / totalSheetsNeeded));
-                }
+
+            // Prioritize reduction from sizes with the largest quantities
+            while (totalStickersOnSheets > capacity) {
+                const maxIndex = sizes.indexOf(Math.max(...sizes));
+                stickerDistribution[maxIndex]--;
+                sizes[maxIndex] -= totalSheetsNeeded;
+                totalStickersOnSheets--;
             }
-    
+
             return { stickerDistribution, totalSheetsNeeded, totalQty, totalStickersOnSheets };
         };
-
         const inputs = Array.from({ length: inputCount }, (_, i) => parseInt(data[`size${i + 1}`]))
             .filter(value => !isNaN(value));
 
         const calculation = calculateStickerDistribution(data.ups, inputs);
         setResult(calculation);
     };
-
 
     return (
         <div className="my-20 relative">
