@@ -57,7 +57,7 @@ const router = createBrowserRouter([
         element: <PrivetRoute><Sample /></PrivetRoute>
       },
       {
-        path: 'calculatePallate',
+        path: '/calculatePallate',
         element: <CalculatePalette /> 
       }
     ]

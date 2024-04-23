@@ -14,26 +14,23 @@ const CalculatePalette = () => {
 
     const onSubmit = (data) => {
         const calculateStickerDistribution = (capacity, sizes) => {
-
-            const totalQty = sizes.reduce((acc, qty) => acc + qty, 0);
-            const totalSheetsNeeded = Math.ceil(totalQty / parseInt(capacity));
-
-            // Calculate the distribution for each size
-            const stickerDistribution = sizes.map(qty => Math.ceil(qty / totalSheetsNeeded));
-
-            // Adjust the distribution to fit within the capacity
+            let totalQty = sizes.reduce((acc, qty) => acc + qty, 0);
+            let totalSheetsNeeded = Math.ceil(totalQty / parseInt(capacity));
+            let stickerDistribution = sizes.map(qty => Math.ceil(qty / totalSheetsNeeded));
             let totalStickersOnSheets = stickerDistribution.reduce((acc, qty) => acc + qty, 0);
-
-            // Prioritize reduction from sizes with the largest quantities
-            while (totalStickersOnSheets > capacity) {
-                const maxIndex = sizes.indexOf(Math.max(...sizes));
-                stickerDistribution[maxIndex]--;
-                sizes[maxIndex] -= totalSheetsNeeded;
-                totalStickersOnSheets--;
+    
+            // Check if each sticker distribution meets the capacity
+            for (let i = 0; i < sizes.length; i++) {
+                while (stickerDistribution[i] * totalSheetsNeeded < sizes[i]) {
+                    totalSheetsNeeded++;
+                    totalStickersOnSheets += sizes[i];
+                    stickerDistribution = sizes.map(qty => Math.ceil(qty / totalSheetsNeeded));
+                }
             }
-
+    
             return { stickerDistribution, totalSheetsNeeded, totalQty, totalStickersOnSheets };
         };
+
         const inputs = Array.from({ length: inputCount }, (_, i) => parseInt(data[`size${i + 1}`]))
             .filter(value => !isNaN(value));
 
@@ -41,10 +38,10 @@ const CalculatePalette = () => {
         setResult(calculation);
     };
 
-    console.log(result);
+
     return (
         <div className="my-20 relative">
-            <form className="w-1/2 mx-auto" onSubmit={handleSubmit(onSubmit)}>
+            <form className="md:w-1/2 w-3/4 mx-auto" onSubmit={handleSubmit(onSubmit)}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label htmlFor="ups">Tray Capacity</label>
@@ -117,7 +114,7 @@ const CalculatePalette = () => {
                             <h5>Impression: {result.totalSheetsNeeded}</h5>
                             <h2>Total Capacity: {result.totalStickersOnSheets}</h2>
                             <h3>Total Quantity: {result.totalQty}</h3>
-                            <h4>Sticker Distribution: {result.stickerDistribution.map((s, i) => <p key={i}>{s}</p>)}</h4>
+                            <h4>Sticker Distribution: {result.stickerDistribution.map((s, i) => <span className="mx-1" key={i}>{s}</span>)}</h4>
                             <motion.button
                                 initial={{ scale: 0.9 }}
                                 animate={{

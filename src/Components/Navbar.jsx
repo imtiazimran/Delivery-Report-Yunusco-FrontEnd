@@ -203,6 +203,28 @@ const Navbar = () => {
                                                     </div>
                                                 </Link>
                                             </Menu.Item>
+                                            <Menu.Item>
+                                                {({ active }) => (
+                                                    <Link
+                                                        to={"/calculatePallate"}
+                                                        className={`mt-2 btn ${active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                                                            } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                                                    >
+                                                        {active ? (
+                                                            <ArchiveActiveIcon
+                                                                className="mr-2 h-5 w-5"
+                                                                aria-hidden="true"
+                                                            />
+                                                        ) : (
+                                                            <ArchiveInactiveIcon
+                                                                className="mr-2 h-5 w-5"
+                                                                aria-hidden="true"
+                                                            />
+                                                        )}
+                                                        Calculate Pallate
+                                                    </Link>
+                                                )}
+                                            </Menu.Item>
                                         </div>
                                     </Menu.Items>
                                 </Transition>
@@ -220,6 +242,7 @@ const Navbar = () => {
                                 <Link className='mx-3 bg-blue-500 text-white p-1 rounded' to={"/previousDelivery"}>Previous Job</Link>
                                 <Link className='mx-3 bg-blue-500 text-white p-1 rounded' to={"/totalDelivery"}>Total Delivery</Link>
                                 <Link className='mx-3 bg-blue-500 text-white p-1 rounded' to={"/sample"}>View Sample</Link>
+                                <Link className='mx-3 bg-blue-500 text-white p-1 rounded' to={"/calculatePallate"}>Calculate Pallate</Link>
                             </div>
 
                             {/*user panal*/}
