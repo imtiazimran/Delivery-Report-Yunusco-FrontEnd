@@ -2,6 +2,7 @@ import React, { createContext, useRef } from 'react';
 import axios from "axios"
 import { useEffect, useState } from "react"
 import Swal from 'sweetalert2';
+import { baseUrl } from '../Redux/api/addJobApi';
 
 
 export const JobContext = createContext(null)
@@ -24,8 +25,7 @@ const JobProvider = ({ children }) => {
 
     // console.log(prevJobs)
 
-    const baseUrl = "https://delivery-report-yunusco-back-end.vercel.app"
-    // const baseUrl = "http://localhost:8570"
+    
 
 
     // get samples

@@ -1,8 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 
-// export const baseUrl = "https://delivery-report-yunusco-back-end.vercel.app"
-export const baseUrl = "http://localhost:8570"
+export const baseUrl = "https://delivery-report-yunusco-back-end.vercel.app"
+// export const baseUrl = "http://localhost:8570"
 
 export const addJobApi = createApi({
     reducerPath: "addJobApi",
