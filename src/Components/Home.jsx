@@ -1,17 +1,19 @@
 
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Stat from './Stat';
 import JobOnProcessing from './JobOnProcessing';
 import DeliveredToday from './DeliveredToday';
 import DeliveryReportChart from './ui/BarChart';
 import { JobContext } from './Context/JobProvider';
 import PreviousDelivery from './PreviousDelivery';
+import { useGetProcessingJobsQuery } from './Redux/api/addJobApi';
 
 const Home = () => {
 
     const { prevJobs } = useContext(JobContext)
 
-
+    const {data, refetch} = useGetProcessingJobsQuery()
+    const onProccess = data?.filter((item) => !item.hasOwnProperty("deliveryType"))
     const currentDate = new Date();
     // Calculate start of today's date (midnight)
     const startOfToday = new Date(currentDate);
@@ -33,11 +35,16 @@ const Home = () => {
         return accumulator; // If conversion fails, return the accumulator unchanged
     }, 0);
 
+    useEffect(() => {
+        refetch()
+    },[])
 
     return (
         <div className='backgruond-color mt-16'>
             <Stat />
             <DeliveryReportChart />
+            {onProccess?.length !== 0 && <JobOnProcessing/> }
+            
             {
                 totalDeliveryToday === 0 ? <PreviousDelivery /> : <DeliveredToday />
             }

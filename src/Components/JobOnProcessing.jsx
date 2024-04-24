@@ -1,17 +1,21 @@
 
-
-import { useContext } from "react";
+import { motion } from "framer-motion"
+import { useContext, useState } from "react";
 import { JobContext } from "./Context/JobProvider";
 import PD_Modal from "./ui/Modal";
 import EmptyAmimation from "../assets/Empty-Animation.json"
 import Loader from "../assets/loader2.json"
 import Lottie from "lottie-react";
 import { AuthContext } from "./Context/AuthProvider";
+import { useDeleteJobMutation, useGetProcessingJobsQuery } from "./Redux/api/addJobApi";
+import Swal from "sweetalert2";
+import { AnimatePresence } from "framer-motion";
 const JobOnProcessing = () => {
     const { user } = useContext(AuthContext)
-    const { jobs,
-        isLoading,
-        handleDelete,
+    const {
+        // jobs,
+        // isLoading,
+        // handleDelete,
         handleDeliveredJob,
         isOpen,
         setIsOpen,
@@ -21,22 +25,39 @@ const JobOnProcessing = () => {
         setPartialDeliveryQty
     } = useContext(JobContext)
 
-
-
+    const { data, isLoading, refetch } = useGetProcessingJobsQuery()
+    const [deleteJob, { isSuccess }] = useDeleteJobMutation()
+    const [selectedId, setSelectedId] = useState(null)
     const handlePartialDeliveryModal = (job) => {
         setSelectedJobForPartialDelivery(job);
         setPartialDeliveryQty(0); // Reset input field
         setIsOpen(true)
     };
 
-    const onProccess = jobs.filter((item) => !item.hasOwnProperty("deliveryType"))
+    const onProccess = data?.filter((item) => !item.hasOwnProperty("deliveryType"))
 
 
-    const currentDeliveryQty = onProccess.reduce((accumolator, currentJob) => accumolator + parseInt(currentJob.qty), 0)
+    const currentDeliveryQty = onProccess?.reduce((accumolator, currentJob) => accumolator + parseInt(currentJob.qty), 0)
 
+    const handleDelete = (job) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    deleteJob(job._id)
+                }
+                refetch()
+            })
+    }
 
-
-
+    const expectedDate = new Date(selectedId?.ExpectedDate);
 
     return (
         <div className="pb-16">
@@ -49,7 +70,7 @@ const JobOnProcessing = () => {
                 setPartialDeliveryQty={setPartialDeliveryQty}
             />
 
-            {onProccess.length === 0 || (
+            {onProccess?.length === 0 || (
                 <div className="rounded-xl md:w-11/12 mx-auto text-2xl py-3 bg-sky-700 text-white text-center">
                     <span className="loading loading-ring loading-xs"></span> Jobs On Processing{" "}
                     <span className="loading loading-ring loading-xs"></span>
@@ -63,7 +84,7 @@ const JobOnProcessing = () => {
                             <Lottie className="lg:w-2/4 mx-auto" animationData={Loader} />
                         </div>
                     </div>
-                ) : onProccess.length === 0 ? (
+                ) : onProccess?.length === 0 ? (
                     <div className="mt-5 ">
                         <span className="lg:text-2xl text-xl bg-cyan-900 text-white py-4 text-center block font-semibold md:w-1/4 mx-auto lg:absolute top-1/4 z-50">
                             No Job is in Processing <br />
@@ -88,8 +109,8 @@ const JobOnProcessing = () => {
                             </thead>
                         )}
                         <tbody>
-                            {onProccess.map((job, i) => (
-                                <tr key={job._id} className="text-center py-16">
+                            {onProccess?.map((job, i) => (
+                                <motion.tr layoutId={job._id} onClick={() => setSelectedId(job)} key={job._id} className="text-center py-16">
                                     <th>{i + 1}</th>
                                     <td className="capitalize">{job?.customer}</td>
                                     <td>JBH000{job?.po}</td>
@@ -114,11 +135,11 @@ const JobOnProcessing = () => {
                                             </svg>
                                         </button>
                                     </td>
-                                </tr>
+                                </motion.tr>
                             ))}
                         </tbody>
                         <tfoot>
-                            {onProccess.length === 0 ? (
+                            {onProccess?.length === 0 ? (
                                 <tr>
                                     <td colSpan="5" className="text-center"></td>
                                 </tr>
@@ -136,6 +157,55 @@ const JobOnProcessing = () => {
                     </table>
                 )}
             </div>
+            <AnimatePresence className="flex justify-center items-center">
+                {
+                    selectedId && (
+                        <motion.div className="fixed top-0 left-0 w-full h-full bg-black/50 z-50 flex items-center justify-center" layoutId={selectedId._id}>
+                            <div className="bg-white p-4  w-[300px] text-black">
+
+                                <h1 className="text-black">PO: JBH000{selectedId?.po}</h1>
+                                <p className="text-black">Customer : {selectedId?.customer}</p>
+                                <p className="text-black">Quantity : {selectedId?.qty.toLocaleString('en-IN')}</p>
+                                <p className="text-black">Impression : {selectedId?.impression}</p>
+                                <p className="text-black">Capacity : {selectedId?.capacity}</p>
+                                <p className="text-black">Label : {selectedId?.label}</p>
+                                <p className="text-black">Expected Delivery : {expectedDate?.toLocaleDateString()}</p>
+                                <p>
+                                    Size:
+                                    {
+                                        selectedId.sizes.map((s, i) => <span className="text-black mx-2" key={i}>{s}</span>)
+                                    }
+                                </p>
+                                <p cla>
+                                    Ups per size:
+                                    {
+                                        selectedId.stickerDistribution.map((s, i) => <span className="text-black mx-2" key={i}>{s}</span>)
+                                    }
+                                </p>
+                                <motion.button
+                                    initial={{ scale: 0.9 }}
+                                    animate={{
+                                        rotate: 0,
+                                        scale: 1,
+                                        transition: { duration: 0.2 }
+                                    }}
+                                    whileHover={{
+                                        scale: 1.1
+                                    }}
+                                    whileTap={{
+                                        scale: 0.9
+                                    }}
+                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold my-2 float-right py-2 px-4 rounded"
+                                    type="submit"
+                                    onClick={() => setSelectedId(null)}
+                                >
+                                    Close
+                                </motion.button>
+                            </div>
+                        </motion.div>
+                    )
+                }
+            </AnimatePresence>
         </div>
     );
 

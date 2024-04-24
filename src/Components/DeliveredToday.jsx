@@ -88,6 +88,8 @@ const DeliveredToday = () => {
         }, 1000); // Adjust the delay as needed
     };
 
+    console.log(todaysDeliveries);
+
     return (
         <div className='pb-16'>
             {todaysDeliveries.length === 0 || (
@@ -124,9 +126,11 @@ const DeliveredToday = () => {
                         </thead>
                         <tbody>
                             {todaysDeliveries.map((job, i) => (
+                                
                                 <tr onDoubleClick={() => handleDeleteDeliveredJob(job)} key={job._id} className="text-center">
+                                
                                     <th>{i + 1}</th>
-                                    <td className='capitalize'>{job.customar}</td>
+                                    <td className='capitalize'>{job?.customer}</td>
                                     <td>JBH00{job.po}</td>
                                     <td className='flex justify-center items-center gap-1'>
                                         <span>{job.qty.toLocaleString('en-IN')}</span>

@@ -53,14 +53,14 @@ const JobProvider = ({ children }) => {
     }, [isLoading]);
 
     // get On Processing jobs
-    useEffect(() => {
-        axios.get(`${baseUrl}/delivery`)
-            .then(res => {
-                setIsLoading(true)
-                setJobs(res.data)
-                setIsLoading(false)
-            })
-    }, [])
+    // useEffect(() => {
+    //     axios.get(`${baseUrl}/delivery`)
+    //         .then(res => {
+    //             setIsLoading(true)
+    //             setJobs(res.data)
+    //             setIsLoading(false)
+    //         })
+    // }, [])
 
     // get all delivered jobs
     useEffect(() => {
@@ -79,17 +79,17 @@ const JobProvider = ({ children }) => {
 
 
     // This effect runs when 'jobs' changes, but checks 'isLoading' to prevent endless calls
-    useEffect(() => {
-        if (!isLoading) {
-            axios.get(`${baseUrl}/delivery`)
-                .then(res => {
-                    setJobs(res.data);
-                })
-                .catch((error) => {
-                    console.error("Error fetching jobs:", error);
-                });
-        }
-    }, [isLoading]);
+    // useEffect(() => {
+    //     if (!isLoading) {
+    //         axios.get(`${baseUrl}/delivery`)
+    //             .then(res => {
+    //                 setJobs(res.data);
+    //             })
+    //             .catch((error) => {
+    //                 console.error("Error fetching jobs:", error);
+    //             });
+    //     }
+    // }, [isLoading]);
 
     // This effect runs when 'prevJobs' changes, but checks 'isLoading' to prevent endless calls
     useEffect(() => {
@@ -468,7 +468,7 @@ const JobProvider = ({ children }) => {
                     setIsLoading(true)
                     try {
                         await axios.delete(`${baseUrl}/deleteJob/${job._id}`);
-                        window.location.reload()
+
 
                         // Display SweetAlert success alert
                         Swal.fire({

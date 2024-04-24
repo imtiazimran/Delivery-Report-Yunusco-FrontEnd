@@ -18,6 +18,8 @@ import PrivetRoute from './Components/PriveteRoute.jsx';
 import ManageUsers from './Components/ManageUsers.jsx';
 import Sample from './Components/Sample/Sample.jsx';
 import CalculatePalette from './Components/CalculatePallate/Calculation.jsx';
+import { Provider } from 'react-redux';
+import { store } from './Components/Redux/api/store.js';
 
 const router = createBrowserRouter([
   {
@@ -58,17 +60,19 @@ const router = createBrowserRouter([
       },
       {
         path: '/calculatePallate',
-        element: <CalculatePalette /> 
+        element: <CalculatePalette />
       }
     ]
   },
 ]);
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <JobProvider>
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
-    </JobProvider>
+    <Provider store={store}>
+      <JobProvider>
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
+      </JobProvider>
+    </Provider>
   </React.StrictMode>,
 )
