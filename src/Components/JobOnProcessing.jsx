@@ -163,7 +163,7 @@ const JobOnProcessing = () => {
             <AnimatePresence className="flex justify-center items-center">
                 {
                     selectedId && (
-                        <motion.div className="fixed top-0 left-0 w-full h-full bg-black/50 z-50 flex items-center justify-center" layoutId={selectedId._id}>
+                        <motion.div className="fixed top-0 left-0 w-full h-full z-50 flex items-center justify-center" layoutId={selectedId._id}>
                             <div className="bg-white p-4  w-[350px] text-black">
 
                                 <h1 className="text-black">PO: JBH000{selectedId?.po}</h1>

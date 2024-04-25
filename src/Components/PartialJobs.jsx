@@ -5,8 +5,10 @@ import PD_Modal from './ui/Modal';
 import NothingFound from "../assets/nothingFound.json"
 import Loader from "../assets/loader2.json"
 import Lottie from "lottie-react";
+import { useGetProcessingJobsQuery } from './Redux/api/addJobApi';
 const PartialJobs = () => {
-    const { jobs,
+    const { 
+        // jobs,
         isLoading,
         handleDelete,
         handleDeliveredJob,
@@ -18,6 +20,7 @@ const PartialJobs = () => {
         setPartialDeliveryQty
     } = useContext(JobContext)
 
+    const {data: onProccess} = useGetProcessingJobsQuery()
     const handlePartialDeliveryModal = (job) => {
         setSelectedJobForPartialDelivery(job);
         setPartialDeliveryQty(0); // Reset input field
@@ -26,10 +29,11 @@ const PartialJobs = () => {
 
 
 
-    const partialDeliveries = jobs.filter((item) => item.hasOwnProperty("deliveryType"))
+
+    const partialDeliveries = onProccess?.filter((item) => item.hasOwnProperty("deliveryType"))
     // console.log(handleDeliveredJob)
 
-    const partialQty = partialDeliveries.reduce((accumolator, currentJob) => accumolator + parseInt(currentJob.qty), 0)
+    const partialQty = partialDeliveries?.reduce((accumolator, currentJob) => accumolator + parseInt(currentJob.qty), 0)
     return (
         <div className='mt-16 py-8 backgruond-color'>
             <PD_Modal
@@ -44,7 +48,7 @@ const PartialJobs = () => {
                 <table className="table">
                     {/* head */}
                     {
-                        partialDeliveries.length === 0 || <thead>
+                        partialDeliveries?.length === 0 || <thead>
                             <tr className="text-center">
                                 <th>#</th>
                                 <th>Customar</th>
@@ -62,7 +66,7 @@ const PartialJobs = () => {
                                     <Lottie className="lg:w-1/4 mx-auto" animationData={Loader} />
                                 </td>
                             </tr>
-                        ) : partialDeliveries.length === 0 ? (
+                        ) : partialDeliveries?.length === 0 ? (
                             <tr>
                                 <td colSpan="7" className="text-center">
                                     <span className="lg:text-2xl text-center block font-semibold capitalize bg-opacity-5 lg:w-1/4 mx-auto lg:absolute top-2/4 z-50">No Partial Jobs</span>
@@ -70,7 +74,7 @@ const PartialJobs = () => {
                                 </td>
                             </tr>
                         ) : (
-                            partialDeliveries.map((job, i) => (
+                            partialDeliveries?.map((job, i) => (
                                 <tr onDoubleClick={() => handleDelete(job)} key={job._id} className="hover:bg-slate-700 text-center">
                                     <th>{i + 1}</th>
                                     <td className='capitalize'>{job.customar}</td>
@@ -96,7 +100,7 @@ const PartialJobs = () => {
                     </tbody>
                     <tfoot>
                         {
-                            partialDeliveries.length === 0 ? (
+                            partialDeliveries?.length === 0 ? (
                                 <tr>
                                     <td colSpan="5" className="text-center">
 
@@ -106,7 +110,7 @@ const PartialJobs = () => {
                                 <th>#</th>
                                 <th></th>
                                 <th className='text-xl text-white'>Total Quantity</th>
-                                <th className='text-xl text-white'>{partialQty.toLocaleString('en-IN')} Piece</th>
+                                <th className='text-xl text-white'>{partialQty?.toLocaleString('en-IN')} Piece</th>
                                 <th></th>
                                 <th></th>
                             </tr>

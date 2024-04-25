@@ -1,10 +1,12 @@
 import React, { useContext } from 'react';
 import { JobContext } from './Context/JobProvider';
 import { Link } from 'react-router-dom';
+import { useGetProcessingJobsQuery } from './Redux/api/addJobApi';
 
 const Stat = () => {
     const { jobs, prevJobs } = useContext(JobContext)
 
+    const {data:pendingJobs} = useGetProcessingJobsQuery()
 
     // --------------------Current Delivery Calculation--------------------------
 
@@ -87,7 +89,7 @@ const Stat = () => {
         return accumulator; // If conversion fails, return the accumulator unchanged
     }, 0);
 
-    // console.log(totalDeliveryToday);
+    // console.log(pendingJobs);
 
     return (
         <div className='md:p-5 py-16 bg-gradient-to-r from-gray-600 to-gray-800 flex justify-center  '>

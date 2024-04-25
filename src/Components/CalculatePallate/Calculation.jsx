@@ -43,7 +43,6 @@ const CalculatePalette = () => {
 
             const maxValueCalculation = totalSheetsNeeded * maxUps
 
-            console.log(maxVal, maxUps, maxValueCalculation);
             while (maxVal > maxValueCalculation) {
                 totalSheetsNeeded++;
             }

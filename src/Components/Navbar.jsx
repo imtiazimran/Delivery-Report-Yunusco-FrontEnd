@@ -8,12 +8,13 @@ import AddJobs from './AddJobs';
 import { AuthContext } from './Context/AuthProvider';
 import Swal from 'sweetalert2';
 import AddSample from './Sample/AddSamples';
+import { useGetProcessingJobsQuery } from './Redux/api/addJobApi';
 
 const Navbar = () => {
     const { user, logOut } = useContext(AuthContext)
 
-    const { jobs, isAdmin } = useContext(JobContext)
-
+    const {  isAdmin } = useContext(JobContext)
+    const{data:onProcess} = useGetProcessingJobsQuery()
     const [isOpen, setIsOpen] = useState(false)
     const [isSampleModalOpen, setIsSampleModalOpen] = useState(false)
 
@@ -42,7 +43,7 @@ const Navbar = () => {
     // console.log(isSampleModalOpen);
 
     // console.log(user);
-    const partialDeliveries = jobs.filter((item) => item.hasOwnProperty("deliveryType"))
+    const partialDeliveries = onProcess?.filter((item) => item.hasOwnProperty("deliveryType"))
     return (
         <div>
             <AddJobs isOpen={isOpen} setIsOpen={setIsOpen} />
@@ -191,7 +192,7 @@ const Navbar = () => {
                                             <Menu.Item>
                                                 <Link to="/partialDelivery">
                                                     <div className="indicator w-full text-sm py-2">
-                                                        <span className="indicator-item badge badge-secondary ">{partialDeliveries.length}</span>
+                                                        <span className="indicator-item badge badge-secondary ">{partialDeliveries?.length}</span>
                                                         <button className="btn btn-sm w-full rounded-md">
                                                             <span className='text-violet-500'>
                                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -233,7 +234,7 @@ const Navbar = () => {
                             <div className='hidden lg:block'>
                                 <Link to="/partialDelivery">
                                     <div className="indicator">
-                                        <span className="indicator-item badge badge-secondary">{partialDeliveries.length}</span>
+                                        <span className="indicator-item badge badge-secondary">{partialDeliveries?.length}</span>
                                         <button className="btn">Partial Jobs</button>
                                     </div>
                                 </Link>
