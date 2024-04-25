@@ -23,8 +23,10 @@ const CalculatePalette = () => {
 
     const onSubmit = (data) => {
         const { ups, label, po, customer } = data
-        const calculateStickerDistribution = async (capacity, sizes) => {
-
+        console.log(data);
+        const calculateStickerDistribution = async (capacity) => {
+            const sizes = Array.from({ length: inputCount }, (_, i) => parseInt(data[`size${i + 1}`]))
+                .filter(value => !isNaN(value));
 
             const totalQty = sizes.reduce((acc, qty) => acc + qty, 0);
             const totalSheetsNeeded = Math.ceil(totalQty / capacity);
@@ -36,33 +38,34 @@ const CalculatePalette = () => {
             let totalStickersOnSheets = stickerDistribution.reduce((acc, qty) => acc + qty, 0);
 
             // Prioritize reduction from sizes with the largest quantities
-            while (totalStickersOnSheets > capacity) {
-                const maxIndex = sizes.indexOf(Math.max(...sizes));
-                stickerDistribution[maxIndex]--;
-                sizes[maxIndex] -= totalSheetsNeeded;
-                totalStickersOnSheets--;
+            const maxVal = Math.max(...sizes)
+            const maxUps = Math.max(...stickerDistribution)
+
+            const maxValueCalculation = totalSheetsNeeded * maxUps
+
+            console.log(maxVal, maxUps, maxValueCalculation);
+            while (maxVal > maxValueCalculation) {
+                totalSheetsNeeded++;
             }
 
 
             const jobData = { ups, label, po, customer, sizes, capacity, ExpectedDate: selectedDate, stickerDistribution, impression: totalSheetsNeeded, qty: totalQty, totalCapacity: totalStickersOnSheets }
 
-            console.log(jobData, data);
             setResult(jobData);
             return { stickerDistribution, totalSheetsNeeded, totalQty, totalStickersOnSheets };
         };
-        const inputs = Array.from({ length: inputCount }, (_, i) => parseInt(data[`size${i + 1}`]))
-            .filter(value => !isNaN(value));
 
-        calculateStickerDistribution(data.ups, inputs);
+
+        calculateStickerDistribution(parseInt(data.ups));
 
     };
 
     const handlePostData = async () => {
         setResult(null)
         const res = await addJob(result)
-       if(res?.data?.result?.insertedId){
-           location('/')
-       }else if (res.error?.status === 400) {
+        if (res?.data?.result?.insertedId) {
+            location('/')
+        } else if (res.error?.status === 400) {
             Swal.fire({
                 position: 'top-center',
                 icon: 'error',
@@ -70,9 +73,8 @@ const CalculatePalette = () => {
                 showConfirmButton: false,
                 timer: 1500
             })
-       }
+        }
     }
-console.log(result)
     return (
         <div className="my-20 relative">
             <form className="md:w-1/2 w-3/4 mx-auto" onSubmit={handleSubmit(onSubmit)}>
@@ -241,8 +243,8 @@ console.log(result)
                             <h5>Impression: {result.impression}</h5>
                             <h2>Total Capacity: {result.capacity}</h2>
                             <h3>Total Quantity: {result.qty}</h3>
-                            <h4>Sizes: {result?.sizes?.map((s, i) => <span className="mx-1" key={i}>{s}</span>)}</h4>
-                            <h4>Sticker Distribution: {result?.stickerDistribution?.map((s, i) => <span className="mx-1" key={i}>{s}</span>)}</h4>
+                            <h4 className="grid grid-cols-4">Sizes: {result?.sizes?.map((s, i) => <span className="mx-1" key={i}>{s}</span>)}</h4>
+                            <h4 className="grid grid-cols-5">Ups: {result?.stickerDistribution?.map((s, i) => <span className="mx-1" key={i}>{s}</span>)}</h4>
                             <motion.button
                                 initial={{ scale: 0.9 }}
                                 animate={{
