@@ -23,9 +23,7 @@ const JobProvider = ({ children }) => {
     const [sample, setSample] = useState([])
     const editDateDialogRef = useRef(null);
 
-    // console.log(prevJobs)
-
-    
+  
 
 
     // get samples

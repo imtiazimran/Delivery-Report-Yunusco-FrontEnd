@@ -44,8 +44,9 @@ const CalculatePalette = () => {
             }
 
 
-            const jobData = { ups, label, po, customer, sizes, capacity, sizes, ExpectedDate: selectedDate, stickerDistribution, impression: totalSheetsNeeded, qty: totalQty, ups: totalStickersOnSheets }
+            const jobData = { ups, label, po, customer, sizes, capacity, ExpectedDate: selectedDate, stickerDistribution, impression: totalSheetsNeeded, qty: totalQty, totalCapacity: totalStickersOnSheets }
 
+            console.log(jobData, data);
             setResult(jobData);
             return { stickerDistribution, totalSheetsNeeded, totalQty, totalStickersOnSheets };
         };
@@ -71,7 +72,7 @@ const CalculatePalette = () => {
             })
        }
     }
-
+console.log(result)
     return (
         <div className="my-20 relative">
             <form className="md:w-1/2 w-3/4 mx-auto" onSubmit={handleSubmit(onSubmit)}>
@@ -237,9 +238,10 @@ const CalculatePalette = () => {
                             animate={{ y: 0, opacity: 1 }}
                             exit={{ y: -50, opacity: 0 }}
                         >
-                            <h5>Impression: {result.totalSheetsNeeded}</h5>
-                            <h2>Total Capacity: {result.totalStickersOnSheets}</h2>
-                            <h3>Total Quantity: {result.totalQty}</h3>
+                            <h5>Impression: {result.impression}</h5>
+                            <h2>Total Capacity: {result.capacity}</h2>
+                            <h3>Total Quantity: {result.qty}</h3>
+                            <h4>Sizes: {result?.sizes?.map((s, i) => <span className="mx-1" key={i}>{s}</span>)}</h4>
                             <h4>Sticker Distribution: {result?.stickerDistribution?.map((s, i) => <span className="mx-1" key={i}>{s}</span>)}</h4>
                             <motion.button
                                 initial={{ scale: 0.9 }}
