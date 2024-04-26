@@ -113,7 +113,7 @@ const JobOnProcessing = () => {
                         <tbody>
                             {onProccess?.map((job, i) => (
 
-                                <motion.tr layoutId={job._id}  key={job._id} className="text-center py-16">
+                                <motion.tr layoutId={job._id}  key={job._id} className={` ${selectedId?._id === job?._id ? "invisible" : "" } text-center py-16`}>
                                         <th  onClick={() => setSelectedId(job)}>{i + 1}</th>
                                         <td  onClick={() => setSelectedId(job)} className="capitalize">{job?.customer}</td>
                                         <td  onClick={() => setSelectedId(job)}>JBH000{job?.po}</td>
