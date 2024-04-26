@@ -106,7 +106,7 @@ const AddJobs = ({ isOpen, setIsOpen }) => {
                                     >
                                         <span className="sr-only">Enable notifications</span>
                                         <span
-                                            className={`${enabled ? 'translate-x-6' : 'translate-x-1'
+                                            className={`${enabled ? 'translate-x-6' : ''
                                                 } inline-block h-4 w-4 transform rounded-full bg-white transition`}
                                         />
                                     </Switch>

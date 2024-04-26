@@ -176,13 +176,13 @@ const JobOnProcessing = () => {
                                 <p className="grid grid-cols-6">
                                     Size:
                                     {
-                                        selectedId.sizes.map((s, i) => <span className="text-black mx-2" key={i}>{s}</span>)
+                                        selectedId?.sizes?.map((s, i) => <span className="text-black mx-2" key={i}>{s}</span>)
                                     }
                                 </p>
                                 <p cla>
                                     Ups per size:
                                     {
-                                        selectedId.stickerDistribution.map((s, i) => <span className="text-black mx-2" key={i}>{s}</span>)
+                                        selectedId?.stickerDistribution?.map((s, i) => <span className="text-black mx-2" key={i}>{s}</span>)
                                     }
                                 </p>
                                 <motion.button
