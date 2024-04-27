@@ -14,7 +14,7 @@ const ResultPopup = ({ result, handlePostData, isLoading, setResult }) => {
                         exit={{ y: -50, opacity: 0 }}
                     >
                         <h5>Impression: {result.impression}</h5>
-                        <h2>Total Capacity: {result.capacity}</h2>
+                        <h2>Total Capacity: {result.totalStickersOnSheets}</h2>
                         <h3>Total Quantity: {result.qty}</h3>
                         <h4 className="grid grid-cols-4">Sizes: {result?.sizes?.map((s, i) => <span className="mx-1" key={i}>{s}</span>)}</h4>
                         <h4 className="grid grid-cols-5">Ups: {result?.stickerDistribution?.map((s, i) => <span className="mx-1" key={i}>{s}</span>)}</h4>

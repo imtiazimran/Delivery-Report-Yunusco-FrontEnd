@@ -41,7 +41,7 @@ const CalculatePalette = () => {
                 const totalSheetsNeeded = Math.ceil(totalQty / capacity);
 
                 // Calculate the distribution for each size
-                const stickerDistribution = sizes.map(qty => Math.ceil(qty / totalSheetsNeeded));
+                const stickerDistribution = sizes.map(qty => Math.round(qty / totalSheetsNeeded));
 
                 // Adjust the distribution to fit within the capacity
                 let totalStickersOnSheets = stickerDistribution.reduce((acc, qty) => acc + qty, 0);
@@ -55,7 +55,7 @@ const CalculatePalette = () => {
                 while (maxVal > maxValueCalculation) {
                     totalSheetsNeeded++;
                 }
-                const jobData = { ups, label, po, customer, sizes, capacity, ExpectedDate: selectedDate, stickerDistribution, impression: totalSheetsNeeded, qty: totalQty, totalCapacity: totalStickersOnSheets }
+                const jobData = { ups, label, po, customer, sizes, capacity, ExpectedDate: selectedDate, stickerDistribution, totalStickersOnSheets, impression: totalSheetsNeeded, qty: totalQty, totalCapacity: totalStickersOnSheets }
 
                 setResult(jobData);
                 return { stickerDistribution, totalSheetsNeeded, totalQty, totalStickersOnSheets };
