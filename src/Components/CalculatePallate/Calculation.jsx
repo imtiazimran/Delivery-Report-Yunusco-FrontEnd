@@ -22,7 +22,7 @@ const CalculatePalette = () => {
     const [selectedDate, setSelectedDate] = useState(currentDate);
     const location = useNavigate()
     const [addJob, { isLoading }] = useAddJobMutation();
-
+console.log(result)
     const handleFocus = (index) => {
         if (index === inputCount - 1) {
             setInputCount(prevCount => prevCount + 1);
@@ -38,13 +38,47 @@ const CalculatePalette = () => {
                     .filter(value => !isNaN(value));
 
                 const totalQty = sizes.reduce((acc, qty) => acc + qty, 0);
-                const totalSheetsNeeded = Math.ceil(totalQty / capacity);
+                let totalSheetsNeeded = Math.ceil(totalQty / capacity);
 
                 // Calculate the distribution for each size
-                const stickerDistribution = sizes.map(qty => Math.round(qty / totalSheetsNeeded));
+                let stickerDistribution = sizes.map(qty => Math.round(qty / totalSheetsNeeded));
 
                 // Adjust the distribution to fit within the capacity
                 let totalStickersOnSheets = stickerDistribution.reduce((acc, qty) => acc + qty, 0);
+
+                // Check if totalStickersOnSheets exceeds or decreases compared to capacity
+                // if (totalStickersOnSheets > capacity) {
+                //     // Reduce the distribution proportionally to fit within the capacity
+                //     const reductionFactor = capacity / totalStickersOnSheets;
+                //     stickerDistribution = stickerDistribution.map(qty => Math.floor(qty * reductionFactor));
+                //     totalStickersOnSheets = stickerDistribution.reduce((acc, qty) => acc + qty, 0);
+                // } else if (totalStickersOnSheets < capacity) {
+                //     // Increase the distribution proportionally to fill the capacity
+                //     const increaseFactor = capacity / totalStickersOnSheets;
+                //     stickerDistribution = stickerDistribution.map(qty => Math.ceil(qty * increaseFactor));
+                //     totalStickersOnSheets = stickerDistribution.reduce((acc, qty) => acc + qty, 0);
+                // }
+
+                // Multiply each value in stickerDistribution by totalSheetsNeeded
+                const calculatedStickerDistribution = stickerDistribution.map(qty => qty * totalSheetsNeeded);
+
+                // Check if any sticker distribution value is less than original size, then increase totalSheetsNeeded
+                let needsIncrement = false;
+                calculatedStickerDistribution.forEach((qty, index) => {
+                    if (qty < sizes[index]) {
+                        needsIncrement = true;
+                    }
+                });
+
+                if (needsIncrement) {
+                    totalSheetsNeeded++;
+                    // stickerDistribution = sizes.map(qty => Math.round(qty / totalSheetsNeeded));
+                    // stickerDistribution = stickerDistribution.map(qty => qty * totalSheetsNeeded);
+                }
+
+
+                // Calculate the output of each size after distribution
+                const outputAfterDistribution = sizes.map((qty, index) => totalSheetsNeeded * stickerDistribution[index]);
 
                 // Prioritize reduction from sizes with the largest quantities
                 const maxVal = Math.max(...sizes)
@@ -55,11 +89,27 @@ const CalculatePalette = () => {
                 while (maxVal > maxValueCalculation) {
                     totalSheetsNeeded++;
                 }
-                const jobData = { ups, label, po, customer, sizes, capacity, ExpectedDate: selectedDate, stickerDistribution, totalStickersOnSheets, impression: totalSheetsNeeded, qty: totalQty, totalCapacity: totalStickersOnSheets }
+
+                const jobData = {
+                    ups,
+                    label,
+                    po,
+                    customer,
+                    sizes,
+                    capacity,
+                    ExpectedDate: selectedDate,
+                    stickerDistribution,
+                    totalStickersOnSheets,
+                    impression: totalSheetsNeeded,
+                    qty: totalQty,
+                    totalCapacity: totalStickersOnSheets,
+                    outputAfterDistribution
+                };
 
                 setResult(jobData);
                 return { stickerDistribution, totalSheetsNeeded, totalQty, totalStickersOnSheets };
             };
+
             calculateStickerDistribution(parseInt(data.ups));
 
         } else {
