@@ -1,4 +1,4 @@
-import {AnimatePresence, motion} from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 const ResultPopup = ({ result, handlePostData, isLoading, setResult }) => {
     return (
         <AnimatePresence>
@@ -14,12 +14,15 @@ const ResultPopup = ({ result, handlePostData, isLoading, setResult }) => {
                         exit={{ y: -50, opacity: 0 }}
                     >
                         <h5>Impression: {result.impression}</h5>
-                        <h2>Total Capacity: {result?.totalStickersOnSheets}</h2>
-                        <h3>Total Stickers: {result?.ups}</h3>
+                        <h3>Given Ups: {result?.ups}</h3>
+                        <h2>After Calculate: {result?.totalStickersOnSheets}</h2>
                         <h3>Total Quantity: {result?.qty}</h3>
-                        <h4 className="grid grid-cols-4">Sizes: {result?.sizes?.map((s, i) => <span className="mx-1" key={i}>{s}</span>)}</h4>
-                        <h4 className="grid grid-cols-5">Ups: {result?.stickerDistribution?.map((s, i) => <span className="mx-1" key={i}>{s}</span>)}</h4>
-                        <h4 className="grid grid-cols-5">Output: {result?.outputAfterDistribution?.map((s, i) => <span className="mx-1" key={i}>{s}</span>)}</h4>
+                        <div className="flex gap-4">
+
+                            <h4 className="">Sizes: {result?.sizes?.map((s, i) => <p className="mx-1" key={i}>{s}</p>)}</h4>
+                            <h4 className="">Ups: {result?.stickerDistribution?.map((s, i) => <p className="mx-1" key={i}>{s}</p>)}</h4>
+                            <h4 className="">Output: {result?.outputAfterDistribution?.map((s, i) => <p className="mx-1" key={i}>{s}</p>)}</h4>
+                        </div>
                         <motion.button
                             initial={{ scale: 0.9 }}
                             animate={{

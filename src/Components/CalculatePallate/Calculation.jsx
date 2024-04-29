@@ -36,60 +36,25 @@ console.log(result)
             const calculateStickerDistribution = async (capacity) => {
                 const sizes = Array.from({ length: inputCount }, (_, i) => parseInt(data[`size${i + 1}`]))
                     .filter(value => !isNaN(value));
-
+            
                 const totalQty = sizes.reduce((acc, qty) => acc + qty, 0);
                 let totalSheetsNeeded = Math.ceil(totalQty / capacity);
-
-                // Calculate the distribution for each size
                 let stickerDistribution = sizes.map(qty => Math.round(qty / totalSheetsNeeded));
-
-                // Adjust the distribution to fit within the capacity
+            
                 let totalStickersOnSheets = stickerDistribution.reduce((acc, qty) => acc + qty, 0);
-
-                // Check if totalStickersOnSheets exceeds or decreases compared to capacity
-                // if (totalStickersOnSheets > capacity) {
-                //     // Reduce the distribution proportionally to fit within the capacity
-                //     const reductionFactor = capacity / totalStickersOnSheets;
-                //     stickerDistribution = stickerDistribution.map(qty => Math.floor(qty * reductionFactor));
-                //     totalStickersOnSheets = stickerDistribution.reduce((acc, qty) => acc + qty, 0);
-                // } else if (totalStickersOnSheets < capacity) {
-                //     // Increase the distribution proportionally to fill the capacity
-                //     const increaseFactor = capacity / totalStickersOnSheets;
-                //     stickerDistribution = stickerDistribution.map(qty => Math.ceil(qty * increaseFactor));
-                //     totalStickersOnSheets = stickerDistribution.reduce((acc, qty) => acc + qty, 0);
-                // }
-
-                // Multiply each value in stickerDistribution by totalSheetsNeeded
-                const calculatedStickerDistribution = stickerDistribution.map(qty => qty * totalSheetsNeeded);
-
-                // Check if any sticker distribution value is less than original size, then increase totalSheetsNeeded
-                let needsIncrement = false;
-                calculatedStickerDistribution.forEach((qty, index) => {
-                    if (qty < sizes[index]) {
-                        needsIncrement = true;
+            
+                const outputAfterDistribution = stickerDistribution.map((qty, index) => totalSheetsNeeded * stickerDistribution[index]);
+            
+                for (let i = 0; i < sizes.length; i++) {
+                    if (outputAfterDistribution[i] < sizes[i]) {
+                        // Adjust totalSheetsNeeded to ensure output exceeds original sizes
+                        totalSheetsNeeded = Math.ceil(sizes[i] / (sizes[i] / totalSheetsNeeded));
+                        stickerDistribution = sizes.map(qty => Math.round(qty / totalSheetsNeeded));
+                        totalStickersOnSheets = stickerDistribution.reduce((acc, qty) => acc + qty, 0);
+                        break;
                     }
-                });
-
-                if (needsIncrement) {
-                    totalSheetsNeeded++;
-                    // stickerDistribution = sizes.map(qty => Math.round(qty / totalSheetsNeeded));
-                    // stickerDistribution = stickerDistribution.map(qty => qty * totalSheetsNeeded);
                 }
-
-
-                // Calculate the output of each size after distribution
-                const outputAfterDistribution = sizes.map((qty, index) => totalSheetsNeeded * stickerDistribution[index]);
-
-                // Prioritize reduction from sizes with the largest quantities
-                const maxVal = Math.max(...sizes)
-                const maxUps = Math.max(...stickerDistribution)
-
-                const maxValueCalculation = totalSheetsNeeded * maxUps
-
-                while (maxVal > maxValueCalculation) {
-                    totalSheetsNeeded++;
-                }
-
+            
                 const jobData = {
                     ups,
                     label,
@@ -105,10 +70,11 @@ console.log(result)
                     totalCapacity: totalStickersOnSheets,
                     outputAfterDistribution
                 };
-
+            
                 setResult(jobData);
                 return { stickerDistribution, totalSheetsNeeded, totalQty, totalStickersOnSheets };
             };
+            
 
             calculateStickerDistribution(parseInt(data.ups));
 
