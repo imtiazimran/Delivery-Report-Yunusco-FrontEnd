@@ -7,10 +7,12 @@ import DeliveryReportChart from './ui/BarChart';
 import { JobContext } from './Context/JobProvider';
 import PreviousDelivery from './PreviousDelivery';
 import { useGetProcessingJobsQuery } from './Redux/api/addJobApi';
+import { useGetAllJobsQuery } from './Redux/api/totalJobApi';
 
 const Home = () => {
 
-    const { prevJobs } = useContext(JobContext)
+    const {data: deliveredData} = useGetAllJobsQuery()
+    const {data: prevJobs} = deliveredData || {}
 
     const {data, refetch} = useGetProcessingJobsQuery()
     const onProccess = data?.filter((item) => !item.hasOwnProperty("deliveryType"))
@@ -20,14 +22,14 @@ const Home = () => {
     startOfToday.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to 0
 
     // Filter deliveries for today's date
-    const todaysDeliveries = prevJobs.filter(currentJob => {
+    const todaysDeliveries = prevJobs?.filter(currentJob => {
         if (currentJob.goodsDeliveryDate) {
             const deliveryDate = parseCustomDate(currentJob.goodsDeliveryDate);
             return isSameDate(deliveryDate, startOfToday);
         }
         return false;
     });
-    const totalDeliveryToday = todaysDeliveries.reduce((accumulator, currentJob) => {
+    const totalDeliveryToday = todaysDeliveries?.reduce((accumulator, currentJob) => {
         const qtyAsNumber = parseInt(currentJob.qty, 10); // Convert the string to an integer
         if (!isNaN(qtyAsNumber)) {
             return accumulator + qtyAsNumber;

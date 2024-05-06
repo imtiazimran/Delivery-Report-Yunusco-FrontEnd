@@ -2,9 +2,13 @@ import React, { useContext } from 'react';
 import { JobContext } from './Context/JobProvider';
 import { Link } from 'react-router-dom';
 import { useGetProcessingJobsQuery } from './Redux/api/addJobApi';
+import { useGetAllJobsQuery } from './Redux/api/totalJobApi';
 
 const Stat = () => {
-    const { jobs, prevJobs } = useContext(JobContext)
+    const { jobs } = useContext(JobContext)
+
+    const {data: deliveredData} = useGetAllJobsQuery()
+    const {data: prevJobs} = deliveredData || {}
 
     const {data:pendingJobs} = useGetProcessingJobsQuery()
 
@@ -21,7 +25,7 @@ const Stat = () => {
 
     const currentMonth = currentDate.getMonth();
     const currentYear = currentDate.getFullYear();
-    const currentMonthJobs = prevJobs.filter((job) => {
+    const currentMonthJobs = prevJobs?.filter((job) => {
         const dateParts = job.goodsDeliveryDate.split('-');
         if (dateParts.length === 3) {
             const deliveryDate = new Date(
@@ -37,13 +41,14 @@ const Stat = () => {
         return false;
     });
 
+
     // Calculate yesterday's date
     const yesterdayDate = new Date(currentDate);
     yesterdayDate.setDate(currentDate.getDate() - 1);
 
 
     // Filter deliveries for yesterday's date
-    const yesterdayDeliveries = prevJobs.filter(currentJob => {
+    const yesterdayDeliveries = prevJobs?.filter(currentJob => {
         if (currentJob.goodsDeliveryDate) { // Check if goodsDeliveryDate is not empty
             const deliveryDate = parseCustomDate(currentJob.goodsDeliveryDate);
             return isSameDate(deliveryDate, yesterdayDate);
@@ -52,7 +57,7 @@ const Stat = () => {
     });
 
     // Calculate total previous delivery quantity
-    const totalPrevDelivery = yesterdayDeliveries.reduce((accumulator, currentJob) => {
+    const totalPrevDelivery = yesterdayDeliveries?.reduce((accumulator, currentJob) => {
         const qtyAsNumber = parseInt(currentJob.qty, 10); // Convert the string to an integer
         if (!isNaN(qtyAsNumber)) {
             return accumulator + qtyAsNumber;
@@ -62,7 +67,7 @@ const Stat = () => {
 
     // ------------------------------------ Total Delivery Calculation----------------------------------
 
-    const currentMonthTotalDelivery = currentMonthJobs.reduce((accumulator, currentJob) => {
+    const currentMonthTotalDelivery = currentMonthJobs?.reduce((accumulator, currentJob) => {
         const qtyAsNumber = parseInt(currentJob.qty); // Convert the string to an integer
         if (!isNaN(qtyAsNumber)) {
             return accumulator + qtyAsNumber;
@@ -74,14 +79,14 @@ const Stat = () => {
     // ------------------------------------ today Delivery Calculation----------------------------------
     const startOfToday = new Date(currentDate);
     startOfToday.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to 0
-    const todaysDeliveries = prevJobs.filter(currentJob => {
+    const todaysDeliveries = prevJobs?.filter(currentJob => {
         if (currentJob.goodsDeliveryDate) {
             const deliveryDate = parseCustomDate(currentJob.goodsDeliveryDate);
             return isSameDate(deliveryDate, startOfToday);
         }
         return false;
     });
-    const DeliveredToday = todaysDeliveries.reduce((accumulator, currentJob) => {
+    const DeliveredToday = todaysDeliveries?.reduce((accumulator, currentJob) => {
         const qtyAsNumber = parseInt(currentJob.qty, 10); // Convert the string to an integer
         if (!isNaN(qtyAsNumber)) {
             return accumulator + qtyAsNumber;
@@ -98,9 +103,9 @@ const Stat = () => {
                     todaysDeliveries != 0 &&
                     <div className="stat text-center">
                         <div className="stat-title">Delivered Today</div>
-                        <div className="stat-desc">{todaysDeliveries.length} Jobs</div>
-                        <div className="stat-value text-3xl">{DeliveredToday.toLocaleString('en-IN')}</div>
-                        <div className="stat-desc">{startOfToday.toLocaleDateString()}</div>
+                        <div className="stat-desc">{todaysDeliveries?.length} Jobs</div>
+                        <div className="stat-value text-3xl">{DeliveredToday}</div>
+                        <div className="stat-desc">{startOfToday.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
                     </div>
                 }
                 {
@@ -108,9 +113,9 @@ const Stat = () => {
                     <Link to={"/previousDelivery"}>
                         <div className="stat text-center">
                             <div className="stat-title">Previous Delivery</div>
-                            <div className="stat-desc">{yesterdayDeliveries.length} Jobs</div>
-                            <div className="stat-value md:text-3xl">{totalPrevDelivery.toLocaleString('en-IN')}</div>
-                            <div className="stat-desc">{yesterdayDate.toLocaleDateString()}</div>
+                            <div className="stat-desc">{yesterdayDeliveries?.length} Jobs</div>
+                            <div className="stat-value md:text-3xl">{totalPrevDelivery}</div>
+                            <div className="stat-desc">{yesterdayDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
                         </div>
                     </Link>
                 }
@@ -119,7 +124,7 @@ const Stat = () => {
                     currentDeliveryQty != 0 &&
                     <div className="stat text-center">
                         <div className="stat-title">On Going</div>
-                        <div className="stat-value">{currentDeliveryQty.toLocaleString("en-IN")}</div>
+                        <div className="stat-value">{currentDeliveryQty}</div>
                         <div className="stat-desc">↗︎ </div>
                     </div>
                 }
@@ -127,8 +132,8 @@ const Stat = () => {
                 <Link to={"/totalDelivery"}>
                     <div className="stat text-center ">
                         <div className="stat-title">Total Delivery</div>
-                        <div className="stat-desc">{currentMonthJobs.length} Jobs</div>
-                        <div className="stat-value text-3xl">{currentMonthTotalDelivery.toLocaleString("en-IN")}</div>
+                        <div className="stat-desc">{currentMonthJobs?.length} Jobs</div>
+                        <div className="stat-value text-3xl">{currentMonthTotalDelivery}</div>
                         <div className="stat-desc">From {new Date(new Date().getFullYear(), new Date().getMonth(), 1).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
                     </div>
                 </Link>
@@ -136,7 +141,7 @@ const Stat = () => {
                     balanceQty != 0 && <Link to={"/partialDelivery"}>
                         <div className="stat text-center">
                             <div className="stat-title">Balance Quantity</div>
-                            <div className='stat-value'>{balanceQty.toLocaleString("en-IN")}</div>
+                            <div className='stat-value'>{balanceQty}</div>
                         </div>
                     </Link>
                 }

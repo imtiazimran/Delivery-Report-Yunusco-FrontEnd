@@ -66,7 +66,7 @@ const JobOnProcessing = () => {
         return values.includes(searchQuery.toLowerCase());
     });
 
-    
+
     const currentDeliveryQty = filteredCategories?.reduce((accumolator, currentJob) => accumolator + parseInt(currentJob.qty), 0)
 
     return (
@@ -87,11 +87,10 @@ const JobOnProcessing = () => {
                 </div>
             )}
 
-            <div className="overflow-x-auto mx-auto text-white">
             <div className="my-5 w-1/2 mx-auto flex justify-center">
-            <input type="text" placeholder="Search..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="input input-bordered text-black mx-auto" />
-
+                <input type="text" placeholder="Search..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="input input-bordered text-black mx-auto" />
             </div>
+            <div className="overflow-x-auto mx-auto text-white">
                 {isLoading ? (
                     <div>
                         <div className="text-center">

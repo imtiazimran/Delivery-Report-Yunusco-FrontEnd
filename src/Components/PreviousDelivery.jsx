@@ -6,8 +6,11 @@ import Lottie from "lottie-react";
 import { usePDF } from 'react-to-pdf';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useGetAllJobsQuery } from './Redux/api/totalJobApi';
 const PreviousDelivery = () => {
-    const { prevJobs, isLoading, handleDeleteDeliveredJob } = useContext(JobContext);
+    // rtk query hook 
+    const {data: deliveredData, isLoading} = useGetAllJobsQuery()
+    const {data: prevJobs} = deliveredData || {}
     const [reduceADay, setReduceADay] = useState(1)
     const currentDate = new Date();
     const datePickerRef = useRef(null);
@@ -34,7 +37,7 @@ const PreviousDelivery = () => {
 
 
     // Filter deliveries for yesterday's date
-    const yesterdayDeliveries = prevJobs.filter(currentJob => {
+    const yesterdayDeliveries = prevJobs?.filter(currentJob => {
         if (currentJob.goodsDeliveryDate) { // Check if goodsDeliveryDate is not empty
             const deliveryDate = parseCustomDate(currentJob.goodsDeliveryDate);
             return isSameDate(deliveryDate, yesterdayDate);
@@ -43,7 +46,7 @@ const PreviousDelivery = () => {
     });
 
     // Calculate total previous delivery quantity
-    const totalPrevDelivery = yesterdayDeliveries.reduce((accumulator, currentJob) => {
+    const totalPrevDelivery = yesterdayDeliveries?.reduce((accumulator, currentJob) => {
         const qtyAsNumber = parseInt(currentJob.qty, 10); // Convert the string to an integer
         if (!isNaN(qtyAsNumber)) {
             return accumulator + qtyAsNumber;
@@ -120,7 +123,7 @@ const PreviousDelivery = () => {
                 <table className="table">
                     {/* head */}
                     {
-                        yesterdayDeliveries.length === 0 || <thead>
+                        yesterdayDeliveries?.length === 0 || <thead>
                             <tr className="text-center bg-yellow-500 text-white lg:text-xl">
                                 <th>#</th>
                                 <th>Customer</th>
@@ -137,7 +140,7 @@ const PreviousDelivery = () => {
                                     <Lottie className="w-1/4 mx-auto" animationData={Loader} />
                                 </td>
                             </tr>
-                        ) : yesterdayDeliveries.length === 0 ? (
+                        ) : yesterdayDeliveries?.length === 0 ? (
                             <tr>
                                 <td colSpan="7" className='text-center'>
                                     <span className="lg:text-2xl text-center block font-semibold capitalize  lg:w-1/4 mx-auto z-50">
@@ -147,24 +150,24 @@ const PreviousDelivery = () => {
                                 </td>
                             </tr>
                         ) : (
-                            yesterdayDeliveries.map((job, i) => (
+                            yesterdayDeliveries?.map((job, i) => (
                                 <tr onDoubleClick={() => handleDeleteDeliveredJob(job)} key={job._id} className=" text-center">
                                     <th>{i + 1}</th>
                                     <td className='capitalize'>{job.customar}</td>
                                     <td>JBH00{job.po}</td>
-                                    <td>{job.qty.toLocaleString('en-IN')}</td>
+                                    <td>{job?.qty}</td>
                                     <td className='uppercase'>{job.label}</td>
                                 </tr>
                             ))
                         )}
                     </tbody>
                     {
-                        yesterdayDeliveries.length === 0 || <tfoot>
+                        yesterdayDeliveries?.length === 0 || <tfoot>
                             <tr className='text-center bg-yellow-500'>
                                 <th>#</th>
                                 <th></th>
                                 <th className='text-xl text-white'>Total Quantity</th>
-                                <th className='text-xl text-white '>{totalPrevDelivery.toLocaleString('en-IN')} Pcs</th>
+                                <th className='text-xl text-white '>{totalPrevDelivery} Pcs</th>
                                 <th></th>
                             </tr>
                         </tfoot>

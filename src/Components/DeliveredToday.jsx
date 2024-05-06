@@ -5,10 +5,12 @@ import { usePDF } from "react-to-pdf"
 import EmptyAmimation from "../assets/blank.json"
 import Loader from "../assets/loader2.json"
 import Lottie from "lottie-react";
+import { useGetAllJobsQuery } from './Redux/api/totalJobApi';
 
 const DeliveredToday = () => {
-    const { prevJobs,
-        isLoading,
+    const {
+        //  prevJobs,
+        // isLoading,
         handleDeleteDeliveredJob,
         selectedJobForUpdateData,
         setSelectedJobForUpdateData,
@@ -22,6 +24,8 @@ const DeliveredToday = () => {
     // console.log(prevJobs)
     const currentDate = new Date();
 
+    const {data: deliveredData, isLoading} = useGetAllJobsQuery()
+    const {data: prevJobs} = deliveredData || {}
 
 
     // Calculate start of today's date (midnight)
@@ -29,14 +33,14 @@ const DeliveredToday = () => {
     startOfToday.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to 0
 
     // Filter deliveries for today's date
-    const todaysDeliveries = prevJobs.filter(currentJob => {
+    const todaysDeliveries = prevJobs?.filter(currentJob => {
         if (currentJob.goodsDeliveryDate.toLocaleString()) {
             const deliveryDate = parseCustomDate(currentJob.goodsDeliveryDate);
             return isSameDate(deliveryDate, startOfToday);
         }
         return false;
     });
-    const totalDeliveryToday = todaysDeliveries.reduce((accumulator, currentJob) => {
+    const totalDeliveryToday = todaysDeliveries?.reduce((accumulator, currentJob) => {
         const qtyAsNumber = parseInt(currentJob.qty, 10); // Convert the string to an integer
         if (!isNaN(qtyAsNumber)) {
             return accumulator + qtyAsNumber;
@@ -88,12 +92,12 @@ const DeliveredToday = () => {
         }, 1000); // Adjust the delay as needed
     };
 
-    console.log(todaysDeliveries);
+    // console.log(todaysDeliveries);
 
     return (
         <div className='pb-16'>
-            {todaysDeliveries.length === 0 || (
-                <div className="text-2xl bg-cyan-900 text-white py-4 text-center"> {todaysDeliveries.length} Jobs Delivered Today
+            {todaysDeliveries?.length === 0 || (
+                <div className="text-2xl bg-cyan-900 text-white py-4 text-center"> {todaysDeliveries?.length} Jobs Delivered Today
                     <button className="rounded pdf px-3 hover:text-blue-400" onClick={() => printPDF()}>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75l3 3m0 0l3-3m-3 3v-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -125,7 +129,7 @@ const DeliveredToday = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {todaysDeliveries.map((job, i) => (
+                            {todaysDeliveries?.map((job, i) => (
                                 
                                 <tr onDoubleClick={() => handleDeleteDeliveredJob(job)} key={job._id} className="text-center">
                                 
@@ -149,7 +153,7 @@ const DeliveredToday = () => {
                                 <th>#</th>
                                 <th></th>
                                 <th className='text-xl text-white'>Total Quantity</th>
-                                <th className='text-xl text-white'>{totalDeliveryToday.toLocaleString('en-IN')} Pcs</th>
+                                <th className='text-xl text-white'>{totalDeliveryToday?.toLocaleString()} Pcs</th>
                                 <th></th>
                             </tr>
                         </tfoot>

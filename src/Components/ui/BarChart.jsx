@@ -1,17 +1,18 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { JobContext } from '../Context/JobProvider';
+import {  useGetAllJobsQuery } from '../Redux/api/totalJobApi';
 
 
 const DeliveryReportChart = () => {
-  const { prevJobs } = useContext(JobContext)
   const [chartWidth, setChartWidth] = useState(600); // Initial width
   const [chartHeight, setChartHeight] = useState(300); // Initial height
   const chartContainerRef = useRef('');
   const [reduceMonth, setReduceMonth] = useState(-1)
   const [currentMonthJobs, setCurrentMonthJobs] = useState([])
   const [currentMonth, setCurrentMonth] = useState('')
- 
+  const {data: deliveredData} = useGetAllJobsQuery()
+  const {data: prevJobs} = deliveredData || {}
 
   const preMonth = () => {
     setReduceMonth(reduceMonth - 1)
@@ -51,7 +52,7 @@ const DeliveryReportChart = () => {
   useEffect(() => {
     setCurrentMonth(updatedCurrentMonth)
     const currentYear = currentDate.getFullYear();
-    const filteredJobs = prevJobs.filter((job) => {
+    const filteredJobs = prevJobs?.filter((job) => {
       const dateParts = job.goodsDeliveryDate.split('-');
       if (dateParts.length === 3) {
         const deliveryDate = new Date(
@@ -104,7 +105,7 @@ const DeliveryReportChart = () => {
   //   return currentMonth === 0 ? 11 : currentMonth - 1;
   // };
 
-  const currentMonthTotalDelivery = currentMonthJobs.reduce((accumulator, currentJob) => {
+  const currentMonthTotalDelivery = currentMonthJobs?.reduce((accumulator, currentJob) => {
     const qtyAsNumber = parseInt(currentJob.qty); // Convert the string to an integer
     if (!isNaN(qtyAsNumber)) {
       return accumulator + qtyAsNumber;
@@ -113,14 +114,14 @@ const DeliveryReportChart = () => {
   }, 0);
 
 
-  const sortedJobs = currentMonthJobs.sort((a, b) => {
+  const sortedJobs = currentMonthJobs?.sort((a, b) => {
     // Convert delivery dates to Date objects for comparison
     const dateA = new Date(a.goodsDeliveryDate);
     const dateB = new Date(b.goodsDeliveryDate);
     return dateA - dateB;
   });
 
-  const chartData = sortedJobs.reduce((accumulator, job) => {
+  const chartData = sortedJobs?.reduce((accumulator, job) => {
     const date = job.goodsDeliveryDate.substring(0, 2); // Extracting the first 2 characters of the date
     // Check if the date already exists in the accumulator array
     const existingDateIndex = accumulator.findIndex(item => item.date === date);
@@ -195,7 +196,7 @@ const DeliveryReportChart = () => {
 
       <div className='flex justify-center text-xl gap-4'><button onClick={() => preMonth()}>previous month</button>  <button onClick={() => nextMonth()}>next month</button></div>
 
-      <h2 className='py-5 text-center text-xl'>Total Delivery: {currentMonthTotalDelivery.toLocaleString()}</h2>
+      <h2 className='py-5 text-center text-xl'>Total Delivery: {currentMonthTotalDelivery?.toLocaleString()}</h2>
       <BarChart
         width={chartWidth}
         height={chartHeight}

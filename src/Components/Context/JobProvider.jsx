@@ -61,19 +61,19 @@ const JobProvider = ({ children }) => {
     // }, [])
 
     // get all delivered jobs
-    useEffect(() => {
-        axios.get(`${baseUrl}/delivered`)
-            .then((res) => {
-                setIsLoading(true);
-                setPrevJobs(res.data);
-            })
-            .catch((error) => {
-                console.error("Error fetching jobs:", error);
-            })
-            .finally(() => {
-                setIsLoading(false);
-            });
-    }, []);
+    // useEffect(() => {
+    //     axios.get(`${baseUrl}/delivered?page=1&limit=100&searchTerm=''`)
+    //         .then((res) => {
+    //             setIsLoading(true);
+    //             setPrevJobs(res.data);
+    //         })
+    //         .catch((error) => {
+    //             console.error("Error fetching jobs:", error);
+    //         })
+    //         .finally(() => {
+    //             setIsLoading(false);
+    //         });
+    // }, []);
 
 
     // This effect runs when 'jobs' changes, but checks 'isLoading' to prevent endless calls
@@ -90,28 +90,28 @@ const JobProvider = ({ children }) => {
     // }, [isLoading]);
 
     // This effect runs when 'prevJobs' changes, but checks 'isLoading' to prevent endless calls
-    useEffect(() => {
-        if (!isLoading) {
-            axios.get(`${baseUrl}/delivered`)
-                .then((res) => {
-                    setPrevJobs(res.data);
-                })
-                .catch((error) => {
-                    console.error("Error fetching previous jobs:", error);
-                });
-        }
-    }, [isLoading]);
+    // useEffect(() => {
+    //     if (!isLoading) {
+    //         axios.get(`${baseUrl}/delivered`)
+    //             .then((res) => {
+    //                 setPrevJobs(res.data);
+    //             })
+    //             .catch((error) => {
+    //                 console.error("Error fetching previous jobs:", error);
+    //             });
+    //     }
+    // }, [isLoading]);
 
 
     // get all the users
-    useEffect(() => {
-        axios.get(`${baseUrl}/users`)
-            .then(res => {
-                setIsLoading(true)
-                setUsers(res.data)
-                setIsLoading(false)
-            })
-    }, [])
+    // useEffect(() => {
+    //     axios.get(`${baseUrl}/users`)
+    //         .then(res => {
+    //             setIsLoading(true)
+    //             setUsers(res.data)
+    //             setIsLoading(false)
+    //         })
+    // }, [])
 
     // get logged user only
     const handleAdminSearch = (email) => {
@@ -297,8 +297,8 @@ const JobProvider = ({ children }) => {
             });
     }
 
+    
     // delete Sample
-
     const deleteSample = (id) => {
         Swal.fire({
             title: 'Are you sure?',
@@ -432,12 +432,13 @@ const JobProvider = ({ children }) => {
             });
             window.location.reload()
         } catch (error) {
+            console.log(error); 
             if (error.response && error.response.status === 400) {
                 Swal.fire({
                     position: 'top-center',
                     icon: 'error',
                     title: 'Job Already Exists',
-                    text: 'Job with this PO already exists.',
+                    text: `error.response.data.message`,
                     showConfirmButton: "OK"
                 });
             }

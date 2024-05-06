@@ -2,6 +2,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import axios from 'axios';
 import { Fragment, useState } from 'react'
 import Swal from 'sweetalert2';
+import { baseUrl } from '../Redux/api/addJobApi';
 
 export default function PD_Modal({
   isOpen,
@@ -22,7 +23,7 @@ export default function PD_Modal({
     if (selectedJobForPartialDelivery && partialDeliveryQty > 0) {
       try {
         const response = await axios.put(
-          `https://delivery-report-yunusco-back-end.vercel.app/updatePartialDelivery/${selectedJobForPartialDelivery._id}`,
+          `${baseUrl}/updatePartialDelivery/${selectedJobForPartialDelivery._id}`,
           { partialDeliveryQty }
         );
 
@@ -39,6 +40,7 @@ export default function PD_Modal({
             closeModal();
           },
         });
+        window.location.reload()
       } catch (error) {
         console.error("Error updating partial delivery:", error);
       }

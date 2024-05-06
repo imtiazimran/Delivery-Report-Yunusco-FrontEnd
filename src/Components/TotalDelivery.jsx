@@ -3,14 +3,15 @@ import { JobContext } from './Context/JobProvider';
 import Loader from "../assets/loader2.json"
 import Lottie from 'lottie-react';
 import NothingFound from "../assets/nothingFound.json"
+import Pagination from './utils/Pagination';
+import { useGetAllJobsQuery, useGetLimitedJobsQuery } from './Redux/api/totalJobApi';
 // import AOS from "aos"
 
 // AOS.init()
 
 const TotalDelivery = () => {
     const {
-        prevJobs,
-        isLoading,
+        // prevJobs,
         handleDeleteDeliveredJob,
         selectedJobForUpdateData,
         setSelectedJobForUpdateData,
@@ -22,15 +23,22 @@ const TotalDelivery = () => {
     } = useContext(JobContext);
 
 
-
     const [sortedData, setSortedData] = useState([]); // State to hold sorted data
     const [searchQuery, setSearchQuery] = useState("")
     const editDateDialogRef = useRef(null);
     const [reduceMonth, setReduceMonth] = useState(1)
     const [currentMonthJobs, setCurrentMonthJobs] = useState([])
     const [currentMonth, setCurrentMonth] = useState('')
+    // const { currentPage, totalItems, totalPages, currentTQty, deliveredItems: delivered = [] } = prevJobs
+    const [page, setPage] = useState(1)
+    const [pageSize, setPageSize] = useState(10)
 
+    // rtk query hook 
+    const { data, isLoading } = useGetLimitedJobsQuery({ searchTerm: searchQuery, page, pageSize })
+    
+    const { currentPage, totalItems, totalPages, currentTQty, deliveredItems: delivered = [] } = data || {}
 
+//    console.log(delivered);
     // Function to sort data by date in descending order
 
 
@@ -61,12 +69,12 @@ const TotalDelivery = () => {
         handleCloseModal()
     }
 
-
+    // const deliveredItems = []
 
 
 
     const sortDataByDate = () => {
-        const sorted = [...prevJobs].sort((a, b) => {
+        const sorted = [...delivered].sort((a, b) => {
             const dateA = new Date(
                 a.goodsDeliveryDate.slice(6, 10), // Year
                 a.goodsDeliveryDate.slice(3, 5) - 1, // Month (0-indexed)
@@ -119,9 +127,9 @@ const TotalDelivery = () => {
 
 
 
-    useEffect(() => {
-        sortDataByDate(); // Initial sorting
-    }, [currentMonthJobs]);
+    // useEffect(() => {
+    //     sortDataByDate(); // Initial sorting
+    // }, [currentMonthJobs]);
 
     const filteredJobs = sortedData.filter((job) =>
         job.po.toLowerCase().includes(searchQuery.toLowerCase())
@@ -138,6 +146,8 @@ const TotalDelivery = () => {
         }
         return accumulator; // If conversion fails, return the accumulator unchanged
     }, 0);
+
+    // console.log(isLoading);
 
     return (
         <div className='mt-16 py-8 backgruond-color'>
@@ -166,7 +176,7 @@ const TotalDelivery = () => {
                 <table className="table">
                     {/* head */}
                     {
-                        filteredJobs.length === 0 ||
+                        delivered?.length === 0 ||
                         <thead>
                             <tr className="text-center text-slate-200 bg-yellow-600 text-xl">
                                 <th>#</th>
@@ -185,7 +195,7 @@ const TotalDelivery = () => {
                                     <Lottie className="lg:w-1/4 mx-auto" animationData={Loader} />
                                 </td>
                             </tr>
-                        ) : filteredJobs.length === 0 ? (
+                        ) : delivered?.length === 0 ? (
                             <tr>
                                 <td colSpan="7" className="text-center">
                                     <span className="lg:text-2xl text-center block font-semibold capitalize bg-opacity-5 lg:w-1/4 mx-auto lg:absolute top-2/4 z-50">Sorry i Only have the Recods From Septembar 2023</span>
@@ -193,7 +203,7 @@ const TotalDelivery = () => {
                                 </td>
                             </tr>
                         ) : (
-                            filteredJobs.map((job, i) => (
+                            delivered?.map((job, i) => (
                                 <tr
                                     className={` text-center`}
                                     onDoubleClick={() => handleDeleteDeliveredJob(job)}
@@ -201,7 +211,7 @@ const TotalDelivery = () => {
                                 >
 
                                     <th>{i + 1}</th>
-                                    <td className='capitalize'>{job.customar}</td>
+                                    <td className='capitalize'>{job.customar || job.customer}</td>
                                     <td>JBH00{job.po}</td>
                                     <td>{job.qty.toLocaleString('en-IN')}</td>
                                     <td className='uppercase'>{job.label}</td>
@@ -220,13 +230,13 @@ const TotalDelivery = () => {
                         )}
                     </tbody>
                     {
-                        filteredJobs.length === 0 ||
+                        delivered?.length === 0 ||
                         <tfoot>
                             <tr className='text-center bg-yellow-600'>
                                 <th>#</th>
                                 <th></th>
                                 <th className='text-xl text-white'>Total Quantity</th>
-                                <th className='text-xl text-white'>{totalPrevDelivery.toLocaleString('en-IN')} Pcs</th>
+                                <th className='text-xl text-white'>{currentTQty.toLocaleString('en-IN')} Pcs</th>
                                 <th></th>
                                 <th></th>
                             </tr>
@@ -259,6 +269,7 @@ const TotalDelivery = () => {
 
 
             </div>
+            <Pagination totalItems={totalItems} currentPage={currentPage} itemsPerPage={pageSize} onPageChange={setPage} />
         </div>
     );
 };

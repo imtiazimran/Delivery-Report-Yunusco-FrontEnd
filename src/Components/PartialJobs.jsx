@@ -77,7 +77,7 @@ const PartialJobs = () => {
                             partialDeliveries?.map((job, i) => (
                                 <tr onDoubleClick={() => handleDelete(job)} key={job._id} className="hover:bg-slate-700 text-center">
                                     <th>{i + 1}</th>
-                                    <td className='capitalize'>{job.customar}</td>
+                                    <td className='capitalize'>{job.customar || job.customer}</td>
                                     <td>JBH00{job.po}</td>
                                     <td>{job.qty.toLocaleString('en-IN')}</td>
                                     <td className='uppercase'>{job.label}</td>

@@ -22,7 +22,7 @@ const CalculatePalette = () => {
     const [selectedDate, setSelectedDate] = useState(currentDate);
     const location = useNavigate()
     const [addJob, { isLoading }] = useAddJobMutation();
-console.log(result)
+// console.log(result)
     const handleFocus = (index) => {
         if (index === inputCount - 1) {
             setInputCount(prevCount => prevCount + 1);
