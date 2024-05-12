@@ -27,28 +27,7 @@ const JobProvider = ({ children }) => {
 
 
     // get samples
-    useEffect(() => {
-        axios.get(`${baseUrl}/sample`)
-            .then(res => {
-                setIsLoading(true)
-                setSample(res.data)
-                setIsLoading(false)
-            })
-            .catch(error => console.log(error))
-            .finally(() => setIsLoading(false))
-    })
-
-    useEffect(() => {
-        if (!isLoading) {
-            axios.get(`${baseUrl}/sample`)
-                .then(res => {
-                    setSample(res.data);
-                })
-                .catch((error) => {
-                    console.error("Error fetching sapmles:", error);
-                });
-        }
-    }, [isLoading]);
+    
 
     // get On Processing jobs
     // useEffect(() => {
@@ -620,6 +599,7 @@ const JobProvider = ({ children }) => {
         editDateDialogRef,
         AddJobs,
         users,
+        currentUser,
         isAdmin,
         deleteUserFromDataBase,
         makeAdmin,

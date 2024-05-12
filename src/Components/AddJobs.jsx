@@ -8,15 +8,18 @@ import Loader from "../assets/loader2.json"
 import { JobContext } from './Context/JobProvider';
 import { Switch } from '@headlessui/react';
 import DatePicker from 'react-datepicker';
+import { useAddJobToDeliveredMutation, useAddToPertialMutation } from './Redux/api/totalJobApi';
 const AddJobs = ({ isOpen, setIsOpen }) => {
-    const { AddJobs, AddPartialJob, isLoading, setIsLoading } = useContext(JobContext)
+    // const { AddJobs, AddPartialJob, isLoading, setIsLoading } = useContext(JobContext)
+    const [addJobToDelivered, { isLoading }] = useAddJobToDeliveredMutation()
+    const [addToPertial, { isLoading: isLoadingPartial }] = useAddToPertialMutation()
     const [enabled, setEnabled] = useState(true)
     const { user } = useContext(AuthContext)
     const currentDate = new Date();
     const datePickerRef = useRef(null);
     const [selectedDate, setSelectedDate] = useState(currentDate);
 
-    const handleSubmit = e => {
+    const handleSubmit = async e => {
         e.preventDefault()
         const form = e.target;
         const customar = form.customar.value
@@ -47,14 +50,53 @@ const AddJobs = ({ isOpen, setIsOpen }) => {
 
         if (user) {
             if (enabled) {
-                AddJobs(addJobs)
+                const res = await addJobToDelivered(addJobs)
+                console.log(res);
+                if (res?.data?.success === true) {
+                    Swal.fire({
+                        position: 'top-center',
+                        icon: 'success',
+                        title: "Job Added",
+                        text: "Job Added Successfully",
+                        confirmButtonText: "Ok",
+                        showConfirmButton: true
+                    })
+                } else {
+                    Swal.fire({
+                        position: 'top-center',
+                        icon: 'error',
+                        title: "Job Not Added",
+                        text: "Something went wrong",
+                        confirmButtonText: "Ok",
+                        showConfirmButton: true
+                    })
+                }
             } else {
-                AddPartialJob(addJobs)
+                const res = await addToPertial(addJobs)
+                if (res?.data?.success === true) {
+                    Swal.fire({
+                        position: 'top-center',
+                        icon: 'success',
+                        title: "Job Added",
+                        text: "Job Added Successfully",
+                        confirmButtonText: "Ok",
+                        showConfirmButton: true
+                    })
+                } else {
+                    Swal.fire({
+                        position: 'top-center',
+                        icon: 'error',
+                        title: "Job Not Added",
+                        text: "Something went wrong",
+                        confirmButtonText: "Ok",
+                        showConfirmButton: true
+                    })
+                }
             }
             setIsOpen(false)
         } else {
             setIsOpen(false)
-            setIsLoading(false)
+            // setIsLoading(false)
             Swal.fire({
                 position: 'top-center',
                 icon: 'error',
@@ -91,7 +133,7 @@ const AddJobs = ({ isOpen, setIsOpen }) => {
                 className="modal"
             >
                 {
-                    isLoading ?
+                    isLoading || isLoadingPartial ?
                         <Lottie className="lg:w-1/4 mx-auto" animationData={Loader} />
                         :
                         <div className="modal-box">

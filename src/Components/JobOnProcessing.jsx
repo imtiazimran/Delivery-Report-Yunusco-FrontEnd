@@ -109,7 +109,7 @@ const JobOnProcessing = () => {
                     // The table code can go here
                     <table className="table md:w-11/12 mx-auto">
                         {/* head */}
-                        {onProccess.length === 0 || (
+                        {onProccess?.length === 0 || (
                             <thead>
                                 <tr className="text-center text-white">
                                     <th>#</th>
@@ -162,7 +162,7 @@ const JobOnProcessing = () => {
                                     <th>#</th>
                                     <th></th>
                                     <th className="text-xl text-white">Total Quantity</th>
-                                    <th className="text-xl text-white">{currentDeliveryQty.toLocaleString("en-IN")} Piece</th>
+                                    <th className="text-xl text-white">{currentDeliveryQty?.toLocaleString("en-IN")} Piece</th>
                                     <th></th>
                                     <th></th>
                                 </tr>

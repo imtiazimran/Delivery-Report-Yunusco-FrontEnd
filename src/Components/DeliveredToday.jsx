@@ -5,13 +5,15 @@ import { usePDF } from "react-to-pdf"
 import EmptyAmimation from "../assets/blank.json"
 import Loader from "../assets/loader2.json"
 import Lottie from "lottie-react";
-import { useGetAllJobsQuery } from './Redux/api/totalJobApi';
+import { useDeleteFromDeliveredMutation, useGetAllJobsQuery } from './Redux/api/totalJobApi';
+import Swal from 'sweetalert2';
 
 const DeliveredToday = () => {
     const {
         //  prevJobs,
         // isLoading,
-        handleDeleteDeliveredJob,
+        // handleDeleteDeliveredJob,
+        currentUser,
         selectedJobForUpdateData,
         setSelectedJobForUpdateData,
         updatedQuantity,
@@ -20,13 +22,49 @@ const DeliveredToday = () => {
         setUpdatedDeliveryDate,
         handleUpdateDateQty
     } = useContext(JobContext);
+    const [deleteFromDelivered, { isSuccess}] = useDeleteFromDeliveredMutation()
     const editDateDialogRef = useRef(null);
     // console.log(prevJobs)
     const currentDate = new Date();
 
-    const {data: deliveredData, isLoading} = useGetAllJobsQuery()
+    const {data: deliveredData, isLoading, refetch} = useGetAllJobsQuery()
     const {data: prevJobs} = deliveredData || {}
 
+// console.log(currentUser)
+    const handleDelete = async(job) => {
+        if (currentUser?.role === "Admin" || currentUser?.role === "Editor"){
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                   const response = await deleteFromDelivered(job._id)
+                   if(response.data.deletedCount > 0){
+                       Swal.fire({
+                           icon: 'success',
+                           title: 'Job Deleted',
+                           text: 'The job has been successfully Deleted from Total delivery.',
+                       })
+                   }
+                }
+                refetch()
+            })
+        }else{
+            
+            Swal.fire({
+                position: 'top-center',
+                icon: 'error',
+                title: "Unauthorize Oparetion",
+                text: "Look Like You Don't have the permission to Delete Job",
+                showConfirmButton: "OK"
+            })
+        }
+    }
 
     // Calculate start of today's date (midnight)
     const startOfToday = new Date(currentDate);
@@ -111,7 +149,7 @@ const DeliveredToday = () => {
                     <div className="text-center">
                         <Lottie className="lg:w-1/4 mx-auto" animationData={Loader} />
                     </div>
-                ) : todaysDeliveries.length === 0 ? (
+                ) : todaysDeliveries?.length === 0 ? (
                     <div className="text-center ">
                         <span className="lg:text-2xl text-xl bg-cyan-900 text-white py-4 text-center block font-semibold capitalize lg:w-1/4 mx-auto lg:absolute top-1/4 z-50">No Job delivered today <br /> <Link to={"previousDelivery"} >View Previous Delivery</Link>   </span>
                         <Lottie className="lg:w-1/4 mx-auto" animationData={EmptyAmimation} />
@@ -131,10 +169,10 @@ const DeliveredToday = () => {
                         <tbody>
                             {todaysDeliveries?.map((job, i) => (
                                 
-                                <tr onDoubleClick={() => handleDeleteDeliveredJob(job)} key={job._id} className="text-center">
+                                <tr onDoubleClick={() => handleDelete(job)} key={job._id} className="text-center">
                                 
                                     <th>{i + 1}</th>
-                                    <td className='capitalize'>{job?.customer}</td>
+                                    <td className='capitalize'>{job.customar || job.customer}</td>
                                     <td>JBH00{job.po}</td>
                                     <td className='flex justify-center items-center gap-1'>
                                         <span>{job.qty.toLocaleString('en-IN')}</span>

@@ -27,11 +27,13 @@ const TotalDelivery = () => {
     const [searchQuery, setSearchQuery] = useState("")
     const editDateDialogRef = useRef(null);
     const [reduceMonth, setReduceMonth] = useState(1)
-    const [currentMonthJobs, setCurrentMonthJobs] = useState([])
-    const [currentMonth, setCurrentMonth] = useState('')
+    // const [currentMonthJobs, setCurrentMonthJobs] = useState([])
+    // const [currentMonth, setCurrentMonth] = useState('')
     // const { currentPage, totalItems, totalPages, currentTQty, deliveredItems: delivered = [] } = prevJobs
     const [page, setPage] = useState(1)
     const [pageSize, setPageSize] = useState(10)
+
+   
 
     // rtk query hook 
     const { data, isLoading } = useGetLimitedJobsQuery({ searchTerm: searchQuery, page, pageSize })
