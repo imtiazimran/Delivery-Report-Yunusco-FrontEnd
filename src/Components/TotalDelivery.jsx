@@ -4,7 +4,7 @@ import Loader from "../assets/loader2.json"
 import Lottie from 'lottie-react';
 import NothingFound from "../assets/nothingFound.json"
 import Pagination from './utils/Pagination';
-import { useGetAllJobsQuery, useGetLimitedJobsQuery } from './Redux/api/totalJobApi';
+import { useDeleteFromDeliveredMutation, useGetLimitedJobsQuery } from './Redux/api/totalJobApi';
 // import AOS from "aos"
 
 // AOS.init()
@@ -12,7 +12,7 @@ import { useGetAllJobsQuery, useGetLimitedJobsQuery } from './Redux/api/totalJob
 const TotalDelivery = () => {
     const {
         // prevJobs,
-        handleDeleteDeliveredJob,
+        // handleDeleteDeliveredJob,
         selectedJobForUpdateData,
         setSelectedJobForUpdateData,
         updatedQuantity,
@@ -23,6 +23,7 @@ const TotalDelivery = () => {
     } = useContext(JobContext);
 
 
+    
     const [sortedData, setSortedData] = useState([]); // State to hold sorted data
     const [searchQuery, setSearchQuery] = useState("")
     const editDateDialogRef = useRef(null);
@@ -32,14 +33,24 @@ const TotalDelivery = () => {
     // const { currentPage, totalItems, totalPages, currentTQty, deliveredItems: delivered = [] } = prevJobs
     const [page, setPage] = useState(1)
     const [pageSize, setPageSize] = useState(10)
-
-   
-
+    
+    
+    
     // rtk query hook 
     const { data, isLoading } = useGetLimitedJobsQuery({ searchTerm: searchQuery, page, pageSize })
     
     const { currentPage, totalItems, totalPages, currentTQty, deliveredItems: delivered = [] } = data || {}
+    
+    const [deleteFromDelivered, { isSuccess}] = useDeleteFromDeliveredMutation()
 
+    if (isSuccess) {
+        Swal.fire({
+            position: 'top-center',
+            icon: 'success',
+            title: "Job Deleted",
+            text: "The job has been successfully Deleted from Total delivery.",
+        })
+    }
 //    console.log(delivered);
     // Function to sort data by date in descending order
 
@@ -208,7 +219,7 @@ const TotalDelivery = () => {
                             delivered?.map((job, i) => (
                                 <tr
                                     className={` text-center`}
-                                    onDoubleClick={() => handleDeleteDeliveredJob(job)}
+                                    onDoubleClick={() => deleteFromDelivered(job._id)}
                                     key={job._id}
                                 >
 

@@ -9,6 +9,7 @@ export const addJobApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl
     }),
+    tagTypes: ["jobOnProcess"],
     endpoints: (builder) => ({
 
         addJob: builder.mutation({
@@ -16,21 +17,30 @@ export const addJobApi = createApi({
                 url: "/addToProcess",
                 method: "POST",
                 body: data
-            })
+            }),
+            invalidatesTags: ["jobOnProcess"],
+            onQueryStarted: (arg, { dispatch }) => {
+                dispatch(addJobApi.util.invalidateTags(["jobOnProcess"]));
+            },
         }),
         getProcessingJobs: builder.query({
             query: () => ({
                 url: "/delivery",
                 method: "GET"
-            })
+            }),
+            providesTags: ["jobOnProcess"],
         }),
         deleteJob: builder.mutation({
             query: (id) => ({
                 url: `/deleteJob/${id}`,
                 method: "DELETE"
-            })
+            }),
+            invalidatesTags: ["jobOnProcess"],
+            onQueryStarted: (arg, { dispatch }) => {
+                dispatch(addJobApi.util.invalidateTags(["jobOnProcess"]));
+            },
         })
     })
 })
 
-export const {useAddJobMutation, useGetProcessingJobsQuery,useDeleteJobMutation } = addJobApi;
+export const { useAddJobMutation, useGetProcessingJobsQuery, useDeleteJobMutation } = addJobApi;

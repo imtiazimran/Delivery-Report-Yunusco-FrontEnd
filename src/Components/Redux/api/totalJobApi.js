@@ -47,7 +47,7 @@ export const totalJobApi = createApi({
       }),
       invalidatesTags: ["Delivered"],
       // Refetch queries after mutation
-      onQueryStarted: ({ dispatch }) => {
+      onQueryStarted: (arg, { dispatch }) => {
         dispatch(totalJobApi.util.invalidateTags(["Delivered"]));
       },
     }),

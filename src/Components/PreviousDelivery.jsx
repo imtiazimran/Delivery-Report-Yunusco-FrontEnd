@@ -6,17 +6,28 @@ import Lottie from "lottie-react";
 import { usePDF } from 'react-to-pdf';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { useGetAllJobsQuery } from './Redux/api/totalJobApi';
+import { useDeleteFromDeliveredMutation, useGetAllJobsQuery } from './Redux/api/totalJobApi';
 const PreviousDelivery = () => {
     // rtk query hook 
-    const {data: deliveredData, isLoading} = useGetAllJobsQuery()
+    const {data: deliveredData, isLoading, refetch} = useGetAllJobsQuery()
     const {data: prevJobs} = deliveredData || {}
     const [reduceADay, setReduceADay] = useState(1)
     const currentDate = new Date();
     const datePickerRef = useRef(null);
     const [selectedDate, setSelectedDate] = useState(currentDate); // State for the selected date
 
+    const [deleteFromDelivered, { isSuccess}] = useDeleteFromDeliveredMutation()
 
+
+    if (isSuccess) {
+        refetch()
+        Swal.fire({
+            position: 'top-center',
+            icon: 'success',
+            title: "Job Deleted",
+            text: "The job has been successfully Deleted from Total delivery.",
+        })
+    }
 
     // "yesterdayDate" should be calculated based on "selectedDate"
     const yesterdayDate = new Date(selectedDate);
@@ -151,7 +162,7 @@ const PreviousDelivery = () => {
                             </tr>
                         ) : (
                             yesterdayDeliveries?.map((job, i) => (
-                                <tr onDoubleClick={() => handleDeleteDeliveredJob(job)} key={job._id} className=" text-center">
+                                <tr onDoubleClick={() => deleteFromDelivered(job._id)} key={job._id} className=" text-center">
                                     <th>{i + 1}</th>
                                     <td className='capitalize'>{job.customar}</td>
                                     <td>JBH00{job.po}</td>

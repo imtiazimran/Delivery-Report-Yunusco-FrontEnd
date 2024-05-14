@@ -5,12 +5,13 @@ import PD_Modal from './ui/Modal';
 import NothingFound from "../assets/nothingFound.json"
 import Loader from "../assets/loader2.json"
 import Lottie from "lottie-react";
-import { useGetProcessingJobsQuery } from './Redux/api/addJobApi';
+import { useDeleteJobMutation, useGetProcessingJobsQuery } from './Redux/api/addJobApi';
+import Swal from 'sweetalert2';
 const PartialJobs = () => {
-    const { 
+    const {
         // jobs,
         isLoading,
-        handleDelete,
+        // handleDelete,
         handleDeliveredJob,
         isOpen,
         setIsOpen,
@@ -20,15 +21,44 @@ const PartialJobs = () => {
         setPartialDeliveryQty
     } = useContext(JobContext)
 
-    const {data: onProccess} = useGetProcessingJobsQuery()
+    const { data: onProccess, refetch } = useGetProcessingJobsQuery()
+    const [deleteJob, { isSuccess }] = useDeleteJobMutation()
     const handlePartialDeliveryModal = (job) => {
         setSelectedJobForPartialDelivery(job);
         setPartialDeliveryQty(0); // Reset input field
         setIsOpen(true)
     };
 
+    const handleDelete = async (job) => {
 
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        })
+            .then(async (result) => {
+                if (result.isConfirmed) {
+                    // setSelectedId(null)
+                   const res =await deleteJob(job._id)
+                    console.log(res);
+                    refetch()
+                    Swal.fire({
+                        position: 'top-center',
+                        icon: 'success',
+                        title: "Job Deleted",
+                        text: "Job Deleted Successfully",
+                        confirmButtonText: "Ok",
+                        timer: 1500
+                    })
+                }
+            })
+    }
 
+ 
 
     const partialDeliveries = onProccess?.filter((item) => item.hasOwnProperty("deliveryType"))
     // console.log(handleDeliveredJob)

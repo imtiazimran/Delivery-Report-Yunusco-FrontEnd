@@ -51,7 +51,7 @@ const AddJobs = ({ isOpen, setIsOpen }) => {
         if (user) {
             if (enabled) {
                 const res = await addJobToDelivered(addJobs)
-                console.log(res);
+                // console.log(res);
                 if (res?.data?.success === true) {
                     Swal.fire({
                         position: 'top-center',
@@ -73,6 +73,7 @@ const AddJobs = ({ isOpen, setIsOpen }) => {
                 }
             } else {
                 const res = await addToPertial(addJobs)
+                console.log(res);
                 if (res?.data?.success === true) {
                     Swal.fire({
                         position: 'top-center',
