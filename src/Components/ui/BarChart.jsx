@@ -1,219 +1,215 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { JobContext } from '../Context/JobProvider';
-import {  useGetAllJobsQuery } from '../Redux/api/totalJobApi';
-
+import { useGetAllJobsQuery } from '../Redux/api/totalJobApi';
 
 const DeliveryReportChart = () => {
-  const [chartWidth, setChartWidth] = useState(600); // Initial width
-  const [chartHeight, setChartHeight] = useState(300); // Initial height
+  const [chartWidth, setChartWidth] = useState(600);
+  const [chartHeight, setChartHeight] = useState(300);
   const chartContainerRef = useRef('');
-  const [reduceMonth, setReduceMonth] = useState(-1)
-  const [currentMonthJobs, setCurrentMonthJobs] = useState([])
-  const [currentMonth, setCurrentMonth] = useState('')
-  const {data: deliveredData} = useGetAllJobsQuery()
-  const {data: prevJobs} = deliveredData || {}
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [selectedMonth, setSelectedMonth] = useState(null);
+  const [monthlyData, setMonthlyData] = useState([]);
+  const [dailyData, setDailyData] = useState([]);
+  const [view, setView] = useState('monthly'); // 'monthly' or 'daily'
+  const { data: deliveredData } = useGetAllJobsQuery();
+  const { data: jobs } = deliveredData || {};
 
-  const preMonth = () => {
-    setReduceMonth(reduceMonth - 1)
-  }
+  // Function to parse delivery date string
+  const parseDeliveryDate = (dateString) => {
+    const [datePart] = dateString.split(' ');
+    const [day, month, year] = datePart.split('-');
+    return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+  };
 
-  const nextMonth = () => {
-    // Disable the forward button when date is equal to yesterdayDate
-    setReduceMonth(reduceMonth + 1);
-  }
+  // Process monthly data
+  useEffect(() => {
+    if (!jobs) return;
 
-  // Adjust chart dimensions based on container size
+    const monthData = Array(12).fill(0).map((_, index) => ({
+      month: index,
+      monthName: new Date(2000, index, 1).toLocaleString('default', { month: 'long' }),
+      qty: 0
+    }));
+
+    jobs.forEach(job => {
+      try {
+        const deliveryDate = parseDeliveryDate(job.goodsDeliveryDate);
+        if (deliveryDate.getFullYear() === selectedYear) {
+          const month = deliveryDate.getMonth();
+          const qty = parseInt(job.qty) || 0;
+          monthData[month].qty += qty;
+        }
+      } catch (error) {
+        console.error('Error processing job:', error);
+      }
+    });
+
+    setMonthlyData(monthData);
+  }, [jobs, selectedYear]);
+
+  // Process daily data when a month is selected
+  useEffect(() => {
+    if (!jobs || selectedMonth === null) return;
+
+    const daysInMonth = new Date(selectedYear, selectedMonth + 1, 0).getDate();
+    const dailyData = Array(daysInMonth).fill(0).map((_, index) => ({
+      day: index + 1,
+      date: `${String(index + 1).padStart(2, '0')}/${String(selectedMonth + 1).padStart(2, '0')}`,
+      qty: 0
+    }));
+
+    jobs.forEach(job => {
+      try {
+        const deliveryDate = parseDeliveryDate(job.goodsDeliveryDate);
+        if (deliveryDate.getFullYear() === selectedYear && 
+            deliveryDate.getMonth() === selectedMonth) {
+          const day = deliveryDate.getDate() - 1;
+          const qty = parseInt(job.qty) || 0;
+          dailyData[day].qty += qty;
+        }
+      } catch (error) {
+        console.error('Error processing job:', error);
+      }
+    });
+
+    setDailyData(dailyData);
+  }, [jobs, selectedYear, selectedMonth]);
+
+  // Handle chart resize
   useEffect(() => {
     const handleResize = () => {
       if (chartContainerRef.current) {
         const containerWidth = chartContainerRef.current.offsetWidth;
-        // Set the chart width relative to the container width
         setChartWidth(containerWidth);
-        // Set the chart height as needed
-        // You can adjust this based on your layout requirements
         setChartHeight(500);
       }
     };
 
-    // Add event listener for window resize
     window.addEventListener('resize', handleResize);
-
-    // Call the resize handler once to set initial dimensions
     handleResize();
-
-    // Cleanup function to remove event listener
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const currentDate = new Date();
-  const updatedCurrentMonth = currentDate.getMonth() + reduceMonth;
-
-  useEffect(() => {
-    setCurrentMonth(updatedCurrentMonth)
-    const currentYear = currentDate.getFullYear();
-    const filteredJobs = prevJobs?.filter((job) => {
-      const dateParts = job.goodsDeliveryDate.split('-');
-      if (dateParts.length === 3) {
-        const deliveryDate = new Date(
-          parseInt(dateParts[2], 10), // Year
-          parseInt(dateParts[1], 10) - 1, // Month (0-indexed)
-          parseInt(dateParts[0], 10) // Day
-        );
-        return (
-          deliveryDate.getMonth() === updatedCurrentMonth &&
-          deliveryDate.getFullYear() === currentYear
-        );
-      }
-      return false;
-    });
-    setCurrentMonthJobs(filteredJobs);
-  }, [prevJobs, reduceMonth]);
-
-
-
-  // const currentDate = new Date();
-
-  // const currentMonth = currentDate.getMonth();
-  // const currentYear = currentDate.getFullYear();
-  // const currentMonthJobs = prevJobs.filter((job) => {
-  //   const dateParts = job.goodsDeliveryDate.split('-');
-  //   if (dateParts.length === 3) {
-  //     const deliveryDate = new Date(
-  //       parseInt(dateParts[2], 10), // Year
-  //       parseInt(dateParts[1], 10) - 1, // Month (0-indexed)
-  //       parseInt(dateParts[0], 10) // Day
-  //     );
-  //     return (
-  //       deliveryDate.getMonth() === currentMonth &&
-  //       deliveryDate.getFullYear() === currentYear
-  //     );
-  //   }
-  //   return false;
-  // });
-
-  // console.log(currentMonth);
-
-  // const increaseMonth = (currentMonth) => {
-  //   // Increase the current month by 1, handling the case where the current month is December (index 11)
-  //   return currentMonth === 11 ? 0 : currentMonth + 1;
-  // };
-
-  // const decreaseMonth = (currentMonth) => {
-  //   // Decrease the current month by 1, handling the case where the current month is January (index 0)
-  //   console.log(currentMonth);
-  //   return currentMonth === 0 ? 11 : currentMonth - 1;
-  // };
-
-  const currentMonthTotalDelivery = currentMonthJobs?.reduce((accumulator, currentJob) => {
-    const qtyAsNumber = parseInt(currentJob.qty); // Convert the string to an integer
-    if (!isNaN(qtyAsNumber)) {
-      return accumulator + qtyAsNumber;
+  // Handle bar click
+  const handleBarClick = (data) => {
+    if (view === 'monthly') {
+      setSelectedMonth(data.month);
+      setView('daily');
     }
-    return accumulator; // If conversion fails, return the accumulator unchanged
-  }, 0);
+  };
 
+  // Handle back button click
+  const handleBackToMonths = () => {
+    setSelectedMonth(null);
+    setView('monthly');
+  };
 
-  const sortedJobs = currentMonthJobs?.sort((a, b) => {
-    // Convert delivery dates to Date objects for comparison
-    const dateA = new Date(a.goodsDeliveryDate);
-    const dateB = new Date(b.goodsDeliveryDate);
-    return dateA - dateB;
-  });
-
-  const chartData = sortedJobs?.reduce((accumulator, job) => {
-    const date = job.goodsDeliveryDate.substring(0, 2); // Extracting the first 2 characters of the date
-    // Check if the date already exists in the accumulator array
-    const existingDateIndex = accumulator.findIndex(item => item.date === date);
-    // If the date doesn't exist, add it to the accumulator
-    if (existingDateIndex === -1) {
-      accumulator.push({
-        day: parseInt(date, 10), // Use the actual date instead of incrementing
-        qty: parseInt(job.qty),
-        date: date,
-      });
-    } else {
-      // If the date already exists, update the qty (assuming you want to sum the quantities)
-      accumulator[existingDateIndex].qty += parseInt(job.qty);
-    }
-
-    return accumulator;
-  }, []);
-
-  const printPDF = () => {
-    setTimeout(() => {
-        if (chartContainerRef.current) {
-            const content = chartContainerRef.current.innerHTML;
-            const originalDocument = document.body.innerHTML;
-            document.body.innerHTML = content;
-            window.print();
-            document.body.innerHTML = originalDocument;
-        } else {
-            console.error("Error: Unable to find targetRef.");
-        }
-    }, 1000); // Adjust the delay as needed
-};
+  const totalDelivery = monthlyData.reduce((sum, month) => sum + month.qty, 0);
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="custom-tooltip bg-purple-600 px-2 py-1">
-          <p>{`Day: ${label}`}</p>
-          {payload.map((entry, index) => (
-            <p key={`tooltip-${index}`} >
-              {`${entry.dataKey}: ${entry.value}`}
-            </p>
-          ))}
+        <div className="custom-tooltip bg-purple-600 px-4 py-2 rounded text-white">
+          <p className="font-semibold">{`${label}`}</p>
+          <p>{`Quantity: ${payload[0].value.toLocaleString()}`}</p>
         </div>
       );
     }
     return null;
   };
 
+  const printPDF = () => {
+    setTimeout(() => {
+      if (chartContainerRef.current) {
+        const content = chartContainerRef.current.innerHTML;
+        const originalDocument = document.body.innerHTML;
+        document.body.innerHTML = content;
+        window.print();
+        document.body.innerHTML = originalDocument;
+      }
+    }, 1000);
+  };
 
   return (
     <div ref={chartContainerRef} className="w-full max-w-screen-full mx-auto bg-slate-800">
-
-      <h1 className='md:text-xl text-center font-semibold py-5 bg-slate-600'>
-      <button className="rounded pdf px-3 hover:text-blue-400" onClick={() => printPDF()}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75l3 3m0 0l3-3m-3 3v-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+      <div className="flex justify-between items-center bg-slate-600 p-5">
+        <button 
+          className="rounded pdf px-3 hover:text-blue-400" 
+          onClick={printPDF}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75l3 3m0 0l3-3m-3 3v-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </button>
+        <h1 className='md:text-xl text-center font-semibold'>
+          {view === 'monthly' 
+            ? `Monthly Delivery Chart ${selectedYear}`
+            : `Daily Delivery Chart - ${monthlyData[selectedMonth]?.monthName} ${selectedYear}`
+          }
+        </h1>
+        <div className="flex gap-2">
+          {view === 'daily' ? (
+            <button
+              onClick={handleBackToMonths}
+              className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Back to Months
             </button>
-        Delivery Chart of {updatedCurrentMonth === 0 ? "January" :
-          updatedCurrentMonth === 1 ? "February" :
-            updatedCurrentMonth === 2 ? "March" :
-              updatedCurrentMonth === 3 ? "April" :
-                updatedCurrentMonth === 4 ? "May" :
-                  updatedCurrentMonth === 5 ? "June" :
-                    updatedCurrentMonth === 6 ? "July" :
-                      updatedCurrentMonth === 7 ? "August" :
-                        updatedCurrentMonth === 8 ? "September" :
-                          updatedCurrentMonth === 9 ? "October" :
-                            updatedCurrentMonth === 10 ? "November" :
-                              "December"}
-      </h1>
+          ) : (
+            <>
+              <button
+                onClick={() => setSelectedYear(prev => prev - 1)}
+                className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+              >
+                ←
+              </button>
+              <button
+                onClick={() => setSelectedYear(prev => prev + 1)}
+                className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+                disabled={selectedYear >= new Date().getFullYear()}
+              >
+                →
+              </button>
+            </>
+          )}
+        </div>
+      </div>
 
-      <div className='flex justify-center text-xl gap-4'><button onClick={() => preMonth()}>previous month</button>  <button onClick={() => nextMonth()}>next month</button></div>
+      <h2 className='py-5 text-center text-xl text-white'>
+        Total Delivery: {
+          view === 'monthly' 
+            ? monthlyData.reduce((sum, month) => sum + month.qty, 0).toLocaleString()
+            : dailyData.reduce((sum, day) => sum + day.qty, 0).toLocaleString()
+        }
+      </h2>
 
-      <h2 className='py-5 text-center text-xl'>Total Delivery: {currentMonthTotalDelivery?.toLocaleString()}</h2>
       <BarChart
         width={chartWidth}
         height={chartHeight}
-        data={chartData}
-        margin={{
-          top: 20, right: 30, left: 20, bottom: 5,
-        }}
+        data={view === 'monthly' ? monthlyData : dailyData}
+        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" />
-        <YAxis dataKey="qty" />
+        <XAxis 
+          dataKey={view === 'monthly' ? "monthName" : "date"}
+          angle={-45}
+          textAnchor="end"
+          height={60}
+        />
+        <YAxis />
         <Tooltip content={<CustomTooltip />} />
         <Legend />
-        <Bar dataKey="qty" fill="#8884d8" />
+        <Bar 
+          dataKey="qty" 
+          fill="#8884d8"
+          name="Delivery Quantity"
+          onClick={view === 'monthly' ? handleBarClick : undefined}
+          cursor={view === 'monthly' ? 'pointer' : 'default'}
+        />
       </BarChart>
     </div>
   );
 };
 
 export default DeliveryReportChart;
+
