@@ -128,7 +128,7 @@ const DeliveryPieChart = () => {
   }, []);
 
   return (
-    <div className="w-full bg-slate-800 p-2 sm:p-4 rounded-lg">
+    <div className="w-full bg-slate-800 py-5 px-2 sm:py-4 ">
       <div className="flex flex-col sm:flex-row justify-between items-center bg-slate-600 p-3 sm:p-5 rounded-t-lg gap-3 sm:gap-0">
         <h1 className="text-lg sm:text-xl font-semibold text-white text-center sm:text-left">
           Customer Distribution - {monthNames[selectedMonth]} {selectedYear}

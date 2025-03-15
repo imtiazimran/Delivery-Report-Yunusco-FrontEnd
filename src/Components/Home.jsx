@@ -46,13 +46,13 @@ const Home = () => {
         <div className='backgruond-color mt-16'>
             <Stat />
             <DeliveryReportChart />
-            <DeliveryPieChart />
             {onProccess?.length !== 0 && <JobOnProcessing/> }
             
             {
                 totalDeliveryToday === 0 ? <PreviousDelivery /> : <DeliveredToday />
             }
 
+            <DeliveryPieChart />
         </div>
     );
 };
