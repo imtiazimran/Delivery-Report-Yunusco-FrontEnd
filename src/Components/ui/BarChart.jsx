@@ -13,7 +13,7 @@ const DeliveryReportChart = () => {
   const [view, setView] = useState('monthly'); // 'monthly' or 'daily'
   const { data: deliveredData } = useGetAllJobsQuery();
   const { data: jobs } = deliveredData || {};
-
+console.log(jobs)
   // Function to parse delivery date string
   const parseDeliveryDate = (dateString) => {
     const [datePart] = dateString.split(' ');

@@ -8,6 +8,7 @@ import { JobContext } from './Context/JobProvider';
 import PreviousDelivery from './PreviousDelivery';
 import { useGetProcessingJobsQuery } from './Redux/api/addJobApi';
 import { useGetAllJobsQuery } from './Redux/api/totalJobApi';
+import DeliveryPieChart from './ui/PieChart';
 
 const Home = () => {
 
@@ -45,6 +46,7 @@ const Home = () => {
         <div className='backgruond-color mt-16'>
             <Stat />
             <DeliveryReportChart />
+            <DeliveryPieChart />
             {onProccess?.length !== 0 && <JobOnProcessing/> }
             
             {
