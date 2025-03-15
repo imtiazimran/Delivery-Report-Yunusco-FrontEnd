@@ -116,7 +116,7 @@ const DeliveryPieChart = () => {
         const isMobile = window.innerWidth < 640;
         setChartDimensions({
           width: width,
-          height: isMobile ? width * 0.8 : Math.min(width * 0.6, 600)
+          height: isMobile ? 500 : Math.min(width * 0.6, 600)
         });
       }
     };
